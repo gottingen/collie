@@ -17,7 +17,7 @@
 #[[carbin_cc_test(
         NAME custom_comparator_test
         SOURCES custom_comparator_test.cc
-        DEPS turbo::turbo ${CARBIN_DEPS_LINK} ${GTEST_LIB} ${GTEST_MAIN_LIB}
+        DEPS collie::collie ${CARBIN_DEPS_LINK} ${GTEST_LIB} ${GTEST_MAIN_LIB}
         COPTS ${USER_CXX_FLAGS}
 )]]
 #[[
@@ -36,3 +36,4 @@ carbin_cc_test(
 )
 ]]
 add_subdirectory(meta)
+add_subdirectory(strings)

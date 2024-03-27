@@ -515,7 +515,7 @@ namespace collie {
             typedef std::reverse_iterator<iterator> reverse_iterator;
             typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
-//    static constexpr extent_type extent = Extent;
+            //    static constexpr extent_type extent = Extent;
             enum {
                 extent = Extent
             };
@@ -539,10 +539,8 @@ namespace collie {
                 span_EXPECTS(data_ == nullptr && count == 0);
             }
 
-            template<typename It span_REQUIRES_T((
-                                                         std::is_convertible<decltype(*std::declval<It &>()), element_type &>::value
-                                                 ))
-            >
+            template<typename It
+                    span_REQUIRES_T((std::is_convertible<decltype(*std::declval<It &>()), element_type &>::value))>
             constexpr span(It first, size_type count)
                     : data_(to_address(first)), size_(count) {
                 span_EXPECTS(
@@ -551,10 +549,8 @@ namespace collie {
                 );
             }
 
-            template<typename It, typename End span_REQUIRES_T((
-                                                                       std::is_convertible<decltype(&*std::declval<It &>()), element_type *>::value
-                                                                       && !std::is_convertible<End, std::size_t>::value
-                                                               ))
+            template<typename It,
+                    typename End span_REQUIRES_T((std::is_convertible<decltype(&*std::declval<It &>()), element_type *>::value && !std::is_convertible<End, std::size_t>::value))
             >
             constexpr span(It first, End last)
                     : data_(to_address(first)), size_(to_size(last - first)) {

@@ -5,7 +5,7 @@
 #ifndef TYPE_SAFE_DETAIL_FORCE_INLINE_HPP_INCLUDED
 #define TYPE_SAFE_DETAIL_FORCE_INLINE_HPP_INCLUDED
 
-#include <collie/macro/debug_assert.h>
+#include <collie/base/debug_assert.h>
 
 #define TYPE_SAFE_FORCE_INLINE DEBUG_ASSERT_FORCE_INLINE
 

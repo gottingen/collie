@@ -16,17 +16,17 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include <collie/testing/doctest.h>
-#include <collie/container/small_vector.h>
+#include <collie/container/inlined_vector.h>
 
-TEST_CASE("small_vector" * doctest::timeout(300)) {
+TEST_CASE("InlinedVector" * doctest::timeout(300)) {
 
     //SUBCASE("constructor")
     {
-        collie::small_vector<int> vec1;
+        collie::InlinedVector<int> vec1;
         REQUIRE_EQ(vec1.size(), 0);
         REQUIRE_EQ(vec1.empty(), true);
 
-        collie::small_vector<int, 4> vec2;
+        collie::InlinedVector<int, 4> vec2;
         REQUIRE_NE(vec2.data(), nullptr);
         REQUIRE_EQ(vec2.size(), 0);
         REQUIRE_EQ(vec2.empty(), true);
@@ -36,7 +36,7 @@ TEST_CASE("small_vector" * doctest::timeout(300)) {
     //SUBCASE("constructor_n")
     {
         for (int N = 0; N <= 65536; N = (N ? N << 1 : 1)) {
-            collie::small_vector<int> vec(N);
+            collie::InlinedVector<int> vec(N);
             REQUIRE_EQ(vec.size(), N);
             REQUIRE_EQ(vec.empty(), (N == 0));
             REQUIRE_GE(vec.max_size(), vec.size());
@@ -47,12 +47,12 @@ TEST_CASE("small_vector" * doctest::timeout(300)) {
     //SUBCASE("copy_constructor")
     {
         for (int N = 0; N <= 65536; N = (N ? N << 1 : 1)) {
-            collie::small_vector<int> vec1(N);
+            collie::InlinedVector<int> vec1(N);
             for (auto &item: vec1) {
                 item = N;
             }
 
-            collie::small_vector<int> vec2(vec1);
+            collie::InlinedVector<int> vec2(vec1);
             REQUIRE_EQ(vec1.size(), N);
             REQUIRE_EQ(vec2.size(), N);
             for (size_t i = 0; i < vec1.size(); ++i) {
@@ -65,12 +65,12 @@ TEST_CASE("small_vector" * doctest::timeout(300)) {
     //SUBCASE("move_constructor")
     {
         for (int N = 0; N <= 65536; N = (N ? N << 1 : 1)) {
-            collie::small_vector<int> vec1(N);
+            collie::InlinedVector<int> vec1(N);
             for (auto &item: vec1) {
                 item = N;
             }
 
-            collie::small_vector<int> vec2(std::move(vec1));
+            collie::InlinedVector<int> vec2(std::move(vec1));
             REQUIRE_EQ(vec1.size(), 0);
             REQUIRE_EQ(vec1.empty(), true);
             REQUIRE_EQ(vec2.size(), N);
@@ -84,7 +84,7 @@ TEST_CASE("small_vector" * doctest::timeout(300)) {
     //SUBCASE("push_back")
     {
         for (int N = 0; N <= 65536; N = (N ? N << 1 : 1)) {
-            collie::small_vector<int> vec;
+            collie::InlinedVector<int> vec;
             size_t pcap{0};
             size_t ncap{0};
             for (int n = 0; n < N; ++n) {
@@ -106,7 +106,7 @@ TEST_CASE("small_vector" * doctest::timeout(300)) {
         size_t size{0};
         size_t pcap{0};
         size_t ncap{0};
-        collie::small_vector<int> vec;
+        collie::InlinedVector<int> vec;
         for (int N = 0; N <= 65536; N = (N ? N << 1 : N + 1)) {
             vec.push_back(N);
             ++size;
@@ -129,7 +129,7 @@ TEST_CASE("small_vector" * doctest::timeout(300)) {
     //SUBCASE("iterator")
     {
         for (int N = 0; N <= 65536; N = (N ? N << 1 : 1)) {
-            collie::small_vector<int> vec;
+            collie::InlinedVector<int> vec;
             for (int n = 0; n < N; ++n) {
                 vec.push_back(n);
                 REQUIRE_EQ(vec.size(), n + 1);
@@ -168,7 +168,7 @@ TEST_CASE("small_vector" * doctest::timeout(300)) {
     //SUBCASE("clear")
     {
         for (int N = 0; N <= 65536; N = (N ? N << 1 : 1)) {
-            collie::small_vector<int> vec(N);
+            collie::InlinedVector<int> vec(N);
             auto cap = vec.capacity();
             REQUIRE_EQ(vec.size(), N);
             vec.clear();
@@ -180,11 +180,11 @@ TEST_CASE("small_vector" * doctest::timeout(300)) {
     //SUBCASE("comparison")
     {
         for (int N = 0; N <= 65536; N = (N ? N << 1 : 1)) {
-            collie::small_vector<int> vec1;
+            collie::InlinedVector<int> vec1;
             for (int i = 0; i < N; ++i) {
                 vec1.push_back(i);
             }
-            collie::small_vector<int> vec2(vec1);
+            collie::InlinedVector<int> vec2(vec1);
             REQUIRE_EQ(vec1, vec2);
         }
     }
