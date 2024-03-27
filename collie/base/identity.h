@@ -13,18 +13,27 @@
 // limitations under the License.
 //
 //
+// Created by jeff on 24-3-27.
+//
 
-#ifndef COLLIE_MACRO_MACROS_H_
-#define COLLIE_MACRO_MACROS_H_
+#ifndef COLLIE_BASE_IDENTITY_H_
+#define COLLIE_BASE_IDENTITY_H_
 
-#ifndef COLLIE_LIKELY
-#if defined(__GNUC__)
-#define COLLIE_LIKELY(x) (__builtin_expect((x), 1))
-#define COLLIE_UNLIKELY(x) (__builtin_expect((x), 0))
-#else
-#define COLLIE_LIKELY(x) (x)
-  #define COLLIE_UNLIKELY(x) (x)
-#endif
-#endif
+namespace collie {
 
-#endif  // COLLIE_MACRO_MACROS_H_
+    // Similar to `std::identity` from C++20.
+    template <class Ty> struct identity {
+        using is_transparent = void;
+        using argument_type = Ty;
+
+        Ty &operator()(Ty &self) const {
+            return self;
+        }
+        const Ty &operator()(const Ty &self) const {
+            return self;
+        }
+    };
+
+}  // namespace collie
+
+#endif  // COLLIE_BASE_IDENTITY_H_

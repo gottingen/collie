@@ -29,8 +29,8 @@ carbin_cc_binary(
 )
 
 carbin_cc_binary(
-        NAME small_vector
-        SOURCES small_vector.cc
+        NAME inlined_vector
+        SOURCES inlined_vector.cc
         DEPS Threads::Threads
         COPTS ${USER_CXX_FLAGS}
 )

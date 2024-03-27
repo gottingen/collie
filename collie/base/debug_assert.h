@@ -22,8 +22,8 @@
 //    source distribution.
 //======================================================================//
 
-#ifndef COLLIE_MACRO_DEBUG_ASSERT_H_
-#define COLLIE_MACRO_DEBUG_ASSERT_H_
+#ifndef COLLIE_BASE_DEBUG_ASSERT_H_
+#define COLLIE_BASE_DEBUG_ASSERT_H_
 
 #include <cstdlib>
 
@@ -245,8 +245,7 @@ namespace collie::debug_assert {
         }
 
         template<class Expr, class Handler, typename... Args>
-        constexpr auto do_assert(
-                const Expr &expr, const source_location &loc, const char *expression, Handler,
+        constexpr auto do_assert(const Expr &expr, const source_location &loc, const char *expression, Handler,
                 Args &&... args) noexcept(!allows_exception<Handler>::value
                                           || noexcept(Handler::handle(loc, expression,
                                                                       detail::forward<Args>(args)...))) ->
@@ -342,4 +341,4 @@ namespace collie::debug_assert {
         (DEBUG_ASSERT_MARK_UNREACHABLE, collie::debug_assert::detail::regular_void())
 #endif
 
-#endif // COLLIE_MACRO_DEBUG_ASSERT_H_
+#endif // COLLIE_BASE_DEBUG_ASSERT_H_

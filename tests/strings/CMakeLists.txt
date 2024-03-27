@@ -1,4 +1,5 @@
-# Copyright 2023 The Carbin Authors.
+#
+# Copyright 2023 The titan-search Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +14,28 @@
 # limitations under the License.
 #
 
+find_package(Threads REQUIRED)
 
-find_path(DOCTEST_INCLUDE_PATH NAMES doctest/doctest.h)
-include_directories(${DOCTEST_INCLUDE_PATH})
-if((NOT DOCTEST_INCLUDE_PATH))
-    carbin_error(FATAL_ERROR "Fail to find turbo")
-endif()
+carbin_cc_test(
+        NAME inlined_string_test
+        SOURCES inlined_string_test.cc
+        COPTS ${USER_CXX_FLAGS}
+)
+
+carbin_cc_test(
+        NAME case_conv_test
+        SOURCES case_conv_test.cc
+        COPTS ${USER_CXX_FLAGS}
+)
+
+carbin_cc_test(
+        NAME replace_test
+        SOURCES replace_test.cc
+        COPTS ${USER_CXX_FLAGS}
+)
+
+carbin_cc_test(
+        NAME trim_test
+        SOURCES trim_test.cc
+        COPTS ${USER_CXX_FLAGS}
+)
