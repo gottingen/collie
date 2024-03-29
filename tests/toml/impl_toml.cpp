@@ -8,11 +8,7 @@
 #define TOML_IMPLEMENTATION
 #endif
 
-#if USE_SINGLE_HEADER
-#include "../toml.hpp"
-#else
-#include "../include/toml++/toml.h"
-#endif
+#include <collie/toml/toml.h>
 
 namespace toml
 {

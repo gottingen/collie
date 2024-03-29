@@ -19,8 +19,9 @@
 #include <cstdint>
 #include <limits>
 #include <type_traits>
+#include <collie/base/macros.h>
 
-#if !__has_builtin(__builtin_bit_cast)
+#if !COLLIE_HAS_BUILTIN(__builtin_bit_cast)
 #include <cstring>
 #endif
 
@@ -52,7 +53,7 @@ namespace collie {
             typename = std::enable_if_t<std::is_trivially_copyable<To>::value>,
             typename = std::enable_if_t<std::is_trivially_copyable<From>::value>>
     [[nodiscard]] inline To bit_cast(const From &from) noexcept {
-#if __has_builtin(__builtin_bit_cast)
+#if COLLIE_HAS_BUILTIN(__builtin_bit_cast)
         return __builtin_bit_cast(To, from);
 #else
         To to;
@@ -79,7 +80,7 @@ namespace collie {
 #endif
         } else if constexpr (sizeof(T) == 4) {
             uint32_t UV = V;
-#if __has_builtin(__builtin_bswap32)
+#if COLLIE_HAS_BUILTIN(__builtin_bswap32)
             return __builtin_bswap32(UV);
 #elif defined(_MSC_VER) && !defined(_DEBUG)
             return _byteswap_ulong(UV);
@@ -92,7 +93,7 @@ namespace collie {
 #endif
         } else if constexpr (sizeof(T) == 8) {
             uint64_t UV = V;
-#if __has_builtin(__builtin_bswap64)
+#if COLLIE_HAS_BUILTIN(__builtin_bswap64)
             return __builtin_bswap64(UV);
 #elif defined(_MSC_VER) && !defined(_DEBUG)
             return _byteswap_uint64(UV);
@@ -142,7 +143,7 @@ namespace collie {
                 if (Val == 0)
                     return 32;
 
-#if __has_builtin(__builtin_ctz) || defined(__GNUC__)
+#if COLLIE_HAS_BUILTIN(__builtin_ctz) || defined(__GNUC__)
                 return __builtin_ctz(Val);
 #elif defined(_MSC_VER)
                 unsigned long Index;
@@ -158,7 +159,7 @@ namespace collie {
                 if (Val == 0)
                     return 64;
 
-#if __has_builtin(__builtin_ctzll) || defined(__GNUC__)
+#if COLLIE_HAS_BUILTIN(__builtin_ctzll) || defined(__GNUC__)
                 return __builtin_ctzll(Val);
 #elif defined(_MSC_VER)
                 unsigned long Index;
@@ -208,7 +209,7 @@ namespace collie {
                 if (Val == 0)
                     return 32;
 
-#if __has_builtin(__builtin_clz) || defined(__GNUC__)
+#if COLLIE_HAS_BUILTIN(__builtin_clz) || defined(__GNUC__)
                 return __builtin_clz(Val);
 #elif defined(_MSC_VER)
                 unsigned long Index;
@@ -224,7 +225,7 @@ namespace collie {
                 if (Val == 0)
                     return 64;
 
-#if __has_builtin(__builtin_clzll) || defined(__GNUC__)
+#if COLLIE_HAS_BUILTIN(__builtin_clzll) || defined(__GNUC__)
                 return __builtin_clzll(Val);
 #elif defined(_MSC_VER)
                 unsigned long Index;

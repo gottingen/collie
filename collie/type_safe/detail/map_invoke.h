@@ -1,40 +1,38 @@
-// Copyright (C) 2016-2020 Jonathan Müller <jonathanmueller.dev@gmail.com>
-// This file is subject to the license terms in the LICENSE file
-// found in the top-level directory of this distribution.
+// Copyright 2024 The Elastic-AI Authors.
+// part of Elastic AI Search
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+//
 
-#ifndef TYPE_SAFE_DETAIL_MAP_INVOKE_HPP_INCLUDED
-#define TYPE_SAFE_DETAIL_MAP_INVOKE_HPP_INCLUDED
+#pragma once
 
-#if defined(TYPE_SAFE_IMPORT_STD_MODULE)
-import std;
-#else
 #include <utility>
-#endif
 
-namespace collie::ts
-{
-namespace detail
-{
-    template <typename Func, typename Value, typename... Args>
-    auto map_invoke(Func&& f, Value&& v, Args&&... args)
-        -> decltype(std::forward<Func>(f)(std::forward<Value>(v), std::forward<Args>(args)...))
-    {
+namespace collie::ts::detail {
+    template<typename Func, typename Value, typename... Args>
+    auto map_invoke(Func &&f, Value &&v, Args &&... args)
+    -> decltype(std::forward<Func>(f)(std::forward<Value>(v), std::forward<Args>(args)...)) {
         return std::forward<Func>(f)(std::forward<Value>(v), std::forward<Args>(args)...);
     }
 
-    template <typename Func, typename Value>
-    auto map_invoke(Func&& f, Value&& v) -> decltype(std::forward<Value>(v).*std::forward<Func>(f))
-    {
+    template<typename Func, typename Value>
+    auto map_invoke(Func &&f, Value &&v) -> decltype(std::forward<Value>(v).*std::forward<Func>(f)) {
         return std::forward<Value>(v).*std::forward<Func>(f);
     }
 
-    template <typename Func, typename Value, typename... Args>
-    auto map_invoke(Func&& f, Value&& v, Args&&... args)
-        -> decltype((std::forward<Value>(v).*std::forward<Func>(f))(std::forward<Args>(args)...))
-    {
+    template<typename Func, typename Value, typename... Args>
+    auto map_invoke(Func &&f, Value &&v, Args &&... args)
+    -> decltype((std::forward<Value>(v).*std::forward<Func>(f))(std::forward<Args>(args)...)) {
         return (std::forward<Value>(v).*std::forward<Func>(f))(std::forward<Args>(args)...);
     }
-} // namespace detail
-} // namespace collie::ts
-
-#endif // TYPE_SAFE_MAP_INVOKE_HPP_INCLUDED
+} // namespace collie::ts::detail

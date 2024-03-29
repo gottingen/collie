@@ -53,7 +53,9 @@ namespace collie {
 
 #if defined(BYTE_ORDER) && defined(BIG_ENDIAN) && BYTE_ORDER == BIG_ENDIAN
         constexpr bool IsBigEndianHost = true;
+#define COLLIE_BIG_ENDIAN
 #else
+#define COLLIE_LITTLE_ENDIAN
         constexpr bool IsBigEndianHost = false;
 #endif
 
