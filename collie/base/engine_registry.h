@@ -205,8 +205,8 @@ namespace collie {
     };
 
     template<class EngineList, class F>
-    inline engine_dispatcher<F, EngineList> dispatch(F &&f) noexcept {
-        return {std::forward<F>(f)};
+    inline engine_dispatcher<F, EngineList> dispatch(unsigned best_version, F &&f) noexcept {
+        return {best_version, std::forward<F>(f)};
     }
 
 }  // namespace collie

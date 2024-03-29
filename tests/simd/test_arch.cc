@@ -1,13 +1,17 @@
-/***************************************************************************
- * Copyright (c) Johan Mabille, Sylvain Corlay, Wolf Vollprecht and         *
- * Martin Renou                                                             *
- * Copyright (c) QuantStack                                                 *
- * Copyright (c) Serge Guelton                                              *
- *                                                                          *
- * Distributed under the terms of the BSD 3-Clause License.                 *
- *                                                                          *
- * The full license is in the file LICENSE, distributed with this software. *
- ****************************************************************************/
+// Copyright 2024 The Elastic-AI Authors.
+// part of Elastic AI Search
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
 #include <collie/simd/simd.h>
 #ifndef COLLIE_SIMD_NO_SUPPORTED_ARCHITECTURE
@@ -88,12 +92,12 @@ TEST_CASE("[multi arch support]")
 
     SUBCASE("collie::simd::arch_list<...>::alignment()")
     {
-        static_assert(collie::simd::arch_list<collie::simd::generic>::alignment() == 0,
+        static_assert(collie::engine_list<collie::simd::generic>::alignment() == 0,
                       "generic");
-        static_assert(collie::simd::arch_list<collie::simd::sse2>::alignment()
+        static_assert(collie::engine_list<collie::simd::sse2>::alignment()
                           == collie::simd::sse2::alignment(),
                       "one architecture");
-        static_assert(collie::simd::arch_list<collie::simd::avx512f, collie::simd::sse2>::alignment()
+        static_assert(collie::engine_list<collie::simd::avx512f, collie::simd::sse2>::alignment()
                           == collie::simd::avx512f::alignment(),
                       "two architectures");
     }
@@ -105,14 +109,14 @@ TEST_CASE("[multi arch support]")
 
         // platform specific
         {
-            auto dispatched = collie::simd::dispatch(sum {});
+            auto dispatched = collie::simd::simd_dispatch(sum {});
             float res = dispatched(data, 17);
             CHECK_EQ(ref, res);
         }
 
         // only highest available
         {
-            auto dispatched = collie::simd::dispatch<collie::simd::arch_list<collie::simd::best_arch>>(sum {});
+            auto dispatched = collie::simd::simd_dispatch<collie::engine_list<collie::simd::best_arch>>(sum {});
             float res = dispatched(data, 17);
             CHECK_EQ(ref, res);
         }
@@ -120,14 +124,14 @@ TEST_CASE("[multi arch support]")
 #if COLLIE_SIMD_WITH_AVX && COLLIE_SIMD_WITH_SSE2
         static_assert(collie::simd::supported_architectures::contains<collie::simd::avx>() && collie::simd::supported_architectures::contains<collie::simd::sse2>(), "consistent supported architectures");
         {
-            auto dispatched = collie::simd::dispatch<collie::simd::arch_list<collie::simd::avx, collie::simd::sse2>>(sum {});
+            auto dispatched = collie::simd::simd_dispatch<collie::engine_list<collie::simd::avx, collie::simd::sse2>>(sum {});
             float res = dispatched(data, 17);
             CHECK_EQ(ref, res);
         }
 
         // check that we pick the most appropriate version
         {
-            auto dispatched = collie::simd::dispatch<collie::simd::arch_list<collie::simd::sse3, collie::simd::sse2, collie::simd::generic>>(get_arch_version {});
+            auto dispatched = collie::simd::simd_dispatch<collie::engine_list<collie::simd::sse3, collie::simd::sse2, collie::simd::generic>>(get_arch_version {});
             unsigned expected = collie::simd::available_architectures().best >= collie::simd::sse3::version()
                 ? collie::simd::sse3::version()
                 : collie::simd::sse2::version();

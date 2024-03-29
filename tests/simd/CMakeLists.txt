@@ -1,13 +1,18 @@
-############################################################################
-# Copyright (c) Johan Mabille, Sylvain Corlay, Wolf Vollprecht and         #
-# Martin Renou                                                             #
-# Copyright (c) QuantStack                                                 #
-# Copyright (c) Serge Guelton                                              #
-#                                                                          #
-# Distributed under the terms of the BSD 3-Clause License.                 #
-#                                                                          #
-# The full license is in the file LICENSE, distributed with this software. #
-############################################################################
+#
+# Copyright 2023 The EA Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
 include_directories(${PROJECT_SOURCE_DIR})
 
@@ -36,25 +41,7 @@ set(TARGET_ARCH "native" CACHE STRING "Target architecture arguments")
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
     if (NOT WIN32 AND NOT ANDROID)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-parameter -Wextra -Wreorder")
-        # Users may override the c++ standard:
-        if(NOT DEFINED CMAKE_CXX_STANDARD OR "${CMAKE_CXX_STANDARD}" STREQUAL "")
-            if (ENABLE_XTL_COMPLEX)
-                CHECK_CXX_COMPILER_FLAG("-std=c++17" HAS_CPP14_FLAG)
-                if (NOT HAS_CPP14_FLAG)
-                    message(FATAL_ERROR "Unsupported compiler -- simd requires C++17 support when xtl complex support is enabled")
-                endif()
-                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-            else()
-                CHECK_CXX_COMPILER_FLAG("-std=c++11" HAS_CPP11_FLAG)
-                if (NOT HAS_CPP11_FLAG)
-                    message(FATAL_ERROR "Unsupported compiler -- simd requires C++11 support!")
-                else()
-                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-                endif()
-            endif()
-        endif()
-
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-parameter -Wextra -Wreorder -Wno-maybe-uninitialized")
         if (NOT CROSS_COMPILE_ARM)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fPIC")
         endif()
@@ -157,11 +144,10 @@ endif()
 
 add_executable(test_simd ${SIMD_TESTS})
 
-
 add_test(NAME test_simd COMMAND test_simd)
 
 if (CROSS_COMPILE_ARM)
-    add_custom_target(xtest COMMAND qemu-arm -L /usr/arm-linux-gnueabi/ test_simd DEPENDS test_simd)
+    add_custom_target(test COMMAND qemu-arm -L /usr/arm-linux-gnueabi/ test_simd DEPENDS test_simd)
 else()
     add_custom_target(xtest COMMAND test_simd DEPENDS test_simd)
 endif()
@@ -172,7 +158,7 @@ add_subdirectory(architectures)
 if(EMSCRIPTEN)
     set_target_properties(test_simd PROPERTIES LINK_FLAGS "-s MODULARIZE=1 -s EXPORT_NAME=test_simd_wasm -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -lembind")
     target_compile_options(test_simd
-        PUBLIC --std=c++14
+        PUBLIC --std=c++17
         PUBLIC "SHELL: -msimd128"
         PUBLIC "SHELL: -msse2"
     )

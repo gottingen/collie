@@ -1301,7 +1301,7 @@ namespace collie::simd {
         struct sized_batch;
 
         template<typename T, std::size_t N>
-        struct sized_batch<T, N, collie::simd::arch_list<>> {
+        struct sized_batch<T, N, collie::engine_list<>> {
             using type = void;
         };
 
@@ -1321,11 +1321,11 @@ namespace collie::simd {
         };
 
         template<typename T, std::size_t N, class Arch, class... Archs>
-        struct sized_batch<T, N, collie::simd::arch_list<Arch, Archs...>> {
+        struct sized_batch<T, N, collie::engine_list<Arch, Archs...>> {
             using type = typename std::conditional<
                     batch_trait<T, Arch>::size == N,
                     typename batch_trait<T, Arch>::type,
-                    typename sized_batch<T, N, collie::simd::arch_list<Archs...>>::type>::type;
+                    typename sized_batch<T, N, collie::engine_list<Archs...>>::type>::type;
         };
     }
 

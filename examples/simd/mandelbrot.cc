@@ -1,17 +1,17 @@
-/***************************************************************************
- * Copyright (c) Johan Mabille, Sylvain Corlay, Wolf Vollprecht and         *
- * Martin Renou                                                             *
- * Copyright (c) QuantStack                                                 *
- * Copyright (c) Serge Guelton                                              *
- *                                                                          *
- * Distributed under the terms of the BSD 3-Clause License.                 *
- *                                                                          *
- * The full license is in the file LICENSE, distributed with this software. *
- ****************************************************************************/
-
-// This file is derived from tsimd (MIT License)
-// https://github.com/ospray/tsimd/blob/master/benchmarks/mandelbrot.cpp
-// Author Jefferson Amstutz / intel
+// Copyright 2024 The Elastic-AI Authors.
+// part of Elastic AI Search
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
 #include <cstdio>
 #include <iostream>
@@ -260,7 +260,7 @@ struct run_archlist;
 // run simd version of mandelbrot benchmark for a list
 // of archs
 template <class... Arch>
-struct run_archlist<collie::simd::arch_list<Arch...>>
+struct run_archlist<collie::engine_list<Arch...>>
 {
     template <class bencher_t, size_t Align>
     static void run(
