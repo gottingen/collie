@@ -160,7 +160,7 @@ namespace collie {
         return piece1.size() == piece2.size() && func(piece1, piece2);
     }
 
-    bool str_equals_ignore_case(const wchar_t* lhs, const wchar_t* rhs) {
+    inline bool str_equals_ignore_case(const wchar_t* lhs, const wchar_t* rhs) {
         if (lhs == nullptr) return rhs == nullptr;
 
         if (rhs == nullptr) return false;
