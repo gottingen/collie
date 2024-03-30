@@ -42,5 +42,4 @@ namespace collie::tf {
     }
 
 
-}  // end of namespace collie::tf -----------------------------------------------------
-
+}  // namespace collie::tf

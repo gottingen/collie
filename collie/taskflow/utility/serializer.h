@@ -488,19 +488,19 @@ namespace collie::tf {
 
     };
 
-// Constructor
+    // Constructor
     template<typename Stream, typename SizeType>
     Serializer<Stream, SizeType>::Serializer(Stream &stream) : _stream(stream) {
     }
 
-// Operator ()
+    // Operator ()
     template<typename Stream, typename SizeType>
     template<typename... T>
     SizeType Serializer<Stream, SizeType>::operator()(T &&... items) {
         return (_save(std::forward<T>(items)) + ...);
     }
 
-// arithmetic data type
+    // arithmetic data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<std::is_arithmetic_v<std::decay_t<T>>, void> *
@@ -510,7 +510,7 @@ namespace collie::tf {
         return sizeof(t);
     }
 
-// std::basic_string
+    // std::basic_string
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_basic_string_v<std::decay_t<T>>, void> *
@@ -525,7 +525,7 @@ namespace collie::tf {
         return sz + t.size() * sizeof(typename U::value_type);
     }
 
-// std::vector
+    // std::vector
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_vector_v<std::decay_t<T>>, void> *
@@ -551,7 +551,7 @@ namespace collie::tf {
         return sz;
     }
 
-// std::list and std::deque
+    // std::list and std::deque
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_deque_v<std::decay_t<T>> ||
@@ -565,7 +565,7 @@ namespace collie::tf {
         return sz;
     }
 
-// std::forward_list
+    // std::forward_list
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_forward_list_v<std::decay_t<T>>, void> *
@@ -578,7 +578,7 @@ namespace collie::tf {
         return sz;
     }
 
-// std::map and std::unordered_map
+    // std::map and std::unordered_map
     template<typename Stream, typename SizeType>
     template<typename T, std::enable_if_t<
             is_std_map_v<std::decay_t<T>> ||
@@ -593,7 +593,7 @@ namespace collie::tf {
         return sz;
     }
 
-// std::set and std::unordered_set
+    // std::set and std::unordered_set
     template<typename Stream, typename SizeType>
     template<typename T, std::enable_if_t<
             is_std_set_v<std::decay_t<T>> ||
@@ -608,7 +608,7 @@ namespace collie::tf {
         return sz;
     }
 
-// enum data type
+    // enum data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<std::is_enum_v<std::decay_t<T>>, void> *
@@ -618,7 +618,7 @@ namespace collie::tf {
         return _save(static_cast<std::underlying_type_t<U>>(t));
     }
 
-// duration data type
+    // duration data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_duration_v<std::decay_t<T>>, void> *
@@ -627,7 +627,7 @@ namespace collie::tf {
         return _save(t.count());
     }
 
-// time point data type
+    // time point data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_time_point_v<std::decay_t<T>>, void> *
@@ -636,7 +636,7 @@ namespace collie::tf {
         return _save(t.time_since_epoch());
     }
 
-// optional data type
+    // optional data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_optional_v<std::decay_t<T>>, void> *
@@ -649,7 +649,7 @@ namespace collie::tf {
         }
     }
 
-// variant type
+    // variant type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_variant_v<std::decay_t<T>>, void> *
@@ -659,7 +659,7 @@ namespace collie::tf {
                std::visit([&](auto &&arg) { return _save(arg); }, t);
     }
 
-// tuple type
+    // tuple type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_tuple_v<std::decay_t<T>>, void> *
@@ -673,7 +673,7 @@ namespace collie::tf {
         );
     }
 
-// array
+    // array
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_array_v<std::decay_t<T>>, void> *
@@ -699,7 +699,7 @@ namespace collie::tf {
         return sz;
     }
 
-// custom save method
+    // custom save method
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<!is_default_serializable_v<std::decay_t<T>>, void> *
@@ -708,9 +708,9 @@ namespace collie::tf {
         return t.save(*this);
     }
 
-// ----------------------------------------------------------------------------
-// DeSerializer Definition
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // DeSerializer Definition
+    // ----------------------------------------------------------------------------
 
     template<typename T>
     constexpr auto is_default_deserializable_v =
@@ -847,26 +847,26 @@ namespace collie::tf {
         SizeType _load(T &&);
     };
 
-// Constructor
+    // Constructor
     template<typename Stream, typename SizeType>
     Deserializer<Stream, SizeType>::Deserializer(Stream &stream) : _stream(stream) {
     }
 
-// Operator ()
+    // Operator ()
     template<typename Stream, typename SizeType>
     template<typename... T>
     SizeType Deserializer<Stream, SizeType>::operator()(T &&... items) {
         return (_load(std::forward<T>(items)) + ...);
     }
 
-// Function: _variant_helper
+    // Function: _variant_helper
     template<typename Stream, typename SizeType>
     template<size_t I, typename... ArgsT, std::enable_if_t<I == sizeof...(ArgsT)> *>
     SizeType Deserializer<Stream, SizeType>::_variant_helper(size_t, std::variant<ArgsT...> &) {
         return 0;
     }
 
-// Function: _variant_helper
+    // Function: _variant_helper
     template<typename Stream, typename SizeType>
     template<size_t I, typename... ArgsT, std::enable_if_t<I < sizeof...(ArgsT)> *>
     SizeType Deserializer<Stream, SizeType>::_variant_helper(size_t i, std::variant<ArgsT...> &v) {
@@ -884,7 +884,7 @@ namespace collie::tf {
         return _variant_helper<I + 1, ArgsT...>(i - 1, v);
     }
 
-// arithmetic data type
+    // arithmetic data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<std::is_arithmetic_v<std::decay_t<T>>, void> *
@@ -894,7 +894,7 @@ namespace collie::tf {
         return sizeof(t);
     }
 
-// std::basic_string
+    // std::basic_string
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_basic_string_v<std::decay_t<T>>, void> *
@@ -908,7 +908,7 @@ namespace collie::tf {
         return sz + num_chars * sizeof(typename U::value_type);
     }
 
-// std::vector
+    // std::vector
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_vector_v<std::decay_t<T>>, void> *
@@ -934,7 +934,7 @@ namespace collie::tf {
         return sz;
     }
 
-// std::list and std::deque
+    // std::list and std::deque
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_deque_v<std::decay_t<T>> ||
@@ -954,7 +954,7 @@ namespace collie::tf {
         return sz;
     }
 
-// std::map
+    // std::map
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_map_v<std::decay_t<T>>, void> *
@@ -979,7 +979,7 @@ namespace collie::tf {
         return sz;
     }
 
-// std::unordered_map
+    // std::unordered_map
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_unordered_map_v<std::decay_t<T>>, void> *
@@ -1003,7 +1003,7 @@ namespace collie::tf {
         return sz;
     }
 
-// std::set
+    // std::set
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_set_v<std::decay_t<T>>, void> *
@@ -1027,7 +1027,7 @@ namespace collie::tf {
         return sz;
     }
 
-// std::unordered_set
+    // std::unordered_set
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_unordered_set_v<std::decay_t<T>>, void> *
@@ -1051,7 +1051,7 @@ namespace collie::tf {
         return sz;
     }
 
-// enum data type
+    // enum data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<std::is_enum_v<std::decay_t<T>>, void> *
@@ -1064,7 +1064,7 @@ namespace collie::tf {
         return sz;
     }
 
-// duration data type
+    // duration data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_duration_v<std::decay_t<T>>, void> *
@@ -1077,7 +1077,7 @@ namespace collie::tf {
         return s;
     }
 
-// time point data type
+    // time point data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_time_point_v<std::decay_t<T>>, void> *
@@ -1090,7 +1090,7 @@ namespace collie::tf {
         return s;
     }
 
-// optional data type
+    // optional data type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_optional_v<std::decay_t<T>>, void> *
@@ -1112,7 +1112,7 @@ namespace collie::tf {
         return s;
     }
 
-// variant type
+    // variant type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_variant_v<std::decay_t<T>>, void> *
@@ -1123,7 +1123,7 @@ namespace collie::tf {
         return s + _variant_helper(idx, t);
     }
 
-// tuple type
+    // tuple type
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_tuple_v<std::decay_t<T>>, void> *
@@ -1137,7 +1137,7 @@ namespace collie::tf {
         );
     }
 
-// array
+    // array
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<is_std_array_v<std::decay_t<T>>, void> *
@@ -1163,7 +1163,7 @@ namespace collie::tf {
         return sz;
     }
 
-// custom save method
+    // custom save method
     template<typename Stream, typename SizeType>
     template<typename T,
             std::enable_if_t<!is_default_deserializable_v<std::decay_t<T>>, void> *
