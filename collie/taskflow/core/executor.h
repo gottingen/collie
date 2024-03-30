@@ -26,43 +26,43 @@
 
 namespace collie::tf {
 
-// ----------------------------------------------------------------------------
-// Executor Definition
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Executor Definition
+    // ----------------------------------------------------------------------------
 
-/** @class Executor
+    /** @class Executor
 
-@brief class to create an executor for running a taskflow graph
+    @brief class to create an executor for running a taskflow graph
 
-An executor manages a set of worker threads to run one or multiple taskflows
-using an efficient work-stealing scheduling algorithm.
+    An executor manages a set of worker threads to run one or multiple taskflows
+    using an efficient work-stealing scheduling algorithm.
 
-@code{.cpp}
-// Declare an executor and a taskflow
-collie::tf::Executor executor;
-collie::tf::Taskflow taskflow;
+    @code{.cpp}
+    // Declare an executor and a taskflow
+    collie::tf::Executor executor;
+    collie::tf::Taskflow taskflow;
 
-// Add three tasks into the taskflow
-collie::tf::Task A = taskflow.emplace([] () { std::cout << "This is TaskA\n"; });
-collie::tf::Task B = taskflow.emplace([] () { std::cout << "This is TaskB\n"; });
-collie::tf::Task C = taskflow.emplace([] () { std::cout << "This is TaskC\n"; });
+    // Add three tasks into the taskflow
+    collie::tf::Task A = taskflow.emplace([] () { std::cout << "This is TaskA\n"; });
+    collie::tf::Task B = taskflow.emplace([] () { std::cout << "This is TaskB\n"; });
+    collie::tf::Task C = taskflow.emplace([] () { std::cout << "This is TaskC\n"; });
 
-// Build precedence between tasks
-A.precede(B, C);
+    // Build precedence between tasks
+    A.precede(B, C);
 
-collie::tf::Future<void> fu = executor.run(taskflow);
-fu.wait();                // block until the execution completes
+    collie::tf::Future<void> fu = executor.run(taskflow);
+    fu.wait();                // block until the execution completes
 
-executor.run(taskflow, [](){ std::cout << "end of 1 run"; }).wait();
-executor.run_n(taskflow, 4);
-executor.wait_for_all();  // block until all associated executions finish
-executor.run_n(taskflow, 4, [](){ std::cout << "end of 4 runs"; }).wait();
-executor.run_until(taskflow, [cnt=0] () mutable { return ++cnt == 10; });
-@endcode
+    executor.run(taskflow, [](){ std::cout << "end of 1 run"; }).wait();
+    executor.run_n(taskflow, 4);
+    executor.wait_for_all();  // block until all associated executions finish
+    executor.run_n(taskflow, 4, [](){ std::cout << "end of 4 runs"; }).wait();
+    executor.run_until(taskflow, [cnt=0] () mutable { return ++cnt == 10; });
+    @endcode
 
-All the @c run methods are @em thread-safe. You can submit multiple
-taskflows at the same time to an executor from different threads.
-*/
+    All the @c run methods are @em thread-safe. You can submit multiple
+    taskflows at the same time to an executor from different threads.
+    */
     class Executor {
 
         friend class FlowBuilder;
@@ -1794,7 +1794,7 @@ taskflows at the same time to an executor from different threads.
         // TODO: skip the exception that is not associated with any taskflows
     }
 
-// Procedure: _invoke_static_task
+    // Procedure: _invoke_static_task
     inline void Executor::_invoke_static_task(Worker &worker, Node *node) {
         _observer_prologue(worker, node);
         TF_EXECUTOR_EXCEPTION_HANDLER(worker, node, {
@@ -1814,7 +1814,7 @@ taskflows at the same time to an executor from different threads.
         _observer_epilogue(worker, node);
     }
 
-// Procedure: _invoke_subflow_task
+    // Procedure: _invoke_subflow_task
     inline void Executor::_invoke_subflow_task(Worker &w, Node *node) {
         _observer_prologue(w, node);
         TF_EXECUTOR_EXCEPTION_HANDLER(w, node, {
@@ -2100,7 +2100,7 @@ taskflows at the same time to an executor from different threads.
         return run_until(*itr, std::forward<P>(pred), std::forward<C>(c));
     }
 
-// Function: corun
+    // Function: corun
     template<typename T>
     void Executor::corun(T &target) {
 
@@ -2115,7 +2115,7 @@ taskflows at the same time to an executor from different threads.
         parent._process_exception();
     }
 
-// Function: corun_until
+    // Function: corun_until
     template<typename P>
     void Executor::corun_until(P &&predicate) {
 
@@ -2130,7 +2130,7 @@ taskflows at the same time to an executor from different threads.
         // TODO: exception?
     }
 
-// Procedure: _increment_topology
+    // Procedure: _increment_topology
     inline void Executor::_increment_topology() {
 #ifdef __cpp_lib_atomic_wait
         _num_topologies.fetch_add(1, std::memory_order_relaxed);
@@ -2140,7 +2140,7 @@ taskflows at the same time to an executor from different threads.
 #endif
     }
 
-// Procedure: _decrement_topology
+    // Procedure: _decrement_topology
     inline void Executor::_decrement_topology() {
 #ifdef __cpp_lib_atomic_wait
         if(_num_topologies.fetch_sub(1, std::memory_order_acq_rel) == 1) {
@@ -2154,7 +2154,7 @@ taskflows at the same time to an executor from different threads.
 #endif
     }
 
-// Procedure: wait_for_all
+    // Procedure: wait_for_all
     inline void Executor::wait_for_all() {
 #ifdef __cpp_lib_atomic_wait
         size_t n = _num_topologies.load(std::memory_order_acquire);
@@ -2168,7 +2168,7 @@ taskflows at the same time to an executor from different threads.
 #endif
     }
 
-// Function: _set_up_topology
+    // Function: _set_up_topology
     inline void Executor::_set_up_topology(Worker *worker, Topology *tpg) {
 
         // ---- under taskflow lock ----
@@ -2264,9 +2264,9 @@ taskflows at the same time to an executor from different threads.
         }
     }
 
-// ############################################################################
-// Forward Declaration: Subflow
-// ############################################################################
+    // ############################################################################
+    // Forward Declaration: Subflow
+    // ############################################################################
 
     inline void Subflow::join() {
 
@@ -2298,11 +2298,11 @@ taskflows at the same time to an executor from different threads.
         _joinable = false;
     }
 
-// ############################################################################
-// Forward Declaration: Runtime
-// ############################################################################
+    // ############################################################################
+    // Forward Declaration: Runtime
+    // ############################################################################
 
-// Procedure: schedule
+    // Procedure: schedule
     inline void Runtime::schedule(Task task) {
 
         auto node = task._node;
@@ -2317,21 +2317,21 @@ taskflows at the same time to an executor from different threads.
         _executor._schedule(_worker, node);
     }
 
-// Procedure: corun
+    // Procedure: corun
     template<typename T>
     void Runtime::corun(T &&target) {
         _executor._corun_graph(_worker, _parent, target.graph());
         _parent->_process_exception();
     }
 
-// Procedure: corun_until
+    // Procedure: corun_until
     template<typename P>
     void Runtime::corun_until(P &&predicate) {
         _executor._corun_until(_worker, std::forward<P>(predicate));
         // TODO: exception?
     }
 
-// Function: corun_all
+    // Function: corun_all
     inline void Runtime::corun_all() {
         _executor._corun_until(_worker, [this]() -> bool {
             return _parent->_join_counter.load(std::memory_order_acquire) == 0;
@@ -2339,18 +2339,18 @@ taskflows at the same time to an executor from different threads.
         _parent->_process_exception();
     }
 
-// Destructor
+    // Destructor
     inline Runtime::~Runtime() {
         _executor._corun_until(_worker, [this]() -> bool {
             return _parent->_join_counter.load(std::memory_order_acquire) == 0;
         });
     }
 
-// ------------------------------------
-// Runtime::silent_async series
-// ------------------------------------
+    // ------------------------------------
+    // Runtime::silent_async series
+    // ------------------------------------
 
-// Function: _silent_async
+    // Function: _silent_async
     template<typename P, typename F>
     void Runtime::_silent_async(Worker &w, P &&params, F &&f) {
 
@@ -2364,35 +2364,35 @@ taskflows at the same time to an executor from different threads.
         _executor._schedule(w, node);
     }
 
-// Function: silent_async
+    // Function: silent_async
     template<typename F>
     void Runtime::silent_async(F &&f) {
         _silent_async(*_executor._this_worker(), DefaultTaskParams{}, std::forward<F>(f));
     }
 
-// Function: silent_async
+    // Function: silent_async
     template<typename P, typename F>
     void Runtime::silent_async(P &&params, F &&f) {
         _silent_async(*_executor._this_worker(), std::forward<P>(params), std::forward<F>(f));
     }
 
-// Function: silent_async_unchecked
+    // Function: silent_async_unchecked
     template<typename F>
     void Runtime::silent_async_unchecked(F &&f) {
         _silent_async(_worker, DefaultTaskParams{}, std::forward<F>(f));
     }
 
-// Function: silent_async_unchecked
+    // Function: silent_async_unchecked
     template<typename P, typename F>
     void Runtime::silent_async_unchecked(P &&params, F &&f) {
         _silent_async(_worker, std::forward<P>(params), std::forward<F>(f));
     }
 
-// ------------------------------------
-// Runtime::async series
-// ------------------------------------
+    // ------------------------------------
+    // Runtime::async series
+    // ------------------------------------
 
-// Function: _async
+    // Function: _async
     template<typename P, typename F>
     auto Runtime::_async(Worker &w, P &&params, F &&f) {
 
@@ -2414,23 +2414,17 @@ taskflows at the same time to an executor from different threads.
         return fu;
     }
 
-// Function: async
+    // Function: async
     template<typename F>
     auto Runtime::async(F &&f) {
         return _async(*_executor._this_worker(), DefaultTaskParams{}, std::forward<F>(f));
     }
 
-// Function: async
+    // Function: async
     template<typename P, typename F>
     auto Runtime::async(P &&params, F &&f) {
         return _async(*_executor._this_worker(), std::forward<P>(params), std::forward<F>(f));
     }
 
 
-}  // end of namespace collie::tf -----------------------------------------------------
-
-
-
-
-
-
+}  // namespace collie::tf

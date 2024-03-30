@@ -134,36 +134,36 @@ A graph object is move-only.
         Node *_emplace_back(ArgsT &&...);
     };
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-/**
-@class Runtime
+    /**
+    @class Runtime
 
-@brief class to include a runtime object in a task
+    @brief class to include a runtime object in a task
 
-A runtime object allows users to interact with the
-scheduling runtime inside a task, such as scheduling an active task,
-spawning a subflow, and so on.
+    A runtime object allows users to interact with the
+    scheduling runtime inside a task, such as scheduling an active task,
+    spawning a subflow, and so on.
 
-@code{.cpp}
-collie::tf::Task A, B, C, D;
-std::tie(A, B, C, D) = taskflow.emplace(
-  [] () { return 0; },
-  [&C] (collie::tf::Runtime& rt) {  // C must be captured by reference
-    std::cout << "B\n";
-    rt.schedule(C);
-  },
-  [] () { std::cout << "C\n"; },
-  [] () { std::cout << "D\n"; }
-);
-A.precede(B, C, D);
-executor.run(taskflow).wait();
-@endcode
+    @code{.cpp}
+    collie::tf::Task A, B, C, D;
+    std::tie(A, B, C, D) = taskflow.emplace(
+      [] () { return 0; },
+      [&C] (collie::tf::Runtime& rt) {  // C must be captured by reference
+        std::cout << "B\n";
+        rt.schedule(C);
+      },
+      [] () { std::cout << "C\n"; },
+      [] () { std::cout << "D\n"; }
+    );
+    A.precede(B, C, D);
+    executor.run(taskflow).wait();
+    @endcode
 
-A runtime object is associated with the worker and the executor
-that runs the task.
+    A runtime object is associated with the worker and the executor
+    that runs the task.
 
-*/
+    */
     class Runtime {
 
         friend class Executor;
@@ -524,32 +524,32 @@ that runs the task.
         void _silent_async(Worker &w, P &&params, F &&f);
     };
 
-// constructor
+    // constructor
     inline Runtime::Runtime(Executor &e, Worker &w, Node *p) :
             _executor{e},
             _worker{w},
             _parent{p} {
     }
 
-// Function: executor
+    // Function: executor
     inline Executor &Runtime::executor() {
         return _executor;
     }
 
-// Function: worker
+    // Function: worker
     inline Worker &Runtime::worker() {
         return _worker;
     }
 
-// ----------------------------------------------------------------------------
-// TaskParams
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // TaskParams
+    // ----------------------------------------------------------------------------
 
-/**
-@struct TaskParams
+    /**
+    @struct TaskParams
 
-@brief task parameters to use when creating an asynchronous task
-*/
+    @brief task parameters to use when creating an asynchronous task
+    */
     struct TaskParams {
         /**
         @brief name of the task
@@ -567,35 +567,35 @@ that runs the task.
         void *data{nullptr};
     };
 
-/**
-@struct DefaultTaskParams
+    /**
+    @struct DefaultTaskParams
 
-@brief empty task parameter type for compile-time optimization
-*/
+    @brief empty task parameter type for compile-time optimization
+    */
     struct DefaultTaskParams {
     };
 
-/**
-@brief determines if the given type is a task parameter type
+    /**
+    @brief determines if the given type is a task parameter type
 
-Task parameters can be specified in one of the following types:
-  + collie::tf::TaskParams: assign the struct of defined parameters
-  + collie::tf::DefaultTaskParams: assign nothing
-  + std::string: assign a name to the task
-*/
+    Task parameters can be specified in one of the following types:
+      + collie::tf::TaskParams: assign the struct of defined parameters
+      + collie::tf::DefaultTaskParams: assign nothing
+      + std::string: assign a name to the task
+    */
     template<typename P>
     constexpr bool is_task_params_v =
             std::is_same_v<std::decay_t<P>, TaskParams> ||
             std::is_same_v<std::decay_t<P>, DefaultTaskParams> ||
             std::is_constructible_v<std::string, P>;
 
-// ----------------------------------------------------------------------------
-// Node
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Node
+    // ----------------------------------------------------------------------------
 
-/**
-@private
-*/
+    /**
+    @private
+    */
     class Node {
 
         friend class Graph;
@@ -801,83 +801,83 @@ Task parameters can be specified in one of the following types:
         InlinedVector<Node *> _release_all();
     };
 
-// ----------------------------------------------------------------------------
-// Node Object Pool
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Node Object Pool
+    // ----------------------------------------------------------------------------
 
-/**
-@private
-*/
+    /**
+    @private
+    */
     inline ObjectPool<Node> node_pool;
 
-// ----------------------------------------------------------------------------
-// Definition for Node::Static
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Definition for Node::Static
+    // ----------------------------------------------------------------------------
 
-// Constructor
+    // Constructor
     template<typename C>
     Node::Static::Static(C &&c) : work{std::forward<C>(c)} {
     }
 
-// ----------------------------------------------------------------------------
-// Definition for Node::Subflow
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Definition for Node::Subflow
+    // ----------------------------------------------------------------------------
 
-// Constructor
+    // Constructor
     template<typename C>
     Node::Subflow::Subflow(C &&c) : work{std::forward<C>(c)} {
     }
 
-// ----------------------------------------------------------------------------
-// Definition for Node::Condition
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Definition for Node::Condition
+    // ----------------------------------------------------------------------------
 
-// Constructor
+    // Constructor
     template<typename C>
     Node::Condition::Condition(C &&c) : work{std::forward<C>(c)} {
     }
 
-// ----------------------------------------------------------------------------
-// Definition for Node::MultiCondition
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Definition for Node::MultiCondition
+    // ----------------------------------------------------------------------------
 
-// Constructor
+    // Constructor
     template<typename C>
     Node::MultiCondition::MultiCondition(C &&c) : work{std::forward<C>(c)} {
     }
 
-// ----------------------------------------------------------------------------
-// Definition for Node::Module
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Definition for Node::Module
+    // ----------------------------------------------------------------------------
 
-// Constructor
+    // Constructor
     template<typename T>
     inline Node::Module::Module(T &obj) : graph{obj.graph()} {
     }
 
-// ----------------------------------------------------------------------------
-// Definition for Node::Async
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Definition for Node::Async
+    // ----------------------------------------------------------------------------
 
-// Constructor
+    // Constructor
     template<typename C>
     Node::Async::Async(C &&c) : work{std::forward<C>(c)} {
     }
 
-// ----------------------------------------------------------------------------
-// Definition for Node::DependentAsync
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Definition for Node::DependentAsync
+    // ----------------------------------------------------------------------------
 
-// Constructor
+    // Constructor
     template<typename C>
     Node::DependentAsync::DependentAsync(C &&c) : work{std::forward<C>(c)} {
     }
 
-// ----------------------------------------------------------------------------
-// Definition for Node
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Definition for Node
+    // ----------------------------------------------------------------------------
 
-// Constructor
+    // Constructor
     template<typename... Args>
     Node::Node(
             const std::string &name,
@@ -895,7 +895,7 @@ Task parameters can be specified in one of the following types:
             _handle{std::forward<Args>(args)...} {
     }
 
-// Constructor
+    // Constructor
     template<typename... Args>
     Node::Node(
             const std::string &name,
@@ -911,7 +911,7 @@ Task parameters can be specified in one of the following types:
             _handle{std::forward<Args>(args)...} {
     }
 
-// Constructor
+    // Constructor
     template<typename... Args>
     Node::Node(
             const TaskParams &params,
@@ -929,7 +929,7 @@ Task parameters can be specified in one of the following types:
             _handle{std::forward<Args>(args)...} {
     }
 
-// Constructor
+    // Constructor
     template<typename... Args>
     Node::Node(
             const DefaultTaskParams &,

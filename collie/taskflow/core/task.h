@@ -730,12 +730,12 @@ namespace collie::tf {
         return _node.num_dependents();
     }
 
-// Function: num_strong_dependents
+    // Function: num_strong_dependents
     inline size_t TaskView::num_strong_dependents() const {
         return _node.num_strong_dependents();
     }
 
-// Function: num_weak_dependents
+    // Function: num_weak_dependents
     inline size_t TaskView::num_weak_dependents() const {
         return _node.num_weak_dependents();
     }
@@ -794,11 +794,11 @@ namespace collie::tf {
 
 namespace std {
 
-/**
-@struct hash
+    /**
+    @struct hash
 
-@brief hash specialization for std::hash<collie::tf::Task>
-*/
+    @brief hash specialization for std::hash<collie::tf::Task>
+    */
     template<>
     struct hash<collie::tf::Task> {
         auto operator()(const collie::tf::Task &task) const noexcept {
@@ -806,11 +806,11 @@ namespace std {
         }
     };
 
-/**
-@struct hash
+    /**
+    @struct hash
 
-@brief hash specialization for std::hash<collie::tf::TaskView>
-*/
+    @brief hash specialization for std::hash<collie::tf::TaskView>
+    */
     template<>
     struct hash<collie::tf::TaskView> {
         auto operator()(const collie::tf::TaskView &task_view) const noexcept {
