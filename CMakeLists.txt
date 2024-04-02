@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 3.15)
 
 project(collie CXX)
 
-set(PROJECT_DESCRIPTION "Hercules is an ahead of time compiler for a subset of the Python language framework.")
+set(PROJECT_DESCRIPTION "collie is a header only c++ libaray.")
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 1)
 set(PROJECT_VERSION_PATCH 5)
@@ -40,6 +40,7 @@ set(CARBIN_DEPS_PREFIX ${PROJECT_SOURCE_DIR}/carbin)
 # warning
 # in carbin_cmake directory, caution to modify files in that dir
 ######################################################################
+option(CARBIN_ENABLE_INSTALL "Enable installation of carbin" ON)
 include(carbin_module)
 
 ##################################################################
@@ -68,13 +69,15 @@ endif ()
 ##############################################
 # header installing
 #############################################
-install(DIRECTORY ${PROJECT_NAME}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        FILES_MATCHING
-        PATTERN "*.inc"
-        PATTERN "*.h"
-        )
+if (CARBIN_ENABLE_INSTALL)
 
+    install(DIRECTORY ${PROJECT_NAME}
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            FILES_MATCHING
+            PATTERN "*.inc"
+            PATTERN "*.h"
+    )
+endif ()
 # Layout. This works for all platforms:
 #   * <prefix>/lib*/cmake/<PROJECT-NAME>
 #   * <prefix>/lib*/
@@ -95,19 +98,22 @@ include(CMakePackageConfigHelpers)
 # Configure '<PROJECT-NAME>ConfigVersion.cmake'
 # Use:
 #   * PROJECT_VERSION
+if (CARBIN_ENABLE_INSTALL)
 write_basic_package_version_file(
         "${version_config}" COMPATIBILITY SameMajorVersion
 )
-
+endif ()
 # Configure '<PROJECT-NAME>Config.cmake'
 # Use variables:
 #   * TARGETS_EXPORT_NAME
 #   * PROJECT_NAME
+if (CARBIN_ENABLE_INSTALL)
 configure_package_config_file(
         "carbin_cmake/package/carbin_config.cmake.in"
         "${project_config}"
         INSTALL_DESTINATION "${config_install_dir}"
 )
+endif ()
 
 #Targets:
 #  * <prefix>/lib/libbar.a
@@ -119,21 +125,24 @@ configure_package_config_file(
 # Config
 #   * <prefix>/lib/cmake/Foo/FooConfig.cmake
 #   * <prefix>/lib/cmake/Foo/FooConfigVersion.cmake
-install(
-        FILES
-        "${project_config}" "${version_config}"
-        DESTINATION
-        "${config_install_dir}"
-)
-
+if (CARBIN_ENABLE_INSTALL)
+    install(
+            FILES
+            "${project_config}" "${version_config}"
+            DESTINATION
+            "${config_install_dir}"
+    )
+endif ()
 # Config
 #   * <prefix>/lib/cmake/Foo/FooTargets.cmake
+if (CARBIN_ENABLE_INSTALL)
+    install(
+            EXPORT
+            "${TARGETS_EXPORT_NAME}"
+            NAMESPACE
+            "${namespace}"
+            DESTINATION
+            "${config_install_dir}"
+    )
+endif ()
 
-install(
-        EXPORT
-        "${TARGETS_EXPORT_NAME}"
-        NAMESPACE
-        "${namespace}"
-        DESTINATION
-        "${config_install_dir}"
-)

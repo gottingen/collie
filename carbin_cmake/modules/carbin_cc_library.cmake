@@ -200,7 +200,7 @@ function(carbin_cc_library)
 
     endif ()
 
-    if (CARBIN_CC_LIB_PUBLIC)
+    if (CARBIN_CC_LIB_PUBLIC AND CARBIN_ENABLE_INSTALL)
         if (CARBIN_CC_LIB_SHARED)
             install(TARGETS ${CARBIN_CC_LIB_NAME}_SHARED
                     EXPORT ${PROJECT_NAME}Targets

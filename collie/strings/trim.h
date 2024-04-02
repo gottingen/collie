@@ -19,6 +19,7 @@
 
 #include <collie/strings/ascii.h>
 #include <collie/strings/case_conv.h>
+#include <collie/strings/match.h>
 
 namespace collie {
 
@@ -233,6 +234,30 @@ namespace collie {
         }
 
         str->erase(static_cast<size_t>(output_it - &(*str)[0]));
+    }
+
+    inline bool consume_prefix(std::string_view *str, std::string_view expected) {
+        if (!starts_with(*str, expected)) return false;
+        str->remove_prefix(expected.size());
+        return true;
+    }
+
+    inline bool consume_suffix(std::string_view *str, std::string_view expected) {
+        if (!ends_with(*str, expected)) return false;
+        str->remove_suffix(expected.size());
+        return true;
+    }
+
+    [[nodiscard]] inline std::string_view strip_prefix(
+            std::string_view str, std::string_view prefix) {
+        if (starts_with(str, prefix)) str.remove_prefix(prefix.size());
+        return str;
+    }
+
+    [[nodiscard]] inline std::string_view strip_suffix(
+            std::string_view str, std::string_view suffix) {
+        if (ends_with(str, suffix)) str.remove_suffix(suffix.size());
+        return str;
     }
 
 }  // namespace collie

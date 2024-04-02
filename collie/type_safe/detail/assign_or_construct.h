@@ -1,40 +1,39 @@
-// Copyright (C) 2016-2020 Jonathan Müller <jonathanmueller.dev@gmail.com>
-// This file is subject to the license terms in the LICENSE file
-// found in the top-level directory of this distribution.
+// Copyright 2024 The Elastic-AI Authors.
+// part of Elastic AI Search
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+//
 
-#ifndef TYPE_SAFE_DETAIL_ASSIGN_OR_CONSTRUCT_HPP_INCLUDED
-#define TYPE_SAFE_DETAIL_ASSIGN_OR_CONSTRUCT_HPP_INCLUDED
+#pragma once
 
-#if defined(TYPE_SAFE_IMPORT_STD_MODULE)
-import std;
-#else
 #include <type_traits>
-#endif
 
-namespace collie::ts
-{
-namespace detail
-{
+namespace collie::ts::detail {
     // std::is_assignable but without user-defined conversions
-    template <typename T, typename Arg>
-    struct is_direct_assignable
-    {
-        template <typename U>
-        struct consume_udc
-        {
+    template<typename T, typename Arg>
+    struct is_direct_assignable {
+        template<typename U>
+        struct consume_udc {
             operator U() const;
         };
 
-        template <typename U>
-        static std::true_type check(decltype(std::declval<T&>() = std::declval<consume_udc<U>>(),
-                                             0)*);
+        template<typename U>
+        static std::true_type check(decltype(std::declval<T &>() = std::declval<consume_udc<U>>(),
+                0) *);
 
-        template <typename U>
+        template<typename U>
         static std::false_type check(...);
 
         static constexpr bool value = decltype(check<Arg>(0))::value;
     };
-} // namespace detail
-} // namespace collie::ts
-
-#endif // TYPE_SAFE_DETAIL_ASSIGN_OR_CONSTRUCT_HPP_INCLUDED
+} // namespace collie::ts::detail

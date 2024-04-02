@@ -1359,7 +1359,7 @@ namespace collie {
                                       collie::debug_assert::default_handler {
         };
         static inline void report_size_overflow(size_t MinSize, size_t MaxSize) {
-            std::string Reason = "SmallVector unable to grow. Requested capacity (" +
+            std::string Reason = "InlinedVector unable to grow. Requested capacity (" +
                                  std::to_string(MinSize) +
                                  ") is larger than maximum value for size type (" +
                                  std::to_string(MaxSize) + ")";
@@ -1368,7 +1368,7 @@ namespace collie {
 
         static inline void report_at_maximum_capacity(size_t MaxSize) {
             std::string Reason =
-                    "SmallVector capacity unable to grow. Already at maximum size " +
+                    "InlinedVector capacity unable to grow. Already at maximum size " +
                     std::to_string(MaxSize);
             DEBUG_ASSERT(false,  detail::overflow_assert_handler{}, Reason);
         }

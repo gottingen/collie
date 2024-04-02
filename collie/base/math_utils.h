@@ -103,19 +103,19 @@ namespace collie {
 
     /// Reverse the bits in \p Val.
     template <typename T> T reverseBits(T Val) {
-#if __has_builtin(__builtin_bitreverse8)
+#if COLLIE_HAS_BUILTIN(__builtin_bitreverse8)
         if constexpr (std::is_same_v<T, uint8_t>)
     return __builtin_bitreverse8(Val);
 #endif
-#if __has_builtin(__builtin_bitreverse16)
+#if COLLIE_HAS_BUILTIN(__builtin_bitreverse16)
         if constexpr (std::is_same_v<T, uint16_t>)
     return __builtin_bitreverse16(Val);
 #endif
-#if __has_builtin(__builtin_bitreverse32)
+#if COLLIE_HAS_BUILTIN(__builtin_bitreverse32)
         if constexpr (std::is_same_v<T, uint32_t>)
     return __builtin_bitreverse32(Val);
 #endif
-#if __has_builtin(__builtin_bitreverse64)
+#if COLLIE_HAS_BUILTIN(__builtin_bitreverse64)
         if constexpr (std::is_same_v<T, uint64_t>)
     return __builtin_bitreverse64(Val);
 #endif
@@ -567,7 +567,7 @@ namespace collie {
     /// returning true if overflow occurred.
     template <typename T>
     std::enable_if_t<std::is_signed_v<T>, T> AddOverflow(T X, T Y, T &Result) {
-#if __has_builtin(__builtin_add_overflow)
+#if COLLIE_HAS_BUILTIN(__builtin_add_overflow)
         return __builtin_add_overflow(X, Y, &Result);
 #else
         // Perform the unsigned addition.
@@ -593,7 +593,7 @@ namespace collie {
     /// result, returning true if an overflow ocurred.
     template <typename T>
     std::enable_if_t<std::is_signed_v<T>, T> SubOverflow(T X, T Y, T &Result) {
-#if __has_builtin(__builtin_sub_overflow)
+#if COLLIE_HAS_BUILTIN(__builtin_sub_overflow)
         return __builtin_sub_overflow(X, Y, &Result);
 #else
         // Perform the unsigned addition.
