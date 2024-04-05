@@ -20,7 +20,7 @@
 #include <collie/base/macros.h>
 #include <system_error>
 
-namespace clog {
+namespace clog::details {
 
 #ifdef NDEBUG
     static constexpr bool debug_mode = false;
@@ -88,12 +88,12 @@ namespace clog {
     }
 
     template<typename T>
-    void make_check_op_value_string(memory_buf_t *stream, const T &v) {
+    inline void make_check_op_value_string(memory_buf_t *stream, const T &v) {
         collie::format_to(collie::appender(*stream), "{}", v);
     }
 
     template<>
-    void make_check_op_value_string(memory_buf_t *stream, const char &v) {
+    inline void make_check_op_value_string(memory_buf_t *stream, const char &v) {
         if (v >= 32 && v <= 126) {
             collie::format_to(collie::appender(*stream), "{}", v);
         } else {
@@ -102,7 +102,7 @@ namespace clog {
     }
 
     template<>
-    void make_check_op_value_string(memory_buf_t *stream, const signed char &v) {
+    inline void make_check_op_value_string(memory_buf_t *stream, const signed char &v) {
         if (v >= 32 && v <= 126) {
             collie::format_to(collie::appender(*stream), "{}", v);
         } else {
@@ -111,7 +111,7 @@ namespace clog {
     }
 
     template<>
-    void make_check_op_value_string(memory_buf_t *stream, const unsigned char &v) {
+    inline void make_check_op_value_string(memory_buf_t *stream, const unsigned char &v) {
         if (v >= 32 && v <= 126) {
             collie::format_to(collie::appender(*stream), "{}", v);
         } else {
@@ -120,7 +120,7 @@ namespace clog {
     }
 
     template<>
-    void make_check_op_value_string(memory_buf_t *stream, const std::nullptr_t &) {
+    inline void make_check_op_value_string(memory_buf_t *stream, const std::nullptr_t &) {
         collie::format_to(collie::appender(*stream), "nullptr");
     }
 
@@ -198,7 +198,7 @@ namespace clog {
         return t;
     }
 
-}  // namespace clog
+}  // namespace clog:details
 
 #define IS_VLOG_ON_LOGGER(verboselevel, logger) ((logger)->vlog_level() > (verboselevel))
 #define IS_VLOG_ON(verboselevel) IS_VLOG_ON_LOGGER(verboselevel, clog::default_logger_raw())
@@ -211,14 +211,14 @@ namespace clog {
 
 #ifndef CLOG_NO_SOURCE_LOC
 #define COLLIE_LOG_LOGGER_STREAM(logger, level, pl) \
-        !logger->should_log(level) ? (void)0 : clog::LogMessageVoidify()&clog::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, level)
+        !logger->should_log(level) ? (void)0 : clog::details::LogMessageVoidify()&clog::details::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, level)
 #else
 #define COLLIE_LOG_LOGGER_STREAM(logger, level) \
         clog::LogStream((logger), clog::source_loc{}, level)
 #endif
 
 #define COLLIE_LOG_LOGGER_NULL_STREAM() \
-        clog::NullStream((nullptr), clog::source_loc{}, clog::level::trace)
+        clog::details::NullStream((nullptr), clog::source_loc{}, clog::level::trace)
 
 #define COLLIE_LOG_TRACE(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, clog::level::trace, pl)
 #define COLLIE_LOG_DEBUG(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, clog::level::debug, pl)
@@ -231,19 +231,19 @@ namespace clog {
 #define COLLIE_LOGGER_IF_CALL_EVERY_N(SEVERITY, N, condition, logger, pl) \
         static ::clog::details::LogEveryNState COLLIE_CONCAT(everyn_, __LINE__); \
         if(COLLIE_CONCAT(everyn_, __LINE__).should_log((N)) && logger->should_log(static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY)) && (condition)) \
-            clog::LogMessageVoidify()&clog::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY))
+            clog::details::LogMessageVoidify()&clog::details::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY))
 
 #define COLLIE_LOGGER_IF_CALL_FIRST_N(SEVERITY, N, condition, logger, pl) \
         static ::clog::details::LogFirstNState COLLIE_CONCAT(firstn_, __LINE__); \
         if(COLLIE_CONCAT(firstn_, __LINE__).should_log((N)) && logger->should_log(static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY)) && (condition)) \
-            clog::LogMessageVoidify()&clog::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY))
+            clog::details::LogMessageVoidify()&clog::details::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY))
 
 #define COLLIE_LOGGER_IF_CALL_DURATION(SEVERITY, seconds, condition, logger, pl) \
         constexpr size_t COLLIE_CONCAT(LOG_TIME_PERIOD, __LINE__) =                         \
         std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(seconds)).count(); \
         static ::clog::details::LogEveryNDurationState<COLLIE_CONCAT(LOG_TIME_PERIOD, __LINE__)> COLLIE_CONCAT(every_t_, __LINE__); \
         if(COLLIE_CONCAT(every_t_, __LINE__).should_log() && logger->should_log(static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY)) && (condition)) \
-            clog::LogMessageVoidify()&clog::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY))
+            clog::details::LogMessageVoidify()&clog::details::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY))
 
 #define COLLIE_LOG_IMPL(SEVERITY, logger, pl) COLLIE_LOG_##SEVERITY(logger, pl)
 
@@ -310,12 +310,12 @@ DEFINE_CHECK_OP_IMPL(Check_GT, >)
 #undef DEFINE_CHECK_OP_IMPL
 
 #define CHECK_OP_IMPL_LOGGER(name, op, val1, val2, logger) \
-  if(!Check##name##Impl(clog::get_referenceable_value(val1), clog::get_referenceable_value(val2))) \
-    LOG_LOGGER(FATAL, logger) << clog::MakeCheckOpString(val1, val2, #val1 " " #op " " #val2)
+  if(!Check##name##Impl(clog::details::get_referenceable_value(val1), clog::details::get_referenceable_value(val2))) \
+    LOG_LOGGER(FATAL, logger) << clog::details::MakeCheckOpString(val1, val2, #val1 " " #op " " #val2)
 
 #define PCHECK_OP_IMPL_LOGGER(name, op, val1, val2, logger) \
-  if(!Check##name##Impl(clog::get_referenceable_value(val1), clog::get_referenceable_value(val2))) \
-    PLOG_LOGGER(FATAL, logger) << clog::MakeCheckOpString(val1, val2, #val1 " " #op " " #val2)
+  if(!Check##name##Impl(clog::details::get_referenceable_value(val1), clog::details::get_referenceable_value(val2))) \
+    PLOG_LOGGER(FATAL, logger) << clog::details::MakeCheckOpString(val1, val2, #val1 " " #op " " #val2)
 
 #define CHECK_OP_LOGGER(name, op, val1, val2, logger) \
   CHECK_OP_IMPL_LOGGER(name, op, val1, val2, logger)
@@ -483,8 +483,8 @@ DEFINE_CHECK_OP_IMPL(Check_GT, >)
 #define DLOG_IF_ONCE(SEVERITY, condition)             LOG_LOGGER_IF_ONCE(SEVERITY, (condition), clog::default_logger_raw())
 
 #define DCHECK(condition) DCHECK_LOGGER(condition, clog::default_logger_raw())
-#define DCHECK_NOTNULL(val, logger) DCHECK_NOTNULL_LOGGER(val, clog::default_logger_raw())
-#define DCHECK_PTREQ(val1, val2, logger) DCHECK_PTREQ(val1, val2, clog::default_logger_raw())
+#define DCHECK_NOTNULL(val) DCHECK_NOTNULL_LOGGER(val, clog::default_logger_raw())
+#define DCHECK_PTREQ(val1, val2) DCHECK_PTREQ_LOGGER(val1, val2, clog::default_logger_raw())
 #define DCHECK_EQ(val1, val2) CHECK_EQ_LOGGER(val1, val2, clog::default_logger_raw())
 #define DCHECK_NE(val1, val2) CHECK_NE_LOGGER(val1, val2, clog::default_logger_raw())
 #define DCHECK_LE(val1, val2) CHECK_LE_LOGGER(val1, val2, clog::default_logger_raw())
@@ -504,8 +504,8 @@ DEFINE_CHECK_OP_IMPL(Check_GT, >)
 #define DPLOG_IF_ONCE(SEVERITY, condition)               PLOG_LOGGER_IF_ONCE(SEVERITY, (condition), clog::default_logger_raw())
 
 #define DPCHECK(condition) DPCHECK_LOGGER(condition, clog::default_logger_raw())
-#define DPCHECK_NOTNULL(val, logger) DPCHECK_NOTNULL_LOGGER(val, clog::default_logger_raw())
-#define DPCHECK_PTREQ(val1, val2, logger) DPCHECK_PTREQ_LOGGER(val1, val2, clog::default_logger_raw())
+#define DPCHECK_NOTNULL(val) DPCHECK_NOTNULL_LOGGER(val, clog::default_logger_raw())
+#define DPCHECK_PTREQ(val1, val2) DPCHECK_PTREQ_LOGGER(val1, val2, clog::default_logger_raw())
 #define DPCHECK_EQ(val1, val2) PCHECK_EQ_LOGGER(val1, val2, clog::default_logger_raw())
 #define DPCHECK_NE(val1, val2) PCHECK_NE_LOGGER(val1, val2, clog::default_logger_raw())
 #define DPCHECK_LE(val1, val2) PCHECK_LE_LOGGER(val1, val2, clog::default_logger_raw())
