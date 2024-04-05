@@ -77,6 +77,8 @@ namespace clog {
 
             void set_level(level::level_enum log_level);
 
+            void set_vlog_level(int vlevel);
+
             void flush_on(level::level_enum log_level);
 
             template<typename Rep, typename Period>
@@ -127,6 +129,7 @@ namespace clog {
             log_levels log_levels_;
             std::unique_ptr<formatter> formatter_;
             clog::level::level_enum global_log_level_ = level::info;
+            clog::level_t global_vlog_leve_{0};
             level::level_enum flush_level_ = level::off;
             err_handler err_handler_;
             std::shared_ptr<thread_pool> tp_;
