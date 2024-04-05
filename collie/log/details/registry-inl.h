@@ -162,6 +162,14 @@ inline void registry::set_level(level::level_enum log_level) {
     global_log_level_ = log_level;
 }
 
+inline void registry::set_vlog_level(int vlevel) {
+    std::lock_guard<std::mutex> lock(logger_map_mutex_);
+    for (auto &l : loggers_) {
+        l.second->set_vlog_level(vlevel);
+    }
+    global_vlog_leve_.store(vlevel);
+}
+
 inline void registry::flush_on(level::level_enum log_level) {
     std::lock_guard<std::mutex> lock(logger_map_mutex_);
     for (auto &l : loggers_) {
