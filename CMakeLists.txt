@@ -39,8 +39,12 @@ set(CARBIN_DEPS_PREFIX ${PROJECT_SOURCE_DIR}/carbin)
 #######################################################################
 # warning
 # in carbin_cmake directory, caution to modify files in that dir
-######################################################################
-option(CARBIN_ENABLE_INSTALL "Enable installation of carbin" ON)
+#####################################################################
+set(MAIN_PROJECT OFF)
+if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${PROJECT_SOURCE_DIR})
+    set(MAIN_PROJECT ON)
+endif ()
+option(CARBIN_ENABLE_INSTALL "Enable installation of carbin" ${MAIN_PROJECT})
 include(carbin_module)
 
 ##################################################################
@@ -76,6 +80,7 @@ if (CARBIN_ENABLE_INSTALL)
             FILES_MATCHING
             PATTERN "*.inc"
             PATTERN "*.h"
+            PATTERN "*.hpp"
     )
 endif ()
 # Layout. This works for all platforms:

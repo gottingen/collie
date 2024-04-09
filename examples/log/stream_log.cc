@@ -221,5 +221,8 @@ int main() {
         }
         VLOG_ONCE(1) << s;
     }
+    clog::default_logger()->set_pattern("%v");
+    LOG(INFO) << "Hello, World!" << " jeff is here";
+    LOG(WARN) << "Hello, World!" << " jeff is here";
     return 0;
 }
