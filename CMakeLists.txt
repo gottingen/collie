@@ -23,8 +23,8 @@ project(collie CXX)
 
 set(PROJECT_DESCRIPTION "collie is a header only c++ libaray.")
 set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 1)
-set(PROJECT_VERSION_PATCH 5)
+set(PROJECT_VERSION_MINOR 2)
+set(PROJECT_VERSION_PATCH 15)
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 set(CARBIN_VERSION 0.2.0)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake)
@@ -77,10 +77,6 @@ if (CARBIN_ENABLE_INSTALL)
 
     install(DIRECTORY ${PROJECT_NAME}
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-            FILES_MATCHING
-            PATTERN "*.inc"
-            PATTERN "*.h"
-            PATTERN "*.hpp"
     )
 endif ()
 # Layout. This works for all platforms:
