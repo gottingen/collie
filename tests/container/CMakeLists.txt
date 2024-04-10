@@ -21,3 +21,10 @@ carbin_cc_test(
         SOURCES iterator_test.cc
         COPTS ${USER_CXX_FLAGS}
 )
+
+carbin_cc_test(
+        NAME fifo_map_test
+        SOURCES fifo_map_test.cc
+        COPTS ${USER_CXX_FLAGS}
+)
+

@@ -23,8 +23,8 @@ project(collie CXX)
 
 set(PROJECT_DESCRIPTION "collie is a header only c++ libaray.")
 set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 1)
-set(PROJECT_VERSION_PATCH 5)
+set(PROJECT_VERSION_MINOR 2)
+set(PROJECT_VERSION_PATCH 17)
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 set(CARBIN_VERSION 0.2.0)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake)
@@ -39,8 +39,12 @@ set(CARBIN_DEPS_PREFIX ${PROJECT_SOURCE_DIR}/carbin)
 #######################################################################
 # warning
 # in carbin_cmake directory, caution to modify files in that dir
-######################################################################
-option(CARBIN_ENABLE_INSTALL "Enable installation of carbin" ON)
+#####################################################################
+set(MAIN_PROJECT OFF)
+if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${PROJECT_SOURCE_DIR})
+    set(MAIN_PROJECT ON)
+endif ()
+option(CARBIN_ENABLE_INSTALL "Enable installation of carbin" ${MAIN_PROJECT})
 include(carbin_module)
 
 ##################################################################
@@ -73,16 +77,13 @@ if (CARBIN_ENABLE_INSTALL)
 
     install(DIRECTORY ${PROJECT_NAME}
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-            FILES_MATCHING
-            PATTERN "*.inc"
-            PATTERN "*.h"
     )
 endif ()
 # Layout. This works for all platforms:
 #   * <prefix>/lib*/cmake/<PROJECT-NAME>
 #   * <prefix>/lib*/
 #   * <prefix>/include/
-set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/carbin_cmake/${PROJECT_NAME}")
+set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 

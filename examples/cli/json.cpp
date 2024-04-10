@@ -7,7 +7,7 @@
 #include <collie/cli/cli.h>
 #include <iostream>
 #include <memory>
-#include <nlohmann/json.hpp>
+#include <collie/nlohmann/json.hpp>
 #include <string>
 #include <vector>
 
