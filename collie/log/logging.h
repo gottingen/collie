@@ -263,7 +263,7 @@ namespace clog::details {
 #define PLOG_LOGGER_IF(SEVERITY, condition, logger) if((condition)) COLLIE_LOG_IMPL(SEVERITY, logger, true)
 #define PLOG_LOGGER_EVERY_N(SEVERITY, N, logger) COLLIE_LOGGER_IF_CALL_EVERY_N(SEVERITY, (N), (true), logger, true)
 #define PLOG_LOGGER_IF_EVERY_N(SEVERITY, N, condition, logger) COLLIE_LOGGER_IF_CALL_EVERY_N(SEVERITY, (N), (condition), logger, true)
-#define PLOG_LOGGER_FIRST_N(SEVERITY, N, condition, logger) COLLIE_LOGGER_IF_CALL_FIRST_N(SEVERITY, (N), true, logger, true)
+#define PLOG_LOGGER_FIRST_N(SEVERITY, N, logger) COLLIE_LOGGER_IF_CALL_FIRST_N(SEVERITY, (N), true, logger, true)
 #define PLOG_LOGGER_IF_FIRST_N(SEVERITY, N, condition, logger) COLLIE_LOGGER_IF_CALL_FIRST_N(SEVERITY, (N), (condition), logger, true)
 #define PLOG_LOGGER_EVERY_T(SEVERITY, seconds, logger) COLLIE_LOGGER_IF_CALL_DURATION(SEVERITY, (seconds), (true), logger, true)
 #define PLOG_LOGGER_IF_EVERY_T(SEVERITY, seconds, condition, logger) COLLIE_LOGGER_IF_CALL_DURATION(SEVERITY, (seconds), (condition), logger, true)
@@ -577,7 +577,7 @@ DEFINE_CHECK_OP_IMPL(Check_GT, >)
             (true && !(condition)) ? (void)0             \
                     : LOG_LOGGER_ONCE(SEVERITY, logger)
 
-#define DPLOG_LOGGER(SEVERITY, logger)
+#define DPLOG_LOGGER(SEVERITY, logger) \
 static_cast<void>(0), \
             true ? (void)0    \
                  : PLOG_LOGGER(SEVERITY, logger)
@@ -598,7 +598,7 @@ static_cast<void>(0), \
             (true && !(condition)) ? (void)0    \
             :PLOG_LOGGER_EVERY_N(SEVERITY, N, logger)
 
-#define DPLOG_LOGGER_FIRST_N(SEVERITY, N, condition, logger)
+#define DPLOG_LOGGER_FIRST_N(SEVERITY, N, condition, logger) \
 static_cast<void>(0), \
             true ? (void)0    \
                  : PLOG_LOGGER_FIRST_N(SEVERITY, N, logger)
@@ -689,7 +689,7 @@ static_cast<void>(0), \
     COLLIE_MSVC_PUSH_DISABLE_WARNING(4127)                      \
         while(false) COLLIE_MSVC_POP_WARNING() CHECK_PTREQ_LOGGER(val1, val2, logger)
 
-CHECK_OP_LOGGER(_EQ, ==, collie::ptr(val1), collie::ptr(val2), logger)
+//CHECK_OP_LOGGER(_EQ, ==, collie::ptr(val1), collie::ptr(val2), logger)
 
 #define DCHECK_EQ_LOGGER(val1, val2, logger) \
     COLLIE_MSVC_PUSH_DISABLE_WARNING(4127)                      \
@@ -699,7 +699,7 @@ CHECK_OP_LOGGER(_EQ, ==, collie::ptr(val1), collie::ptr(val2), logger)
 COLLIE_MSVC_PUSH_DISABLE_WARNING(4127)                      \
     while(false) COLLIE_MSVC_POP_WARNING() CHECK_NE_LOGGER(val1, val2,logger)
 
-#define DCHECK_LE_LOGGER(val1, val2, logger)
+#define DCHECK_LE_LOGGER(val1, val2, logger) \
     COLLIE_MSVC_PUSH_DISABLE_WARNING(4127)                      \
     while(false) COLLIE_MSVC_POP_WARNING() CHECK_LE_LOGGER(val1, val2,logger)
 
