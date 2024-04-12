@@ -29,11 +29,11 @@ outputs:
         - {{ pin_compatible('collie', exact=True) }}
     requirements:
       build:
+        - {{ compiler('cxx') }}
+        - sysroot_linux-64 # [linux]
         - cmake
         - make
-        - gcc # [linux]
-        - gxx # [linux]
-        - sysroot_linux-64 >=2.17 # [linux]
+
       host:
       run:
     test:
