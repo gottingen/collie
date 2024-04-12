@@ -17,5 +17,5 @@
 #include <collie/module/semver.h>
 
 namespace collie {
-    constexpr collie::ModuleVersion collie_version = {0, 2,11};
+    constexpr collie::ModuleVersion collie_version = {0, 2,21};
 }  // namespace collie

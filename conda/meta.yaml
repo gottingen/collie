@@ -3,18 +3,18 @@
 {% set number = GIT_DESCRIBE_NUMBER %}
 
 package:
-  name: turbo-pkg
+  name: collie-pkg
   version: {{ version }}
 
 build:
   number: {{ number }}
 
 about:
-  home: https://github.com/gottingen/turbo
+  home: https://github.com/gottingen/collie
   license: Apache License 2
   license_family: APACHE
   license_file: LICENSE
-  summary: A library for c++ based libraries and rpc libraries
+  summary: header only library for EA Group
 
 source:
   git_url: ../
@@ -26,13 +26,18 @@ outputs:
     build:
       string: "h{{ GIT_DESCRIBE_HASH }}_{{ number }}"
       run_exports:
-        - {{ pin_compatible('turbo', exact=True) }}
+        - {{ pin_compatible('collie', exact=True) }}
     requirements:
       build:
+        - cmake
+        - make
+        - gcc # [linux]
+        - gxx # [linux]
+        - sysroot_linux-64 >=2.17 # [linux]
       host:
       run:
     test:
       commands:
-        - test -f $PREFIX/lib/libturbo.a              # [linux]
+        - test -f $PREFIX/include/version.h              # [linux]
       #  - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
       #  - conda inspect objects -p $PREFIX $PKG_NAME   # [osx]
