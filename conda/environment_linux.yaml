@@ -1,0 +1,12 @@
+name: collie-dev
+channels:
+  - conda-forge
+  - defaults
+  - ea-group
+dependencies:
+  - gcc
+  - gxx
+  - sysroot_linux-64 >=2.17 # [linux]
+  - gtest
+  - gmock
+  - benchmark

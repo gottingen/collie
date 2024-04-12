@@ -1,0 +1,9 @@
+name: collie-dev
+channels:
+  - conda-forge
+  - defaults
+  - ea-group
+dependencies:
+  - gtest
+  - gmock
+  - benchmark
