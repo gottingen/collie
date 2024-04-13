@@ -54,7 +54,18 @@ include(carbin_module)
 include(user_deps)
 include(user_cxx_config)
 
-add_subdirectory(collie)
+file(GLOB_RECURSE CARBIN_SOURCES "collie/*.h" "collie/*.hpp")
+
+carbin_cc_library(
+        NAMESPACE collie
+        NAME collie
+        HEADERS
+        ${CARBIN_SOURCES}
+        COPTS
+        ${CARBIN_CXX_OPTIONS}
+        PUBLIC
+)
+
 ####################################################################
 # belows are auto, edit it be cation
 ####################################################################
