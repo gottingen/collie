@@ -14,31 +14,8 @@
 # limitations under the License.
 #
 
-#[[
 carbin_cc_binary(
-        NAME hashes_example
-        SOURCES hashes_example.cc
-        DEPS tedis::tedis ${CARBIN_DEPS_LINK}
-        COPTS ${USER_CXX_FLAGS}
+        NAME utf_demo
+        SOURCES utf_demo.cc
+        COPTS ${CARBIN_CXX_OPTIONS}
 )
-]]
-#[[
-carbin_cc_binary(
-        NAME foo_ex
-        SOURCES foo_ex.cc
-        DEPS changeme::foo ${CARBIN_DEPS_LINK}
-        COPTS ${USER_CXX_FLAGS}
-)
-]]
-add_subdirectory(cli)
-add_subdirectory(strings)
-add_subdirectory(tc)
-add_subdirectory(module)
-add_subdirectory(table)
-add_subdirectory(toml)
-add_subdirectory(log)
-add_subdirectory(container)
-add_subdirectory(meta)
-add_subdirectory(simd)
-add_subdirectory(taskflow)
-add_subdirectory(unicode)
