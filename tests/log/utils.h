@@ -1,5 +1,5 @@
-// Copyright 2023 The Elastic-AI Authors.
-// part of Elastic AI Search
+// Copyright 2023 The Turbo Authors.
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,10 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 #pragma once
 
-#include <collie/module/semver.h>
+#include <cstddef>
+#include <string>
 
-namespace collie {
-    constexpr collie::ModuleVersion collie_version = {0, 2,21};
-}  // namespace collie
+std::size_t count_files(const std::string &folder);
+
+void prepare_logdir();
+
+std::string file_contents(const std::string &filename);
+
+std::size_t count_lines(const std::string &filename, bool dump = false);
+
+void require_message_count(const std::string &filename, const std::size_t messages);
+
+std::size_t get_filesize(const std::string &filename);
+
+bool ends_with(std::string const &value, std::string const &ending);

@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
+
 #pragma once
 
-#include <collie/module/semver.h>
+#include <collie/testing/doctest.h>
+#include <collie/testing/matcher.h>
+#include <cstdarg>
 
-namespace collie {
-    constexpr collie::ModuleVersion collie_version = {0, 2,21};
-}  // namespace collie
+

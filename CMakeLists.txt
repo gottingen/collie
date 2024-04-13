@@ -24,7 +24,7 @@ project(collie CXX)
 set(PROJECT_DESCRIPTION "collie is a header only c++ libaray.")
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 2)
-set(PROJECT_VERSION_PATCH 17)
+set(PROJECT_VERSION_PATCH 19)
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 set(CARBIN_VERSION 0.2.0)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake)
@@ -54,7 +54,18 @@ include(carbin_module)
 include(user_deps)
 include(user_cxx_config)
 
-add_subdirectory(collie)
+file(GLOB_RECURSE CARBIN_SOURCES "collie/*.h" "collie/*.hpp")
+
+carbin_cc_library(
+        NAMESPACE collie
+        NAME collie
+        HEADERS
+        ${CARBIN_SOURCES}
+        COPTS
+        ${CARBIN_CXX_OPTIONS}
+        PUBLIC
+)
+
 ####################################################################
 # belows are auto, edit it be cation
 ####################################################################

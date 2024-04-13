@@ -1,5 +1,6 @@
+#!/bin/bash
 #
-# Copyright 2023 The titan-search Authors.
+# Copyright 2023 The Carbin Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,20 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-carbin_cc_binary(
-        NAME str_cat
-        SOURCES cat.cc
-        COPTS ${USER_CXX_FLAGS}
-)
+set -e
 
-carbin_cc_binary(
-        NAME splitter
-        SOURCES splitter.cc
-        COPTS ${USER_CXX_FLAGS}
-)
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=$PREFIX \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCARBIN_BUILD_TEST=OFF \
+        -DCARBIN_BUILD_BENCHMARK=OFF \
+        -DCARBIN_BUILD_EXAMPLES=OFF \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCARBIN_ENABLE_INSTALL=ON \
+        -DBUILD_STATIC_LIBRARY=ON
 
-carbin_cc_binary(
-        NAME str_format
-        SOURCES str_format.cc
-        COPTS ${USER_CXX_FLAGS}
-)
+cmake --build .
+cmake --build . --target install
