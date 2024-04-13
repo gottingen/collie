@@ -15,6 +15,8 @@
 //
 
 #include <collie/strings/format.h>
+#include <atomic>
+#include <memory>
 
 int main() {
 
@@ -24,8 +26,19 @@ int main() {
     std::string h = "hello";
     collie::format_append(&h, " {}", "Jeff");
     collie::println(h);
+
     std::string h1 = "hello";
     collie::format_append(&h1, " Jeff");
     collie::println(h1);
+
+    std::vector<int> abc = {1,4,7};
+    collie::println("v: {}", abc);
+
+    std::atomic<int> a{1};
+    collie::println("a: {}",a);
+
+    std::unique_ptr<int> iptr = std::make_unique<int>(10);
+    collie::println("ptr: {}", collie::ptr(iptr.get()));
+
     return 0;
 }

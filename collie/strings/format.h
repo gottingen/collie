@@ -25,6 +25,7 @@
 #include <collie/strings/fmt/compile.h>
 #include <collie/strings/fmt/os.h>
 #include <collie/strings/fmt/args.h>
+#include <collie/strings/fmt/std.h>
 
 namespace collie {
 
