@@ -114,47 +114,31 @@ namespace collie {
     }
 
 
-    template<typename... T>
-    inline void println(std::FILE *f, format_string<T...> fmt, T &&... args) {
-        return fmt::print(f, "{}\n", fmt::format(fmt, std::forward<T>(args)...));
-    }
-
-    template<typename... T>
-    inline void println(format_string<T...> fmt, T &&... args) {
-        return println(stdout, fmt, std::forward<T>(args)...);
-    }
-
-    template<typename... T>
-    void println(std::ostream &os, format_string<T...> fmt, T &&... args) {
-        fmt::print(os, "{}\n", fmt::format(fmt, std::forward<T>(args)...));
-    }
-
-    template<typename... Args>
-    void println(std::wostream &os,
-                 basic_format_string<wchar_t, type_identity_t<Args>...> fmt,
-                 Args &&... args) {
-        print(os, L"{}\n", fmt::format(fmt, std::forward<Args>(args)...));
+    template<typename ...Args>
+    void println(std::FILE *file, std::string_view fmt, Args &&... args) {
+        fmt::print(file, "{}\n", format(fmt, std::forward<Args>(args)...));
     }
 
     template<typename ...Args>
-    void println(const text_style &ts, std::string_view fmt, Args &&... args) {
-        fmt::print(stdout, ts, "{}\n", format(fmt, std::forward<Args>(args)...));
+    void println(std::ostream &os, std::string_view fmt, Args &&... args) {
+        fmt::print(os, "{}\n", format(fmt, std::forward<Args>(args)...));
     }
 
     template<typename ...Args>
-    void println(const color &c, std::string_view fmt, Args &&... args) {
-        fmt::print(stdout, fg(c), "{}\n", format(fmt, std::forward<Args>(args)...));
-    }
-
-    template<typename ...Args>
-    void println(std::string_view fmt, Args &&... args) {
+    inline void println(std::string_view fmt, Args &&... args) {
         fmt::print(stdout, "{}\n", format(fmt, std::forward<Args>(args)...));
     }
 
     template<typename ...Args>
-    void fprintln(std::FILE *file, std::string_view fmt, Args &&... args) {
-        fmt::print(file, "{}\n", format(fmt, std::forward<Args>(args)...));
+    inline void println(const text_style &ts, std::string_view fmt, Args &&... args) {
+        fmt::print(stdout, ts, "{}\n", format(fmt, std::forward<Args>(args)...));
     }
+
+    template<typename ...Args>
+    inline void println(const color &c, std::string_view fmt, Args &&... args) {
+        fmt::print(stdout, fg(c), "{}\n", format(fmt, std::forward<Args>(args)...));
+    }
+
 
 }
 

@@ -24,3 +24,9 @@ carbin_cc_binary(
         SOURCES splitter.cc
         COPTS ${USER_CXX_FLAGS}
 )
+
+carbin_cc_binary(
+        NAME str_format
+        SOURCES str_format.cc
+        COPTS ${USER_CXX_FLAGS}
+)
