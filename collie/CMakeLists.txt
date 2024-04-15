@@ -13,24 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-carbin_cc_binary(
-        NAME span_basic
-        SOURCES span_basic.cc
-        LINKS Threads::Threads
-        CXXOPTS ${USER_CXX_FLAGS}
+###########################################################################
+# below are examples, after initialization, modify it to your own.
+###########################################################################
+###carbin_example
+file(GLOB_RECURSE COLLIE_HEADERS *)
+carbin_cc_interface(
+        NAMESPACE collie
+        NAME collie
+        HEADERS
+        ${COLLIE_HEADERS}
+        PUBLIC
 )
-
-carbin_cc_binary(
-        NAME span_advance
-        SOURCES span_advance.cc
-        LINKS Threads::Threads
-        CXXOPTS ${USER_CXX_FLAGS}
-)
-
-carbin_cc_binary(
-        NAME inlined_vector
-        SOURCES inlined_vector.cc
-        LINKS Threads::Threads
-        CXXOPTS ${USER_CXX_FLAGS}
-)
+###carbin_example

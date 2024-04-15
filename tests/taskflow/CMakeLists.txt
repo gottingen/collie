@@ -35,8 +35,8 @@ foreach (unittest IN LISTS TF_UNITTESTS)
     carbin_cc_test(
             NAME tf_${unittest}
             SOURCES ${unittest}.cc
-            COPTS ${USER_CXX_FLAGS}
-            DEPS Threads::Threads
+            CXXOPTS ${USER_CXX_FLAGS}
+            LINKS Threads::Threads
     )
 endforeach ()
 

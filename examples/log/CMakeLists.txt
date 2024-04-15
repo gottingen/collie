@@ -18,14 +18,14 @@ find_package(Threads REQUIRED)
 carbin_cc_binary(
         NAME log_example
         SOURCES log_example.cc
-        DEPS Threads::Threads
-        COPTS ${USER_CXX_FLAGS}
+        LINKS Threads::Threads
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_binary(
         NAME stream_log
         SOURCES stream_log.cc
-        DEPS Threads::Threads
-        COPTS ${USER_CXX_FLAGS}
+        LINKS Threads::Threads
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 

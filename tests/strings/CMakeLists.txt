@@ -19,23 +19,23 @@ find_package(Threads REQUIRED)
 carbin_cc_test(
         NAME inlined_string_test
         SOURCES inlined_string_test.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_test(
         NAME case_conv_test
         SOURCES case_conv_test.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_test(
         NAME replace_test
         SOURCES replace_test.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_test(
         NAME trim_test
         SOURCES trim_test.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )

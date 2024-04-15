@@ -19,6 +19,6 @@ find_package(Threads REQUIRED)
 carbin_cc_test(
         NAME uuid_test
         SOURCES uuid_test.cc
-        COPTS ${USER_CXX_FLAGS}
-        DEPS Threads::Threads
+        CXXOPTS ${USER_CXX_FLAGS}
+        LINKS Threads::Threads
 )

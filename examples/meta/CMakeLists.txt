@@ -17,13 +17,13 @@
 carbin_cc_binary(
         NAME reflect
         SOURCES reflect.cc
-        DEPS Threads::Threads
-        COPTS ${USER_CXX_FLAGS}
+        LINKS Threads::Threads
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_binary(
         NAME reflect_custom_name
         SOURCES reflect_custom_name.cc
-        DEPS Threads::Threads
-        COPTS ${USER_CXX_FLAGS}
+        LINKS Threads::Threads
+        CXXOPTS ${USER_CXX_FLAGS}
 )

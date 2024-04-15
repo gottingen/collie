@@ -16,7 +16,7 @@
 carbin_cc_binary(
         NAME config_app
         SOURCES config_app.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 add_test(NAME config_app1 COMMAND config_app -p)
 set_property(TEST config_app1 PROPERTY PASS_REGULAR_EXPRESSION "file=")
@@ -33,11 +33,11 @@ set_property(TEST config_app4 PROPERTY PASS_REGULAR_EXPRESSION "file=\"/\"")
 carbin_cc_binary(
         NAME positional_arity
         SOURCES positional_arity.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_binary(
         NAME positional_vector
         SOURCES positional_vector.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )

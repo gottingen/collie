@@ -21,7 +21,7 @@ function(add_example name)
   carbin_cc_binary(
           NAME toml_${name}
           SOURCES ${name}.cc
-          COPTS ${USER_CXX_FLAGS}
+          CXXOPTS ${USER_CXX_FLAGS}
   )
 endfunction()
 

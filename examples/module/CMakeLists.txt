@@ -17,11 +17,11 @@
 carbin_cc_binary(
         NAME basic_example
         SOURCES basic_example.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_binary(
         NAME range_example
         SOURCES range_example.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
