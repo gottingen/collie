@@ -21,8 +21,8 @@ carbin_cc_library(
         log_utils
         SOURCES
         "utils.cc"
-        COPTS
-        ${TURBO_DEFAULT_COPTS}
+        CXXOPTS
+        ${CARBIN_CXX_OPTIONS}
 )
 
 carbin_cc_test(
@@ -30,7 +30,7 @@ carbin_cc_test(
         daily_logger_test
         SOURCES
         "daily_logger_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -40,7 +40,7 @@ carbin_cc_test(
         log_async_test
         SOURCES
         "async_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -50,7 +50,7 @@ carbin_cc_test(
         backtrace_test
         SOURCES
         "backtrace_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -61,7 +61,7 @@ carbin_cc_test(
         log_cfg_test
         SOURCES
         "log_cfg_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -72,7 +72,7 @@ carbin_cc_test(
         log_dup_filter_test
         SOURCES
         "log_dup_filter_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -83,7 +83,7 @@ carbin_cc_test(
         log_file_logging_test
         SOURCES
         "log_file_logging_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -95,7 +95,7 @@ carbin_cc_test(
         log_fmt_helper_test
         SOURCES
         "log_fmt_helper_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -106,7 +106,7 @@ carbin_cc_test(
         log_macros_test
         SOURCES
         "log_macros_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -117,7 +117,7 @@ carbin_cc_test(
         log_misc_test
         SOURCES
         "log_misc_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -128,7 +128,7 @@ carbin_cc_test(
         log_mpmc_q_test
         SOURCES
         "log_mpmc_q_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -139,7 +139,7 @@ carbin_cc_test(
         log_pattern_formatter_test
         SOURCES
         "log_pattern_formatter_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -150,7 +150,7 @@ carbin_cc_test(
         log_registry_test
         SOURCES
         "log_registry_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -161,7 +161,7 @@ carbin_cc_test(
         log_stdout_api_test
         SOURCES
         "log_stdout_api_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils
@@ -172,7 +172,7 @@ carbin_cc_test(
         log_time_point_test
         SOURCES
         "log_time_point_test.cc"
-        COPTS
+        CXXOPTS
         ${CARBIN_CXX_OPTIONS}
         DEPS
         turbo::log_utils

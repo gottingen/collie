@@ -1,5 +1,4 @@
-#
-# Copyright 2023 The titan-search Authors.
+# Copyright 2023 The Carbin Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,23 +13,9 @@
 # limitations under the License.
 #
 
-carbin_cc_binary(
-        NAME span_basic
-        SOURCES span_basic.cc
-        LINKS Threads::Threads
-        CXXOPTS ${USER_CXX_FLAGS}
-)
 
-carbin_cc_binary(
-        NAME span_advance
-        SOURCES span_advance.cc
-        LINKS Threads::Threads
-        CXXOPTS ${USER_CXX_FLAGS}
-)
-
-carbin_cc_binary(
-        NAME inlined_vector
-        SOURCES inlined_vector.cc
-        LINKS Threads::Threads
-        CXXOPTS ${USER_CXX_FLAGS}
-)
+find_path(DOCTEST_INCLUDE_PATH NAMES doctest/doctest.h)
+include_directories(${DOCTEST_INCLUDE_PATH})
+if((NOT DOCTEST_INCLUDE_PATH))
+    carbin_error(FATAL_ERROR "Fail to find turbo")
+endif()

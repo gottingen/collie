@@ -17,55 +17,60 @@
 # generate by carbin package manager tools for titan-search
 # https://github.com/gottingen/carbin
 ####################################################################################
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.24)
 
 project(collie CXX)
 
-set(PROJECT_DESCRIPTION "collie is a header only c++ libaray.")
+option(${PROJECT_NAME}_IS_TOP_PROJECT "collie project is the top level project or not" ON)
+
+get_property(not_top DIRECTORY PROPERTY PARENT_DIRECTORY)
+if (not_top)
+    set(${PROJECT_NAME}_IS_TOP_PROJECT OFF)
+endif ()
+message(STATUS ${PROJECT_NAME}_IS_TOP_PROJECT)
+
+set(PROJECT_DESCRIPTION "Hercules is an ahead of time compiler for a subset of the Python language framework.")
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 2)
-set(PROJECT_VERSION_PATCH 19)
+set(PROJECT_VERSION_PATCH 26)
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
-set(CARBIN_VERSION 0.2.0)
+
+set(${PROJECT_NAME}_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(${PROJECT_NAME}_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(${PROJECT_NAME}_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(${PROJECT_NAME}_VERSION ${PROJECT_VERSION})
+
+
+set(CARBIN_VERSION 0.3.0)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+##################################################################
+# add this for ${PROJECT_NAME} 's cmake include
+##################################################################
+list(APPEND CMAKE_MODULE_PATH ${${PROJECT_NAME}_SOURCE_DIR}/cmake)
 #################################################################
 #
 # modify the CARBIN_DEPS_PREFIX to you prefix if needed.
 # for example when you install you deps to "/opt/handsome/guy
 # modify as set(CARBIN_DEPS_PREFIX /opt/handsome/guy)
+# this should be PROJECT_SOURCE_DIR, only install libraries
+# deps to top level project
 #################################################################
 set(CARBIN_DEPS_PREFIX ${PROJECT_SOURCE_DIR}/carbin)
 #######################################################################
 # warning
 # in carbin_cmake directory, caution to modify files in that dir
-#####################################################################
-set(MAIN_PROJECT OFF)
-if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${PROJECT_SOURCE_DIR})
-    set(MAIN_PROJECT ON)
-endif ()
-option(CARBIN_ENABLE_INSTALL "Enable installation of carbin" ${MAIN_PROJECT})
+######################################################################
 include(carbin_module)
 
 ##################################################################
 #
 # your cmake directory ${PROJECT_SOURCE_DIR}/cmake, do things here
 #################################################################
-include(user_deps)
-include(user_cxx_config)
+include(collie_deps)
+include(collie_cxx_config)
+include(collie_test)
 
-file(GLOB_RECURSE CARBIN_SOURCES "collie/*.h" "collie/*.hpp")
-
-carbin_cc_library(
-        NAMESPACE collie
-        NAME collie
-        HEADERS
-        ${CARBIN_SOURCES}
-        COPTS
-        ${CARBIN_CXX_OPTIONS}
-        PUBLIC
-)
-
+add_subdirectory(collie)
 ####################################################################
 # belows are auto, edit it be cation
 ####################################################################
@@ -84,12 +89,13 @@ endif ()
 ##############################################
 # header installing
 #############################################
-if (CARBIN_ENABLE_INSTALL)
+install(DIRECTORY ${PROJECT_NAME}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILES_MATCHING
+        PATTERN "*.inc"
+        PATTERN "*.h"
+        )
 
-    install(DIRECTORY ${PROJECT_NAME}
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    )
-endif ()
 # Layout. This works for all platforms:
 #   * <prefix>/lib*/cmake/<PROJECT-NAME>
 #   * <prefix>/lib*/
@@ -110,22 +116,19 @@ include(CMakePackageConfigHelpers)
 # Configure '<PROJECT-NAME>ConfigVersion.cmake'
 # Use:
 #   * PROJECT_VERSION
-if (CARBIN_ENABLE_INSTALL)
 write_basic_package_version_file(
         "${version_config}" COMPATIBILITY SameMajorVersion
 )
-endif ()
+
 # Configure '<PROJECT-NAME>Config.cmake'
 # Use variables:
 #   * TARGETS_EXPORT_NAME
 #   * PROJECT_NAME
-if (CARBIN_ENABLE_INSTALL)
 configure_package_config_file(
         "carbin_cmake/package/carbin_config.cmake.in"
         "${project_config}"
         INSTALL_DESTINATION "${config_install_dir}"
 )
-endif ()
 
 #Targets:
 #  * <prefix>/lib/libbar.a
@@ -137,24 +140,21 @@ endif ()
 # Config
 #   * <prefix>/lib/cmake/Foo/FooConfig.cmake
 #   * <prefix>/lib/cmake/Foo/FooConfigVersion.cmake
-if (CARBIN_ENABLE_INSTALL)
-    install(
-            FILES
-            "${project_config}" "${version_config}"
-            DESTINATION
-            "${config_install_dir}"
-    )
-endif ()
+install(
+        FILES
+        "${project_config}" "${version_config}"
+        DESTINATION
+        "${config_install_dir}"
+)
+
 # Config
 #   * <prefix>/lib/cmake/Foo/FooTargets.cmake
-if (CARBIN_ENABLE_INSTALL)
-    install(
-            EXPORT
-            "${TARGETS_EXPORT_NAME}"
-            NAMESPACE
-            "${namespace}"
-            DESTINATION
-            "${config_install_dir}"
-    )
-endif ()
 
+install(
+        EXPORT
+        "${TARGETS_EXPORT_NAME}"
+        NAMESPACE
+        "${namespace}"
+        DESTINATION
+        "${config_install_dir}"
+)

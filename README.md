@@ -1,6 +1,8 @@
 collie
 ==========================
 
+collie a collection of header only c++ lib.
+
 # externals
 
 * [cppfmt](https://github.com/fmtlib/fmt/tags) 10.2.1

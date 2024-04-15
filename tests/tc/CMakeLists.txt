@@ -41,11 +41,11 @@ set(source_files test.cc
 carbin_cc_test(
         NAME type_safe_test
         SOURCES ${source_files}
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_test(
         NAME type_safe_std_test
         SOURCES std_tc.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )

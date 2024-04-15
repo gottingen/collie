@@ -19,11 +19,11 @@ find_package(Threads REQUIRED)
 carbin_cc_test(
         NAME reflect_aliases_test
         SOURCES reflect_aliases_test.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_test(
         NAME reflect_test
         SOURCES reflect_test.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )

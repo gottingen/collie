@@ -16,17 +16,17 @@
 carbin_cc_binary(
         NAME str_cat
         SOURCES cat.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_binary(
         NAME splitter
         SOURCES splitter.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_binary(
         NAME str_format
         SOURCES str_format.cc
-        COPTS ${USER_CXX_FLAGS}
+        CXXOPTS ${USER_CXX_FLAGS}
 )

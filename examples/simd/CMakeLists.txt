@@ -17,5 +17,5 @@
 carbin_cc_binary(
         NAME simd_mandelbrot
         SOURCES mandelbrot.cc
-        COPTS ${CARBIN_CXX_OPTIONS} -Wno-unused-variable -Wno-unknown-pragmas
+        CXXOPTS ${CARBIN_CXX_OPTIONS} -Wno-unused-variable -Wno-unknown-pragmas
 )
