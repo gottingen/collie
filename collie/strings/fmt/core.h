@@ -860,8 +860,8 @@ template <typename T> class buffer {
   constexpr auto capacity() const noexcept -> size_t { return capacity_; }
 
   /** Returns a pointer to the buffer data (not null-terminated). */
-  FMT_CONSTEXPR auto data() noexcept -> T* { return ptr_; }
-  FMT_CONSTEXPR auto data() const noexcept -> const T* { return ptr_; }
+  constexpr auto data() noexcept -> T* { return ptr_; }
+  constexpr auto data() const noexcept -> const T* { return ptr_; }
 
   /** Clears this buffer. */
   void clear() { size_ = 0; }
