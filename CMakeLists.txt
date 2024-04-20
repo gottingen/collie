@@ -32,7 +32,7 @@ message(STATUS ${PROJECT_NAME}_IS_TOP_PROJECT)
 set(PROJECT_DESCRIPTION "Hercules is an ahead of time compiler for a subset of the Python language framework.")
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 2)
-set(PROJECT_VERSION_PATCH 26)
+set(PROJECT_VERSION_PATCH 28)
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
 set(${PROJECT_NAME}_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
@@ -89,11 +89,14 @@ endif ()
 ##############################################
 # header installing
 #############################################
+
 install(DIRECTORY ${PROJECT_NAME}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         FILES_MATCHING
         PATTERN "*.inc"
         PATTERN "*.h"
+        PATTERN "*.hpp"
+        PATTERN "*.inl"
         )
 
 # Layout. This works for all platforms:
@@ -158,3 +161,4 @@ install(
         DESTINATION
         "${config_install_dir}"
 )
+include(carbin_cpack)
