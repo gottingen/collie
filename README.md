@@ -13,3 +13,8 @@ collie a collection of header only c++ lib.
 * [toml++](https://github.com/marzer/tomlplusplus)
 * [type_safe]()
 * [doctest]()
+
+# package
+
+`sh` and 'deb' package is available now but note that `sh` package installation install the package should be a dir that for the
+package only. 
