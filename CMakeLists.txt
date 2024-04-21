@@ -69,6 +69,7 @@ include(carbin_module)
 include(collie_deps)
 include(collie_cxx_config)
 include(collie_test)
+include(collie_package_config)
 
 add_subdirectory(collie)
 ####################################################################
