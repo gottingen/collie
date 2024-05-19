@@ -448,7 +448,7 @@ namespace collie {
 #define COLLIE_ASSIGN_OR_RETURN_IMPL(result_name, lhs, rexpr)                              \
   auto&& result_name = (rexpr);                                                          \
   COLLIE_RETURN_IF_(!(result_name).ok(), (result_name).status(), COLLIE_STRINGIFY(rexpr)); \
-  lhs = std::move(result_name).ValueUnsafe();
+  lhs = std::move(result_name).value_unsafe();
 
 #define COLLIE_ASSIGN_OR_RETURN_NAME(x, y) COLLIE_CONCAT(x, y)
 
