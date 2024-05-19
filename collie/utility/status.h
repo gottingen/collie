@@ -99,7 +99,7 @@ namespace collie {
     };
 
     namespace status_detail {
-        StatusCode errno_to_status_code(int error_number) {
+        inline StatusCode errno_to_status_code(int error_number) {
             switch (error_number) {
                 case 0:
                     return StatusCode::OK;
