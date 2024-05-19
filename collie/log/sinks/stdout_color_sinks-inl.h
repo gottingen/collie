@@ -17,7 +17,7 @@
 #include <collie/log/common.h>
 #include <collie/log/logger.h>
 
-namespace clog {
+namespace collie::log {
 
 template <typename Factory>
 inline std::shared_ptr<logger> stdout_color_mt(const std::string &logger_name,
@@ -42,4 +42,4 @@ inline std::shared_ptr<logger> stderr_color_st(const std::string &logger_name,
                                                       color_mode mode) {
     return Factory::template create<sinks::stderr_color_sink_st>(logger_name, mode);
 }
-}  // namespace clog
+}  // namespace collie::log

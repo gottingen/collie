@@ -33,7 +33,7 @@
 
 #include <string>
 
-namespace clog {
+namespace collie::log {
 namespace details {
 class tcp_client {
     int socket_ = -1;
@@ -137,4 +137,4 @@ public:
     }
 };
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

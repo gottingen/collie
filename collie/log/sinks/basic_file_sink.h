@@ -24,7 +24,7 @@
 #include <mutex>
 #include <string>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 /*
  * Trivial file sink with single file as target
@@ -53,7 +53,7 @@ using basic_file_sink_st = basic_file_sink<details::null_mutex>;
 //
 // factory functions
 //
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> basic_logger_mt(const std::string &logger_name,
                                                const filename_t &filename,
                                                bool truncate = false,
@@ -62,7 +62,7 @@ inline std::shared_ptr<logger> basic_logger_mt(const std::string &logger_name,
                                                                event_handlers);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> basic_logger_st(const std::string &logger_name,
                                                const filename_t &filename,
                                                bool truncate = false,
@@ -71,6 +71,6 @@ inline std::shared_ptr<logger> basic_logger_st(const std::string &logger_name,
                                                                event_handlers);
 }
 
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/sinks/basic_file_sink-inl.h>

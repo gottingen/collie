@@ -31,10 +31,10 @@
 #include <string>
 #include <unordered_map>
 
-namespace clog {
+namespace collie::log {
     class logger;
-}  // namespace clog
-namespace clog::details {
+}  // namespace collie::log
+namespace collie::log::details {
     class thread_pool;
 
     class registry {
@@ -54,9 +54,9 @@ namespace clog::details {
         std::shared_ptr<logger> default_logger();
 
         // Return raw ptr to the default logger.
-        // To be used directly by the clog default api (e.g. clog::info)
+        // To be used directly by the clog default api (e.g. collie::log::info)
         // This make the default API faster, but cannot be used concurrently with set_default_logger().
-        // e.g do not call set_default_logger() from one thread while calling clog::info() from
+        // e.g do not call set_default_logger() from one thread while calling collie::log::info() from
         // another.
         logger *get_default_raw();
 
@@ -128,8 +128,8 @@ namespace clog::details {
         std::unordered_map<std::string, std::shared_ptr<logger>> loggers_;
         log_levels log_levels_;
         std::unique_ptr<formatter> formatter_;
-        clog::level::level_enum global_log_level_ = level::info;
-        clog::level_t global_vlog_leve_{0};
+        collie::log::level::level_enum global_log_level_ = level::info;
+        collie::log::level_t global_vlog_leve_{0};
         level::level_enum flush_level_ = level::off;
         err_handler err_handler_;
         std::shared_ptr<thread_pool> tp_;
@@ -139,6 +139,6 @@ namespace clog::details {
         size_t backtrace_n_messages_ = 0;
     };
 
-}  // namespace clog::details
+}  // namespace collie::log::details
 
 #include <collie/log/details/registry-inl.h>

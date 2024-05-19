@@ -37,7 +37,7 @@
 //
 // qt_sink class
 //
-namespace clog {
+namespace collie::log {
 namespace sinks {
 template <typename Mutex>
 class qt_sink : public base_sink<Mutex> {
@@ -252,14 +252,14 @@ using qt_color_sink_st = qt_color_sink<details::null_mutex>;
 //
 
 // log to QTextEdit
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> qt_logger_mt(const std::string &logger_name,
                                             QTextEdit *qt_object,
                                             const std::string &meta_method = "append") {
     return Factory::template create<sinks::qt_sink_mt>(logger_name, qt_object, meta_method);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> qt_logger_st(const std::string &logger_name,
                                             QTextEdit *qt_object,
                                             const std::string &meta_method = "append") {
@@ -267,28 +267,28 @@ inline std::shared_ptr<logger> qt_logger_st(const std::string &logger_name,
 }
 
 // log to QPlainTextEdit
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> qt_logger_mt(const std::string &logger_name,
                                             QPlainTextEdit *qt_object,
                                             const std::string &meta_method = "appendPlainText") {
     return Factory::template create<sinks::qt_sink_mt>(logger_name, qt_object, meta_method);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> qt_logger_st(const std::string &logger_name,
                                             QPlainTextEdit *qt_object,
                                             const std::string &meta_method = "appendPlainText") {
     return Factory::template create<sinks::qt_sink_st>(logger_name, qt_object, meta_method);
 }
 // log to QObject
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> qt_logger_mt(const std::string &logger_name,
                                             QObject *qt_object,
                                             const std::string &meta_method) {
     return Factory::template create<sinks::qt_sink_mt>(logger_name, qt_object, meta_method);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> qt_logger_st(const std::string &logger_name,
                                             QObject *qt_object,
                                             const std::string &meta_method) {
@@ -296,7 +296,7 @@ inline std::shared_ptr<logger> qt_logger_st(const std::string &logger_name,
 }
 
 // log to QTextEdit with colorize output
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> qt_color_logger_mt(const std::string &logger_name,
                                                   QTextEdit *qt_text_edit,
                                                   int max_lines,
@@ -305,7 +305,7 @@ inline std::shared_ptr<logger> qt_color_logger_mt(const std::string &logger_name
                                                              false, is_utf8);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> qt_color_logger_st(const std::string &logger_name,
                                                   QTextEdit *qt_text_edit,
                                                   int max_lines,
@@ -314,4 +314,4 @@ inline std::shared_ptr<logger> qt_color_logger_st(const std::string &logger_name
                                                              false, is_utf8);
 }
 
-}  // namespace clog
+}  // namespace collie::log

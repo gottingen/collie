@@ -55,7 +55,7 @@ Windows Registry Editor Version 5.00
 #include <string>
 #include <vector>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 namespace win_eventlog {
@@ -269,4 +269,4 @@ using win_eventlog_sink_mt = win_eventlog::win_eventlog_sink<std::mutex>;
 using win_eventlog_sink_st = win_eventlog::win_eventlog_sink<details::null_mutex>;
 
 }  // namespace sinks
-}  // namespace clog
+}  // namespace collie::log

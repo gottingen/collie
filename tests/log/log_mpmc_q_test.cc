@@ -28,7 +28,7 @@ TEST_CASE("dequeue-empty-nowait [mpmc_blocking_q]")
 {
     size_t q_size = 100;
     milliseconds tolerance_wait(20);
-    clog::details::mpmc_blocking_queue<int> q(q_size);
+    collie::log::details::mpmc_blocking_queue<int> q(q_size);
     int popped_item = 0;
 
     auto start = test_clock::now();
@@ -47,7 +47,7 @@ TEST_CASE("dequeue-empty-wait [mpmc_blocking_q]")
     milliseconds wait_ms(250);
     milliseconds tolerance_wait(250);
 
-    clog::details::mpmc_blocking_queue<int> q(q_size);
+    collie::log::details::mpmc_blocking_queue<int> q(q_size);
     int popped_item = 0;
     auto start = test_clock::now();
     auto rv = q.dequeue_for(popped_item, wait_ms);
@@ -64,7 +64,7 @@ TEST_CASE("enqueue_nowait [mpmc_blocking_q]")
 {
 
     size_t q_size = 1;
-    clog::details::mpmc_blocking_queue<int> q(q_size);
+    collie::log::details::mpmc_blocking_queue<int> q(q_size);
     milliseconds tolerance_wait(10);
 
     q.enqueue(1);
@@ -82,7 +82,7 @@ TEST_CASE("enqueue_nowait [mpmc_blocking_q]")
 TEST_CASE("bad_queue [mpmc_blocking_q]")
 {
     size_t q_size = 0;
-    clog::details::mpmc_blocking_queue<int> q(q_size);
+    collie::log::details::mpmc_blocking_queue<int> q(q_size);
     q.enqueue_nowait(1);
     REQUIRE(q.overrun_counter() == 1);
     int i = 0;
@@ -92,7 +92,7 @@ TEST_CASE("bad_queue [mpmc_blocking_q]")
 TEST_CASE("empty_queue [mpmc_blocking_q]")
 {
     size_t q_size = 10;
-    clog::details::mpmc_blocking_queue<int> q(q_size);
+    collie::log::details::mpmc_blocking_queue<int> q(q_size);
     int i = 0;
     REQUIRE(q.dequeue_for(i, milliseconds(10)) == false);
 }
@@ -100,7 +100,7 @@ TEST_CASE("empty_queue [mpmc_blocking_q]")
 TEST_CASE("full_queue [mpmc_blocking_q]")
 {
     size_t q_size = 100;
-    clog::details::mpmc_blocking_queue<int> q(q_size);
+    collie::log::details::mpmc_blocking_queue<int> q(q_size);
     for (int i = 0; i < static_cast<int>(q_size); i++)
     {
         q.enqueue(i + 0); // i+0 to force rvalue and avoid tidy warnings on the same time if we std::move(i) instead

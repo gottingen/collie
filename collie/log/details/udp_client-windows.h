@@ -34,7 +34,7 @@
     #pragma comment(lib, "AdvApi32.lib")
 #endif
 
-namespace clog {
+namespace collie::log {
 namespace details {
 class udp_client {
     static constexpr int TX_BUFFER_SIZE = 1024 * 10;
@@ -108,4 +108,4 @@ public:
     }
 };
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

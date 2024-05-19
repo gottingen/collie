@@ -19,7 +19,7 @@
 #include <mutex>
 #include <collie/log/details/null_mutex.h>
 
-namespace clog {
+namespace collie::log {
 namespace details {
 
 struct console_mutex {
@@ -38,4 +38,4 @@ struct console_nullmutex {
     }
 };
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

@@ -18,7 +18,7 @@
 
 #include <collie/log/details/log_msg.h>
 
-namespace clog {
+namespace collie::log {
     namespace details {
 
 // Extend log_msg with internal buffer to store its payload.
@@ -44,6 +44,6 @@ namespace clog {
         };
 
     }  // namespace details
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/details/log_msg_buffer-inl.h>

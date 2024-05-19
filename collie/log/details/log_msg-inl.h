@@ -19,14 +19,14 @@
 
 #include <collie/log/details/os.h>
 
-namespace clog {
+namespace collie::log {
 namespace details {
 
-inline log_msg::log_msg(clog::log_clock::time_point log_time,
-                               clog::source_loc loc,
+inline log_msg::log_msg(collie::log::log_clock::time_point log_time,
+                               collie::log::source_loc loc,
                                string_view_t a_logger_name,
-                               clog::level::level_enum lvl,
-                               clog::string_view_t msg)
+                               collie::log::level::level_enum lvl,
+                               collie::log::string_view_t msg)
     : logger_name(a_logger_name),
       level(lvl),
       time(log_time)
@@ -39,16 +39,16 @@ inline log_msg::log_msg(clog::log_clock::time_point log_time,
       payload(msg) {
 }
 
-inline log_msg::log_msg(clog::source_loc loc,
+inline log_msg::log_msg(collie::log::source_loc loc,
                                string_view_t a_logger_name,
-                               clog::level::level_enum lvl,
-                               clog::string_view_t msg)
+                               collie::log::level::level_enum lvl,
+                               collie::log::string_view_t msg)
     : log_msg(os::now(), loc, a_logger_name, lvl, msg) {}
 
 inline log_msg::log_msg(string_view_t a_logger_name,
-                               clog::level::level_enum lvl,
-                               clog::string_view_t msg)
+                               collie::log::level::level_enum lvl,
+                               collie::log::string_view_t msg)
     : log_msg(os::now(), source_loc{}, a_logger_name, lvl, msg) {}
 
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

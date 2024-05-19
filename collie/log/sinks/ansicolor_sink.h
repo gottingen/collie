@@ -24,7 +24,7 @@
 #include <collie/log/sinks/sink.h>
 #include <string>
 
-namespace clog {
+namespace collie::log {
     namespace sinks {
 
 /**
@@ -63,7 +63,7 @@ namespace clog {
 
             void set_pattern(const std::string &pattern) final;
 
-            void set_formatter(std::unique_ptr<clog::formatter> sink_formatter) override;
+            void set_formatter(std::unique_ptr<collie::log::formatter> sink_formatter) override;
 
             // Formatting codes
             const string_view_t reset = "\033[m";
@@ -104,7 +104,7 @@ namespace clog {
             FILE *target_file_;
             mutex_t &mutex_;
             bool should_do_colors_;
-            std::unique_ptr<clog::formatter> formatter_;
+            std::unique_ptr<collie::log::formatter> formatter_;
             std::array<std::string, level::n_levels> colors_;
 
             void print_ccode_(const string_view_t &color_code);
@@ -133,7 +133,7 @@ namespace clog {
         using ansicolor_stderr_sink_st = ansicolor_stderr_sink<details::console_nullmutex>;
 
     }  // namespace sinks
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/sinks/ansicolor_sink-inl.h>
 

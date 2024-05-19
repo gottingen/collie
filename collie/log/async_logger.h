@@ -27,7 +27,7 @@
 
 #include <collie/log/logger.h>
 
-namespace clog {
+namespace collie::log {
 
 // Async overflow policy - block by default.
 enum class async_overflow_policy {
@@ -78,6 +78,6 @@ private:
     std::weak_ptr<details::thread_pool> thread_pool_;
     async_overflow_policy overflow_policy_;
 };
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/async_logger-inl.h>

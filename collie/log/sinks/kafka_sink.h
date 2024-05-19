@@ -34,7 +34,7 @@
 // kafka header
 #include <librdkafka/rdkafkacpp.h>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 struct kafka_sink_config {
@@ -101,32 +101,32 @@ private:
 };
 
 using kafka_sink_mt = kafka_sink<std::mutex>;
-using kafka_sink_st = kafka_sink<clog::details::null_mutex>;
+using kafka_sink_st = kafka_sink<collie::log::details::null_mutex>;
 
 }  // namespace sinks
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> kafka_logger_mt(const std::string &logger_name,
-                                               clog::sinks::kafka_sink_config config) {
+                                               collie::log::sinks::kafka_sink_config config) {
     return Factory::template create<sinks::kafka_sink_mt>(logger_name, config);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> kafka_logger_st(const std::string &logger_name,
-                                               clog::sinks::kafka_sink_config config) {
+                                               collie::log::sinks::kafka_sink_config config) {
     return Factory::template create<sinks::kafka_sink_st>(logger_name, config);
 }
 
-template <typename Factory = clog::async_factory>
-inline std::shared_ptr<clog::logger> kafka_logger_async_mt(
-    std::string logger_name, clog::sinks::kafka_sink_config config) {
+template <typename Factory = collie::log::async_factory>
+inline std::shared_ptr<collie::log::logger> kafka_logger_async_mt(
+    std::string logger_name, collie::log::sinks::kafka_sink_config config) {
     return Factory::template create<sinks::kafka_sink_mt>(logger_name, config);
 }
 
-template <typename Factory = clog::async_factory>
-inline std::shared_ptr<clog::logger> kafka_logger_async_st(
-    std::string logger_name, clog::sinks::kafka_sink_config config) {
+template <typename Factory = collie::log::async_factory>
+inline std::shared_ptr<collie::log::logger> kafka_logger_async_st(
+    std::string logger_name, collie::log::sinks::kafka_sink_config config) {
     return Factory::template create<sinks::kafka_sink_st>(logger_name, config);
 }
 
-}  // namespace clog
+}  // namespace collie::log

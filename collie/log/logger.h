@@ -56,7 +56,7 @@
 #define CLOG_LOGGER_CATCH(location)
 #endif
 
-namespace clog {
+namespace collie::log {
 
     class logger {
     public:
@@ -87,7 +87,7 @@ namespace clog {
 
         logger &operator=(logger other) noexcept;
 
-        void swap(clog::logger &other) noexcept;
+        void swap(collie::log::logger &other) noexcept;
 
         template<typename... Args>
         void log(source_loc loc, level::level_enum lvl, format_string_t<Args...> fmt, Args &&...args) {
@@ -329,9 +329,9 @@ namespace clog {
     protected:
         std::string name_;
         std::vector<sink_ptr> sinks_;
-        clog::level_t level_{level::info};
-        clog::level_t flush_level_{level::off};
-        clog::level_t vlog_level_{0};
+        collie::log::level_t level_{level::info};
+        collie::log::level_t flush_level_{level::off};
+        collie::log::level_t vlog_level_{0};
         err_handler custom_err_handler_{nullptr};
         details::backtracer tracer_;
 
@@ -394,6 +394,6 @@ namespace clog {
 
     void swap(logger &a, logger &b);
 
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/logger-inl.h>

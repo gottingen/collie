@@ -21,93 +21,93 @@
 
 TEST_CASE("stdout_st [stdout]")
 {
-    auto l = clog::stdout_logger_st("test");
+    auto l = collie::log::stdout_logger_st("test");
     l->set_pattern("%+");
-    l->set_level(clog::level::trace);
+    l->set_level(collie::log::level::trace);
     l->trace("Test stdout_st");
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 TEST_CASE("stdout_mt [stdout]")
 {
-    auto l = clog::stdout_logger_mt("test");
+    auto l = collie::log::stdout_logger_mt("test");
     l->set_pattern("%+");
-    l->set_level(clog::level::debug);
+    l->set_level(collie::log::level::debug);
     l->debug("Test stdout_mt");
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 TEST_CASE("stderr_st [stderr]")
 {
-    auto l = clog::stderr_logger_st("test");
+    auto l = collie::log::stderr_logger_st("test");
     l->set_pattern("%+");
     l->info("Test stderr_st");
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 TEST_CASE("stderr_mt [stderr]")
 {
-    auto l = clog::stderr_logger_mt("test");
+    auto l = collie::log::stderr_logger_mt("test");
     l->set_pattern("%+");
     l->info("Test stderr_mt");
     l->warn("Test stderr_mt");
     l->error("Test stderr_mt");
     l->critical("Test stderr_mt");
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 // color loggers
 TEST_CASE("stdout_color_st [stdout]")
 {
-    auto l = clog::stdout_color_st("test");
+    auto l = collie::log::stdout_color_st("test");
     l->set_pattern("%+");
     l->info("Test stdout_color_st");
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 TEST_CASE("stdout_color_mt [stdout]")
 {
-    auto l = clog::stdout_color_mt("test");
+    auto l = collie::log::stdout_color_mt("test");
     l->set_pattern("%+");
-    l->set_level(clog::level::trace);
+    l->set_level(collie::log::level::trace);
     l->trace("Test stdout_color_mt");
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 TEST_CASE("stderr_color_st [stderr]")
 {
-    auto l = clog::stderr_color_st("test");
+    auto l = collie::log::stderr_color_st("test");
     l->set_pattern("%+");
-    l->set_level(clog::level::debug);
+    l->set_level(collie::log::level::debug);
     l->debug("Test stderr_color_st");
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 TEST_CASE("stderr_color_mt [stderr]")
 {
-    auto l = clog::stderr_color_mt("test");
+    auto l = collie::log::stderr_color_mt("test");
     l->set_pattern("%+");
     l->info("Test stderr_color_mt");
     l->warn("Test stderr_color_mt");
     l->error("Test stderr_color_mt");
     l->critical("Test stderr_color_mt");
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 #ifdef TLOG_WCHAR_TO_UTF8_SUPPORT
 
 TEST_CASE("wchar_api [stdout]")
 {
-    auto l = clog::stdout_logger_st("wchar_logger");
+    auto l = collie::log::stdout_logger_st("wchar_logger");
     l->set_pattern("%+");
-    l->set_level(clog::level::trace);
+    l->set_level(collie::log::level::trace);
     l->trace(L"Test wchar_api");
     l->trace(L"Test wchar_api {}", L"param");
     l->trace(L"Test wchar_api {}", 1);
     l->trace(L"Test wchar_api {}", std::wstring{L"wstring param"});
     l->trace(std::wstring{L"Test wchar_api wstring"});
     TLOG_LOGGER_DEBUG(l, L"Test TLOG_LOGGER_DEBUG {}", L"param");
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 #endif

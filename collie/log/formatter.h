@@ -17,7 +17,7 @@
 #include <collie/log/details/log_msg.h>
 #include <collie/strings/fmt/format.h>
 
-namespace clog {
+namespace collie::log {
 
 class formatter {
 public:
@@ -25,4 +25,4 @@ public:
     virtual void format(const details::log_msg &msg, memory_buf_t &dest) = 0;
     virtual std::unique_ptr<formatter> clone() const = 0;
 };
-}  // namespace clog
+}  // namespace collie::log

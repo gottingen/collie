@@ -17,7 +17,7 @@
 #pragma once
 
 
-namespace clog {
+namespace collie::log {
 namespace details {
 
 inline log_msg_buffer::log_msg_buffer(const log_msg &orig_msg)
@@ -61,4 +61,4 @@ inline void log_msg_buffer::update_string_views() {
 }
 
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

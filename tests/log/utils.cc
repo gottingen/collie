@@ -24,7 +24,7 @@
 
 void prepare_logdir()
 {
-    clog::drop_all();
+    collie::log::drop_all();
 #ifdef _WIN32
     system("rmdir /S /Q test_logs");
 #else
@@ -67,7 +67,7 @@ std::size_t count_lines(const std::string &filename, bool dump)
 
 void require_message_count(const std::string &filename, const std::size_t messages)
 {
-    if (strlen(clog::details::os::default_eol) == 0)
+    if (strlen(collie::log::details::os::default_eol) == 0)
     {
         REQUIRE(count_lines(filename) == 1);
     }

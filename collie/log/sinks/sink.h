@@ -19,7 +19,7 @@
 #include <collie/log/details/log_msg.h>
 #include <collie/log/formatter.h>
 
-namespace clog {
+namespace collie::log {
 
 namespace sinks {
 class  sink {
@@ -28,7 +28,7 @@ public:
     virtual void log(const details::log_msg &msg) = 0;
     virtual void flush() = 0;
     virtual void set_pattern(const std::string &pattern) = 0;
-    virtual void set_formatter(std::unique_ptr<clog::formatter> sink_formatter) = 0;
+    virtual void set_formatter(std::unique_ptr<collie::log::formatter> sink_formatter) = 0;
 
     void set_level(level::level_enum log_level);
     level::level_enum level() const;
@@ -40,6 +40,6 @@ protected:
 };
 
 }  // namespace sinks
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/sinks/sink-inl.h>

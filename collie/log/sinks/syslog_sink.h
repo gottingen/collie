@@ -23,7 +23,7 @@
 #include <string>
 #include <syslog.h>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 /**
  * Sink that write to syslog using the `syscall()` library call.
@@ -33,13 +33,13 @@ class syslog_sink : public base_sink<Mutex> {
 public:
     syslog_sink(std::string ident, int syslog_option, int syslog_facility, bool enable_formatting)
         : enable_formatting_{enable_formatting},
-          syslog_levels_{{/* clog::level::trace      */ LOG_DEBUG,
-                          /* clog::level::debug      */ LOG_DEBUG,
-                          /* clog::level::info       */ LOG_INFO,
-                          /* clog::level::warn       */ LOG_WARNING,
-                          /* clog::level::error        */ LOG_ERR,
-                          /* clog::level::fatal   */ LOG_CRIT,
-                          /* clog::level::off        */ LOG_INFO}},
+          syslog_levels_{{/* collie::log::level::trace      */ LOG_DEBUG,
+                          /* collie::log::level::debug      */ LOG_DEBUG,
+                          /* collie::log::level::info       */ LOG_INFO,
+                          /* collie::log::level::warn       */ LOG_WARNING,
+                          /* collie::log::level::error        */ LOG_ERR,
+                          /* collie::log::level::fatal   */ LOG_CRIT,
+                          /* collie::log::level::off        */ LOG_INFO}},
           ident_{std::move(ident)} {
         // set ident to be program name if empty
         ::openlog(ident_.empty() ? nullptr : ident_.c_str(), syslog_option, syslog_facility);
@@ -93,7 +93,7 @@ using syslog_sink_st = syslog_sink<details::null_mutex>;
 }  // namespace sinks
 
 // Create and register a syslog logger
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> syslog_logger_mt(const std::string &logger_name,
                                                 const std::string &syslog_ident = "",
                                                 int syslog_option = 0,
@@ -103,7 +103,7 @@ inline std::shared_ptr<logger> syslog_logger_mt(const std::string &logger_name,
                                                            syslog_facility, enable_formatting);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> syslog_logger_st(const std::string &logger_name,
                                                 const std::string &syslog_ident = "",
                                                 int syslog_option = 0,
@@ -112,4 +112,4 @@ inline std::shared_ptr<logger> syslog_logger_st(const std::string &logger_name,
     return Factory::template create<sinks::syslog_sink_st>(logger_name, syslog_ident, syslog_option,
                                                            syslog_facility, enable_formatting);
 }
-}  // namespace clog
+}  // namespace collie::log

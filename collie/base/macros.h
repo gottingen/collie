@@ -94,6 +94,8 @@
 #define TURBO_CONCAT2(a, b) a##b
 #endif
 
+#define COLLIE_STRINGIFY(x) #x
+
 #if defined(_MSC_VER)
 #  define COLLIE_MSVC_PUSH_DISABLE_WARNING(n) \
     __pragma(warning(push)) __pragma(warning(disable : n))
@@ -101,6 +103,12 @@
 #else
 #  define COLLIE_MSVC_PUSH_DISABLE_WARNING(n)
 #  define COLLIE_MSVC_POP_WARNING()
+#endif
+
+#if defined(__GNUC__) || defined(__clang__) || defined(_MSC_VER)
+#define COLLIE_RESTRICT __restrict
+#else
+#define COLLIE_RESTRICT
 #endif
 
 #endif  // COLLIE_BASE_MACROS_H_

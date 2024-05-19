@@ -33,7 +33,7 @@
 #include <sstream>
 #include <string>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 /*
@@ -54,8 +54,8 @@ struct daily_filename_calculator {
  * Generator of daily log file names with strftime format.
  * Usages:
  *    auto sink =
- * std::make_shared<clog::sinks::daily_file_format_sink_mt>("myapp-%Y-%m-%d:%H:%M:%S.log", hour,
- * minute);" auto logger = clog::daily_logger_format_mt("loggername, "myapp-%Y-%m-%d:%X.log",
+ * std::make_shared<collie::log::sinks::daily_file_format_sink_mt>("myapp-%Y-%m-%d:%H:%M:%S.log", hour,
+ * minute);" auto logger = collie::log::daily_logger_format_mt("loggername, "myapp-%Y-%m-%d:%X.log",
  * hour,  minute)"
  *
  */
@@ -156,7 +156,7 @@ private:
 
     tm now_tm(log_clock::time_point tp) {
         time_t tnow = log_clock::to_time_t(tp);
-        return clog::details::os::localtime(tnow);
+        return collie::log::details::os::localtime(tnow);
     }
 
     log_clock::time_point next_rotation_tp_() {
@@ -213,7 +213,7 @@ using daily_file_format_sink_st =
 //
 // factory functions
 //
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> daily_logger_mt(const std::string &logger_name,
                                                const filename_t &filename,
                                                int hour = 0,
@@ -225,7 +225,7 @@ inline std::shared_ptr<logger> daily_logger_mt(const std::string &logger_name,
                                                                truncate, max_files, event_handlers);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> daily_logger_format_mt(
     const std::string &logger_name,
     const filename_t &filename,
@@ -238,7 +238,7 @@ inline std::shared_ptr<logger> daily_logger_format_mt(
         logger_name, filename, hour, minute, truncate, max_files, event_handlers);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> daily_logger_st(const std::string &logger_name,
                                                const filename_t &filename,
                                                int hour = 0,
@@ -250,7 +250,7 @@ inline std::shared_ptr<logger> daily_logger_st(const std::string &logger_name,
                                                                truncate, max_files, event_handlers);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> daily_logger_format_st(
     const std::string &logger_name,
     const filename_t &filename,
@@ -262,4 +262,4 @@ inline std::shared_ptr<logger> daily_logger_format_st(
     return Factory::template create<sinks::daily_file_format_sink_st>(
         logger_name, filename, hour, minute, truncate, max_files, event_handlers);
 }
-}  // namespace clog
+}  // namespace collie::log

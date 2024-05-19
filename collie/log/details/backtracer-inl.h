@@ -16,7 +16,7 @@
 
 #pragma once
 
-namespace clog {
+namespace collie::log {
 namespace details {
 inline backtracer::backtracer(const backtracer &other) {
     std::lock_guard<std::mutex> lock(other.mutex_);
@@ -70,4 +70,4 @@ inline void backtracer::foreach_pop(std::function<void(const details::log_msg &)
     }
 }
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

@@ -35,7 +35,7 @@
 
 #include <string>
 
-namespace clog {
+namespace collie::log {
 namespace details {
 
 class udp_client {
@@ -91,4 +91,4 @@ public:
     }
 };
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

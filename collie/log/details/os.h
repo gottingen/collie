@@ -19,9 +19,9 @@
 #include <ctime>  // std::time_t
 #include <collie/log/common.h>
 
-namespace clog::details::os {
+namespace collie::log::details::os {
 
-    clog::log_clock::time_point now() noexcept;
+    collie::log::log_clock::time_point now() noexcept;
 
     std::tm localtime(const std::time_t &time_tt) noexcept;
 
@@ -124,6 +124,6 @@ namespace clog::details::os {
     // Return true on success.
     bool fsync(FILE *fp);
 
-}  // namespace clog::details::os
+}  // namespace collie::log::details::os
 
 #include <collie/log/details/os-inl.h>

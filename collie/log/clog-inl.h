@@ -18,7 +18,7 @@
 #include <collie/log/common.h>
 #include <collie/log/pattern_formatter.h>
 
-namespace clog {
+namespace collie::log {
 
     inline void initialize_logger(std::shared_ptr<logger> logger) {
         details::registry::instance().initialize_logger(std::move(logger));
@@ -28,13 +28,13 @@ namespace clog {
         return details::registry::instance().get(name);
     }
 
-    inline void set_formatter(std::unique_ptr<clog::formatter> formatter) {
+    inline void set_formatter(std::unique_ptr<collie::log::formatter> formatter) {
         details::registry::instance().set_formatter(std::move(formatter));
     }
 
     inline void set_pattern(std::string pattern, pattern_time_type time_type) {
         set_formatter(
-                std::unique_ptr<clog::formatter>(new pattern_formatter(std::move(pattern), time_type)));
+                std::unique_ptr<collie::log::formatter>(new pattern_formatter(std::move(pattern), time_type)));
     }
 
     inline void enable_backtrace(size_t n_messages) {
@@ -85,15 +85,15 @@ namespace clog {
         details::registry::instance().set_automatic_registration(automatic_registration);
     }
 
-    inline std::shared_ptr<clog::logger> default_logger() {
+    inline std::shared_ptr<collie::log::logger> default_logger() {
         return details::registry::instance().default_logger();
     }
 
-    inline clog::logger *default_logger_raw() {
+    inline collie::log::logger *default_logger_raw() {
         return details::registry::instance().get_default_raw();
     }
 
-    inline void set_default_logger(std::shared_ptr<clog::logger> default_logger) {
+    inline void set_default_logger(std::shared_ptr<collie::log::logger> default_logger) {
         details::registry::instance().set_default_logger(std::move(default_logger));
     }
 
@@ -101,4 +101,4 @@ namespace clog {
         details::registry::instance().apply_logger_env_levels(std::move(logger));
     }
 
-}  // namespace clog
+}  // namespace collie::log

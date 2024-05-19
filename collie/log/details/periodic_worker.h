@@ -29,7 +29,7 @@
 #include <mutex>
 #include <thread>
 
-namespace clog {
+namespace collie::log {
     namespace details {
 
         class periodic_worker {
@@ -67,6 +67,6 @@ namespace clog {
             std::condition_variable cv_;
         };
     }  // namespace details
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/details/periodic_worker-inl.h>

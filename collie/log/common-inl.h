@@ -17,22 +17,22 @@
 #include <algorithm>
 #include <iterator>
 
-namespace clog {
+namespace collie::log {
     namespace level {
 
         constexpr static string_view_t level_string_views[]CLOG_LEVEL_NAMES;
 
         static const char *short_level_names[]CLOG_SHORT_LEVEL_NAMES;
 
-        inline const string_view_t &to_string_view(clog::level::level_enum l) noexcept {
+        inline const string_view_t &to_string_view(collie::log::level::level_enum l) noexcept {
             return level_string_views[l];
         }
 
-        inline const char *to_short_c_str(clog::level::level_enum l) noexcept {
+        inline const char *to_short_c_str(collie::log::level::level_enum l) noexcept {
             return short_level_names[l];
         }
 
-        inline clog::level::level_enum from_str(const std::string &name) noexcept {
+        inline collie::log::level::level_enum from_str(const std::string &name) noexcept {
             auto it = std::find(std::begin(level_string_views), std::end(level_string_views), name);
             if (it != std::end(level_string_views))
                 return static_cast<level::level_enum>(std::distance(std::begin(level_string_views), it));
@@ -65,4 +65,4 @@ namespace clog {
 
     inline void throw_clog_ex(std::string msg) { CLOG_THROW(CLogEx(std::move(msg))); }
 
-}  // namespace clog
+}  // namespace collie::log

@@ -24,10 +24,10 @@ int main() {
     LOG(WARN) << "Hello, World!" << " jeff is here";
     LOG(ERROR) << "Hello, World!" << " jeff is here";
     LOG(FATAL) << "Hello, World!" << " jeff is here";
-    clog::default_logger()->set_level(clog::level::trace);
+    collie::log::default_logger()->set_level(collie::log::level::trace);
     LOG(DEBUG) << "Hello, World!" << " jeff is here";
     LOG(TRACE) << "Hello, World!" << " jeff is here";
-    clog::default_logger()->set_level(clog::level::info);
+    collie::log::default_logger()->set_level(collie::log::level::info);
 
     LOG_IF(INFO, true) << "Hello, World!" << " jeff is here";
     LOG_IF(INFO, false) << "Hello, World!" << " jeff is not here";
@@ -144,10 +144,10 @@ int main() {
     // CHECK_NEAR false
     CHECK_NEAR(1.0, 1.1, 0.05);
     /// vlog
-    clog::default_logger()->set_vlog_level(1);
+    collie::log::default_logger()->set_vlog_level(1);
     VLOG(1) << "VLOG(1)"<< " jeff should not here";
     VLOG(0) << "VLOG(0)"<< " jeff should here";
-    clog::default_logger()->set_vlog_level(2);
+    collie::log::default_logger()->set_vlog_level(2);
     VLOG(-1) << "VLOG(-1)"<< " jeff should here";
     VLOG(0) << "VLOG(0)"<< " jeff should here";
     VLOG(1) << "VLOG(1)"<< " jeff should here";
@@ -221,7 +221,7 @@ int main() {
         }
         VLOG_ONCE(1) << s;
     }
-    clog::default_logger()->set_pattern("%v");
+    collie::log::default_logger()->set_pattern("%v");
     LOG(INFO) << "Hello, World!" << " jeff is here";
     LOG(WARN) << "Hello, World!" << " jeff is here";
     return 0;

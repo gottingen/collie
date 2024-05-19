@@ -24,13 +24,13 @@
 
 TEST_CASE("basic async test [async]")
 {
-    auto test_sink = std::make_shared<clog::sinks::test_sink_mt>();
+    auto test_sink = std::make_shared<collie::log::sinks::test_sink_mt>();
     size_t overrun_counter = 0;
     size_t queue_size = 128;
     size_t messages = 256;
     {
-        auto tp = std::make_shared<clog::details::thread_pool>(queue_size, 1);
-        auto logger = std::make_shared<clog::async_logger>("as", test_sink, tp, clog::async_overflow_policy::block);
+        auto tp = std::make_shared<collie::log::details::thread_pool>(queue_size, 1);
+        auto logger = std::make_shared<collie::log::async_logger>("as", test_sink, tp, collie::log::async_overflow_policy::block);
         for (size_t i = 0; i < messages; i++)
         {
             logger->info("Hello message #{}", i);
@@ -45,13 +45,13 @@ TEST_CASE("basic async test [async]")
 
 TEST_CASE("discard policy [async]")
 {
-    auto test_sink = std::make_shared<clog::sinks::test_sink_mt>();
+    auto test_sink = std::make_shared<collie::log::sinks::test_sink_mt>();
     test_sink->set_delay(std::chrono::milliseconds(1));
     size_t queue_size = 4;
     size_t messages = 1024;
 
-    auto tp = std::make_shared<clog::details::thread_pool>(queue_size, 1);
-    auto logger = std::make_shared<clog::async_logger>("as", test_sink, tp, clog::async_overflow_policy::overrun_oldest);
+    auto tp = std::make_shared<collie::log::details::thread_pool>(queue_size, 1);
+    auto logger = std::make_shared<collie::log::async_logger>("as", test_sink, tp, collie::log::async_overflow_policy::overrun_oldest);
     for (size_t i = 0; i < messages; i++)
     {
         logger->info("Hello message");
@@ -64,10 +64,10 @@ TEST_CASE("discard policy using factory [async]")
 {
     size_t queue_size = 4;
     size_t messages = 1024;
-    clog::init_thread_pool(queue_size, 1);
+    collie::log::init_thread_pool(queue_size, 1);
 
-    auto logger = clog::create_async_nb<clog::sinks::test_sink_mt>("as2");
-    auto test_sink = std::static_pointer_cast<clog::sinks::test_sink_mt>(logger->sinks()[0]);
+    auto logger = collie::log::create_async_nb<collie::log::sinks::test_sink_mt>("as2");
+    auto test_sink = std::static_pointer_cast<collie::log::sinks::test_sink_mt>(logger->sinks()[0]);
     test_sink->set_delay(std::chrono::milliseconds(3));
 
     for (size_t i = 0; i < messages; i++)
@@ -76,17 +76,17 @@ TEST_CASE("discard policy using factory [async]")
     }
 
     REQUIRE(test_sink->msg_counter() < messages);
-    clog::drop_all();
+    collie::log::drop_all();
 }
 
 TEST_CASE("flush [async]")
 {
-    auto test_sink = std::make_shared<clog::sinks::test_sink_mt>();
+    auto test_sink = std::make_shared<collie::log::sinks::test_sink_mt>();
     size_t queue_size = 256;
     size_t messages = 256;
     {
-        auto tp = std::make_shared<clog::details::thread_pool>(queue_size, 1);
-        auto logger = std::make_shared<clog::async_logger>("as", test_sink, tp, clog::async_overflow_policy::block);
+        auto tp = std::make_shared<collie::log::details::thread_pool>(queue_size, 1);
+        auto logger = std::make_shared<collie::log::async_logger>("as", test_sink, tp, collie::log::async_overflow_policy::block);
         for (size_t i = 0; i < messages; i++)
         {
             logger->info("Hello message #{}", i);
@@ -102,24 +102,24 @@ TEST_CASE("flush [async]")
 TEST_CASE("async periodic flush [async]")
 {
 
-    auto logger = clog::create_async<clog::sinks::test_sink_mt>("as");
-    auto test_sink = std::static_pointer_cast<clog::sinks::test_sink_mt>(logger->sinks()[0]);
+    auto logger = collie::log::create_async<collie::log::sinks::test_sink_mt>("as");
+    auto test_sink = std::static_pointer_cast<collie::log::sinks::test_sink_mt>(logger->sinks()[0]);
 
-    clog::flush_every(std::chrono::seconds(1));
+    collie::log::flush_every(std::chrono::seconds(1));
     std::this_thread::sleep_for(std::chrono::milliseconds(1700));
     REQUIRE(test_sink->flush_counter() == 1);
-    clog::flush_every(std::chrono::seconds(0));
-    clog::drop_all();
+    collie::log::flush_every(std::chrono::seconds(0));
+    collie::log::drop_all();
 }
 
 TEST_CASE("tp->wait_empty()  [async]")
 {
-    auto test_sink = std::make_shared<clog::sinks::test_sink_mt>();
+    auto test_sink = std::make_shared<collie::log::sinks::test_sink_mt>();
     test_sink->set_delay(std::chrono::milliseconds(5));
     size_t messages = 100;
 
-    auto tp = std::make_shared<clog::details::thread_pool>(messages, 2);
-    auto logger = std::make_shared<clog::async_logger>("as", test_sink, tp, clog::async_overflow_policy::block);
+    auto tp = std::make_shared<collie::log::details::thread_pool>(messages, 2);
+    auto logger = std::make_shared<collie::log::async_logger>("as", test_sink, tp, collie::log::async_overflow_policy::block);
     for (size_t i = 0; i < messages; i++)
     {
         logger->info("Hello message #{}", i);
@@ -133,13 +133,13 @@ TEST_CASE("tp->wait_empty()  [async]")
 
 TEST_CASE("multi threads [async]")
 {
-    auto test_sink = std::make_shared<clog::sinks::test_sink_mt>();
+    auto test_sink = std::make_shared<collie::log::sinks::test_sink_mt>();
     size_t queue_size = 128;
     size_t messages = 256;
     size_t n_threads = 10;
     {
-        auto tp = std::make_shared<clog::details::thread_pool>(queue_size, 1);
-        auto logger = std::make_shared<clog::async_logger>("as", test_sink, tp, clog::async_overflow_policy::block);
+        auto tp = std::make_shared<collie::log::details::thread_pool>(queue_size, 1);
+        auto logger = std::make_shared<collie::log::async_logger>("as", test_sink, tp, collie::log::async_overflow_policy::block);
 
         std::vector<std::thread> threads;
         for (size_t i = 0; i < n_threads; i++)
@@ -168,11 +168,11 @@ TEST_CASE("to_file [async]")
     prepare_logdir();
     size_t messages = 1024;
     size_t tp_threads = 1;
-    clog::filename_t filename = TLOG_FILENAME_T(TEST_FILENAME);
+    collie::log::filename_t filename = TLOG_FILENAME_T(TEST_FILENAME);
     {
-        auto file_sink = std::make_shared<clog::sinks::basic_file_sink_mt>(filename, true);
-        auto tp = std::make_shared<clog::details::thread_pool>(messages, tp_threads);
-        auto logger = std::make_shared<clog::async_logger>("as", std::move(file_sink), std::move(tp));
+        auto file_sink = std::make_shared<collie::log::sinks::basic_file_sink_mt>(filename, true);
+        auto tp = std::make_shared<collie::log::details::thread_pool>(messages, tp_threads);
+        auto logger = std::make_shared<collie::log::async_logger>("as", std::move(file_sink), std::move(tp));
 
         for (size_t j = 0; j < messages; j++)
         {
@@ -182,7 +182,7 @@ TEST_CASE("to_file [async]")
 
     require_message_count(TEST_FILENAME, messages);
     auto contents = file_contents(TEST_FILENAME);
-    using clog::details::os::default_eol;
+    using collie::log::details::os::default_eol;
     REQUIRE(ends_with(contents, turbo::format("Hello message #1023{}", default_eol)));
 }
 
@@ -191,11 +191,11 @@ TEST_CASE("to_file multi-workers [async]")
     prepare_logdir();
     size_t messages = 1024 * 10;
     size_t tp_threads = 10;
-    clog::filename_t filename = TLOG_FILENAME_T(TEST_FILENAME);
+    collie::log::filename_t filename = TLOG_FILENAME_T(TEST_FILENAME);
     {
-        auto file_sink = std::make_shared<clog::sinks::basic_file_sink_mt>(filename, true);
-        auto tp = std::make_shared<clog::details::thread_pool>(messages, tp_threads);
-        auto logger = std::make_shared<clog::async_logger>("as", std::move(file_sink), std::move(tp));
+        auto file_sink = std::make_shared<collie::log::sinks::basic_file_sink_mt>(filename, true);
+        auto tp = std::make_shared<collie::log::details::thread_pool>(messages, tp_threads);
+        auto logger = std::make_shared<collie::log::async_logger>("as", std::move(file_sink), std::move(tp));
 
         for (size_t j = 0; j < messages; j++)
         {

@@ -26,12 +26,12 @@
 #include <thread>
 #include <vector>
 
-namespace clog {
+namespace collie::log {
     class async_logger;
 
     namespace details {
 
-        using async_logger_ptr = std::shared_ptr<clog::async_logger>;
+        using async_logger_ptr = std::shared_ptr<collie::log::async_logger>;
 
         enum class async_msg_type {
             log, flush, terminate
@@ -139,6 +139,6 @@ namespace clog {
         };
 
     }  // namespace details
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/details/thread_pool-inl.h>

@@ -21,7 +21,7 @@
 
 #include <cstdio>
 
-namespace clog {
+namespace collie::log {
 
     // public methods
     inline logger::logger(const logger &other)
@@ -45,7 +45,7 @@ namespace clog {
         return *this;
     }
 
-    inline void logger::swap(clog::logger &other) noexcept {
+    inline void logger::swap(collie::log::logger &other) noexcept {
         name_.swap(other.name_);
         sinks_.swap(other.sinks_);
 
@@ -135,7 +135,7 @@ namespace clog {
     }
 
     // protected methods
-    inline void logger::log_it_(const clog::details::log_msg &log_msg,
+    inline void logger::log_it_(const collie::log::details::log_msg &log_msg,
                                 bool log_enabled,
                                 bool traceback_enabled) {
         if (log_enabled) {
@@ -209,4 +209,4 @@ namespace clog {
 #endif
         }
     }
-}  // namespace clog
+}  // namespace collie::log

@@ -21,7 +21,7 @@
 #include <mutex>
 #include <ostream>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 template <typename Mutex>
 class ostream_sink final : public base_sink<Mutex> {
@@ -52,4 +52,4 @@ using ostream_sink_mt = ostream_sink<std::mutex>;
 using ostream_sink_st = ostream_sink<details::null_mutex>;
 
 }  // namespace sinks
-}  // namespace clog
+}  // namespace collie::log

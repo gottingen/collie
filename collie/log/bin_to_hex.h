@@ -43,12 +43,12 @@
 // Examples:
 //
 // std::vector<char> v(200, 0x0b);
-// logger->info("Some buffer {}", clog::to_hex(v));
+// logger->info("Some buffer {}", collie::log::to_hex(v));
 // char buf[128];
-// logger->info("Some buffer {:X}", clog::to_hex(std::begin(buf), std::end(buf)));
-// logger->info("Some buffer {:X}", clog::to_hex(std::begin(buf), std::end(buf), 16));
+// logger->info("Some buffer {:X}", collie::log::to_hex(std::begin(buf), std::end(buf)));
+// logger->info("Some buffer {:X}", collie::log::to_hex(std::begin(buf), std::end(buf), 16));
 
-namespace clog {
+namespace collie::log {
     namespace details {
 
         template<typename It>
@@ -104,12 +104,12 @@ namespace clog {
         return details::dump_info<It>(range_begin, range_end, size_per_line);
     }
 
-}  // namespace clog
+}  // namespace collie::log
 
 namespace fmt {
 
     template<typename T>
-    struct formatter<clog::details::dump_info<T>, char> {
+    struct formatter<collie::log::details::dump_info<T>, char> {
         const char delimiter = ' ';
         bool put_newlines = true;
         bool put_delimiters = true;
@@ -150,7 +150,7 @@ namespace fmt {
 
         // format the given bytes range as hex
         template<typename FormatContext, typename Container>
-        auto format(const clog::details::dump_info<Container> &the_range, FormatContext &ctx) const
+        auto format(const collie::log::details::dump_info<Container> &the_range, FormatContext &ctx) const
         -> decltype(ctx.out()) {
             constexpr const char *hex_upper = "0123456789ABCDEF";
             constexpr const char *hex_lower = "0123456789abcdef";
@@ -220,7 +220,7 @@ namespace fmt {
             *inserter++ = '\n';
 
             if (put_positions) {
-                clog::fmt_lib::format_to(inserter, FMT_STRING("{:04X}: "), pos);
+                collie::log::fmt_lib::format_to(inserter, FMT_STRING("{:04X}: "), pos);
             }
         }
     };

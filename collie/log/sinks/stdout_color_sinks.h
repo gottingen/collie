@@ -24,7 +24,7 @@
 
 #include <collie/log/details/synchronous_factory.h>
 
-namespace clog {
+namespace collie::log {
     namespace sinks {
 #ifdef _WIN32
         using stdout_color_sink_mt = wincolor_stdout_sink_mt;
@@ -39,22 +39,22 @@ namespace clog {
 #endif
     }  // namespace sinks
 
-    template<typename Factory = clog::synchronous_factory>
+    template<typename Factory = collie::log::synchronous_factory>
     std::shared_ptr<logger> stdout_color_mt(const std::string &logger_name,
                                             color_mode mode = color_mode::automatic);
 
-    template<typename Factory = clog::synchronous_factory>
+    template<typename Factory = collie::log::synchronous_factory>
     std::shared_ptr<logger> stdout_color_st(const std::string &logger_name,
                                             color_mode mode = color_mode::automatic);
 
-    template<typename Factory = clog::synchronous_factory>
+    template<typename Factory = collie::log::synchronous_factory>
     std::shared_ptr<logger> stderr_color_mt(const std::string &logger_name,
                                             color_mode mode = color_mode::automatic);
 
-    template<typename Factory = clog::synchronous_factory>
+    template<typename Factory = collie::log::synchronous_factory>
     std::shared_ptr<logger> stderr_color_st(const std::string &logger_name,
                                             color_mode mode = color_mode::automatic);
 
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/sinks/stdout_color_sinks-inl.h>

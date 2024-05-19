@@ -23,7 +23,7 @@
 #include <mutex>
 #include <string>
 
-namespace clog {
+namespace collie::log {
 
 // callbacks type
 typedef std::function<void(const details::log_msg &msg)> custom_log_callback;
@@ -54,16 +54,16 @@ using callback_sink_st = callback_sink<details::null_mutex>;
 //
 // factory functions
 //
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> callback_logger_mt(const std::string &logger_name,
                                                   const custom_log_callback &callback) {
     return Factory::template create<sinks::callback_sink_mt>(logger_name, callback);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> callback_logger_st(const std::string &logger_name,
                                                   const custom_log_callback &callback) {
     return Factory::template create<sinks::callback_sink_st>(logger_name, callback);
 }
 
-}  // namespace clog
+}  // namespace collie::log

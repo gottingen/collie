@@ -25,7 +25,7 @@
 #include <string>
 #include <utility>
 
-namespace clog {
+namespace collie::log {
 namespace cfg {
 namespace helpers {
 
@@ -113,4 +113,4 @@ inline void load_levels(const std::string &input) {
 
 }  // namespace helpers
 }  // namespace cfg
-}  // namespace clog
+}  // namespace collie::log

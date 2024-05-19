@@ -26,7 +26,7 @@
 #include <thread>
 #include <tuple>
 
-namespace clog {
+namespace collie::log {
 namespace details {
 
 inline file_helper::file_helper(const file_event_handlers &event_handlers)
@@ -158,4 +158,4 @@ inline std::tuple<filename_t, filename_t> file_helper::split_by_extension(
 }
 
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

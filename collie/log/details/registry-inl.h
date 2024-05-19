@@ -38,7 +38,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace clog::details {
+namespace collie::log::details {
 
     inline registry::registry()
             : formatter_(new pattern_formatter()) {
@@ -51,7 +51,7 @@ namespace clog::details {
 #endif
 
         const char *default_logger_name = "";
-        default_logger_ = std::make_shared<clog::logger>(default_logger_name, std::move(color_sink));
+        default_logger_ = std::make_shared<collie::log::logger>(default_logger_name, std::move(color_sink));
         loggers_[default_logger_name] = default_logger_;
 
 #endif  // CLOG_DISABLE_DEFAULT_LOGGER
@@ -100,9 +100,9 @@ namespace clog::details {
     }
 
 // Return raw ptr to the default logger.
-// To be used directly by the clog default api (e.g. clog::info)
+// To be used directly by the clog default api (e.g. collie::log::info)
 // This make the default API faster, but cannot be used concurrently with set_default_logger().
-// e.g do not call set_default_logger() from one thread while calling clog::info() from another.
+// e.g do not call set_default_logger() from one thread while calling collie::log::info() from another.
     inline logger *registry::get_default_raw() { return default_logger_.get(); }
 
 // set default logger.
@@ -279,4 +279,4 @@ namespace clog::details {
         loggers_[logger_name] = std::move(new_logger);
     }
 
-}  // namespace clog::details
+}  // namespace collie::log::details

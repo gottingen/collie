@@ -19,14 +19,14 @@
 #include <collie/log/details/os.h>
 #include <collie/log/pattern_formatter.h>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 template <typename ConsoleMutex>
 inline ansicolor_sink<ConsoleMutex>::ansicolor_sink(FILE *target_file, color_mode mode)
     : target_file_(target_file),
       mutex_(ConsoleMutex::mutex()),
-      formatter_(details::make_unique<clog::pattern_formatter>())
+      formatter_(details::make_unique<collie::log::pattern_formatter>())
 
 {
     set_color_mode(mode);
@@ -80,12 +80,12 @@ inline void ansicolor_sink<ConsoleMutex>::flush() {
 template <typename ConsoleMutex>
 inline void ansicolor_sink<ConsoleMutex>::set_pattern(const std::string &pattern) {
     std::lock_guard<mutex_t> lock(mutex_);
-    formatter_ = std::unique_ptr<clog::formatter>(new pattern_formatter(pattern));
+    formatter_ = std::unique_ptr<collie::log::formatter>(new pattern_formatter(pattern));
 }
 
 template <typename ConsoleMutex>
 inline void ansicolor_sink<ConsoleMutex>::set_formatter(
-    std::unique_ptr<clog::formatter> sink_formatter) {
+    std::unique_ptr<collie::log::formatter> sink_formatter) {
     std::lock_guard<mutex_t> lock(mutex_);
     formatter_ = std::move(sink_formatter);
 }
@@ -141,4 +141,4 @@ inline ansicolor_stderr_sink<ConsoleMutex>::ansicolor_stderr_sink(color_mode mod
     : ansicolor_sink<ConsoleMutex>(stderr, mode) {}
 
 }  // namespace sinks
-}  // namespace clog
+}  // namespace collie::log

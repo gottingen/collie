@@ -34,7 +34,7 @@
 #include <utility>
 #include <vector>
 
-namespace clog {
+namespace collie::log {
 namespace details {
 
 ///////////////////////////////////////////////////////////////////////
@@ -1175,8 +1175,8 @@ inline void pattern_formatter::handle_flag_(char flag, details::padding_info pad
                 formatters_.push_back((std::move(unknown_flag)));
             }
             // fix issue #1617 (prev char was '!' and should have been treated as funcname flag
-            // instead of truncating flag) clog::set_pattern("[%10!] %v") => "[      main] some
-            // message" clog::set_pattern("[%3!!] %v") => "[mai] some message"
+            // instead of truncating flag) collie::log::set_pattern("[%10!] %v") => "[      main] some
+            // message" collie::log::set_pattern("[%3!!] %v") => "[mai] some message"
             else {
                 padding.truncate_ = false;
                 formatters_.push_back(
@@ -1272,4 +1272,4 @@ inline void pattern_formatter::compile_pattern_(const std::string &pattern) {
         formatters_.push_back(std::move(user_chars));
     }
 }
-}  // namespace clog
+}  // namespace collie::log

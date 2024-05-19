@@ -20,7 +20,7 @@
 #include <cassert>
 #include <vector>
 
-namespace clog {
+namespace collie::log {
 namespace details {
 template <typename T>
 class circular_q {
@@ -123,4 +123,4 @@ private:
     }
 };
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

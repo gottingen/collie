@@ -17,14 +17,14 @@
 
 #include <collie/log/common.h>
 
-inline bool clog::sinks::sink::should_log(clog::level::level_enum msg_level) const {
+inline bool collie::log::sinks::sink::should_log(collie::log::level::level_enum msg_level) const {
     return msg_level >= level_.load(std::memory_order_relaxed);
 }
 
-inline void clog::sinks::sink::set_level(level::level_enum log_level) {
+inline void collie::log::sinks::sink::set_level(level::level_enum log_level) {
     level_.store(log_level, std::memory_order_relaxed);
 }
 
-inline clog::level::level_enum clog::sinks::sink::level() const {
-    return static_cast<clog::level::level_enum>(level_.load(std::memory_order_relaxed));
+inline collie::log::level::level_enum collie::log::sinks::sink::level() const {
+    return static_cast<collie::log::level::level_enum>(level_.load(std::memory_order_relaxed));
 }

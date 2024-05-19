@@ -25,7 +25,7 @@
 #include <mutex>
 #include <string>
 
-namespace clog {
+namespace collie::log {
     namespace sinks {
 /*
  * Windows color console sink. Uses WriteConsoleA to write to the console with
@@ -51,7 +51,7 @@ namespace clog {
 
             void set_pattern(const std::string &pattern) override final;
 
-            void set_formatter(std::unique_ptr<clog::formatter> sink_formatter) override final;
+            void set_formatter(std::unique_ptr<collie::log::formatter> sink_formatter) override final;
 
             void set_color_mode(color_mode mode);
 
@@ -60,7 +60,7 @@ namespace clog {
             void *out_handle_;
             mutex_t &mutex_;
             bool should_do_colors_;
-            std::unique_ptr<clog::formatter> formatter_;
+            std::unique_ptr<collie::log::formatter> formatter_;
             std::array<std::uint16_t, level::n_levels> colors_;
 
             // set foreground color and return the orig console attributes (for resetting later)
@@ -93,6 +93,6 @@ namespace clog {
         using wincolor_stderr_sink_mt = wincolor_stderr_sink<details::console_mutex>;
         using wincolor_stderr_sink_st = wincolor_stderr_sink<details::console_nullmutex>;
     }  // namespace sinks
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/sinks/wincolor_sink-inl.h>

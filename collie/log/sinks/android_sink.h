@@ -35,7 +35,7 @@
         #define CLOG_ANDROID_RETRIES 2
     #endif
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 /*
@@ -98,19 +98,19 @@ private:
         return __android_log_buf_write(ID, prio, tag, text);
     }
 
-    static android_LogPriority convert_to_android_(clog::level::level_enum level) {
+    static android_LogPriority convert_to_android_(collie::log::level::level_enum level) {
         switch (level) {
-            case clog::level::trace:
+            case collie::log::level::trace:
                 return ANDROID_LOG_VERBOSE;
-            case clog::level::debug:
+            case collie::log::level::debug:
                 return ANDROID_LOG_DEBUG;
-            case clog::level::info:
+            case collie::log::level::info:
                 return ANDROID_LOG_INFO;
-            case clog::level::warn:
+            case collie::log::level::warn:
                 return ANDROID_LOG_WARN;
-            case clog::level::error:
+            case collie::log::level::error:
                 return ANDROID_LOG_ERROR;
-            case clog::level::fatal:
+            case collie::log::level::fatal:
                 return ANDROID_LOG_FATAL;
             default:
                 return ANDROID_LOG_DEFAULT;
@@ -133,18 +133,18 @@ using android_sink_buf_st = android_sink<details::null_mutex, BufferId>;
 
 // Create and register android syslog logger
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> android_logger_mt(const std::string &logger_name,
                                                  const std::string &tag = "clog") {
     return Factory::template create<sinks::android_sink_mt>(logger_name, tag);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> android_logger_st(const std::string &logger_name,
                                                  const std::string &tag = "clog") {
     return Factory::template create<sinks::android_sink_st>(logger_name, tag);
 }
 
-}  // namespace clog
+}  // namespace collie::log
 
 #endif  // __ANDROID__

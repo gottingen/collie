@@ -20,7 +20,7 @@
 #include <collie/log/common.h>
 #include <string>
 
-namespace clog {
+namespace collie::log {
     namespace details {
         struct log_msg {
             log_msg() = default;
@@ -52,6 +52,6 @@ namespace clog {
             string_view_t payload;
         };
     }  // namespace details
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/details/log_msg-inl.h>

@@ -25,7 +25,7 @@
 #include <mutex>
 #include <string>
 
-namespace clog {
+namespace collie::log {
     namespace sinks {
 
         //
@@ -77,7 +77,7 @@ namespace clog {
 // factory functions
 //
 
-    template<typename Factory = clog::synchronous_factory>
+    template<typename Factory = collie::log::synchronous_factory>
     inline std::shared_ptr<logger> rotating_logger_mt(const std::string &logger_name,
                                                       const filename_t &filename,
                                                       size_t max_file_size,
@@ -88,7 +88,7 @@ namespace clog {
                 logger_name, filename, max_file_size, max_files, rotate_on_open, event_handlers);
     }
 
-    template<typename Factory = clog::synchronous_factory>
+    template<typename Factory = collie::log::synchronous_factory>
     inline std::shared_ptr<logger> rotating_logger_st(const std::string &logger_name,
                                                       const filename_t &filename,
                                                       size_t max_file_size,
@@ -98,6 +98,6 @@ namespace clog {
         return Factory::template create<sinks::rotating_file_sink_st>(
                 logger_name, filename, max_file_size, max_files, rotate_on_open, event_handlers);
     }
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/sinks/rotating_file_sink-inl.h>

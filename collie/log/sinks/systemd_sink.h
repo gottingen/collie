@@ -25,7 +25,7 @@
 #endif
 #include <systemd/sd-journal.h>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 /**
@@ -37,13 +37,13 @@ public:
     systemd_sink(std::string ident = "", bool enable_formatting = false)
         : ident_{std::move(ident)},
           enable_formatting_{enable_formatting},
-          syslog_levels_{{/* clog::level::trace      */ LOG_DEBUG,
-                          /* clog::level::debug      */ LOG_DEBUG,
-                          /* clog::level::info       */ LOG_INFO,
-                          /* clog::level::warn       */ LOG_WARNING,
-                          /* clog::level::error        */ LOG_ERR,
-                          /* clog::level::fatal     */ LOG_CRIT,
-                          /* clog::level::off        */ LOG_INFO}} {}
+          syslog_levels_{{/* collie::log::level::trace      */ LOG_DEBUG,
+                          /* collie::log::level::debug      */ LOG_DEBUG,
+                          /* collie::log::level::info       */ LOG_INFO,
+                          /* collie::log::level::warn       */ LOG_WARNING,
+                          /* collie::log::level::error        */ LOG_ERR,
+                          /* collie::log::level::fatal     */ LOG_CRIT,
+                          /* collie::log::level::off        */ LOG_INFO}} {}
 
     ~systemd_sink() override {}
 
@@ -116,17 +116,17 @@ using systemd_sink_st = systemd_sink<details::null_mutex>;
 }  // namespace sinks
 
 // Create and register a syslog logger
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> systemd_logger_mt(const std::string &logger_name,
                                                  const std::string &ident = "",
                                                  bool enable_formatting = false) {
     return Factory::template create<sinks::systemd_sink_mt>(logger_name, ident, enable_formatting);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> systemd_logger_st(const std::string &logger_name,
                                                  const std::string &ident = "",
                                                  bool enable_formatting = false) {
     return Factory::template create<sinks::systemd_sink_st>(logger_name, ident, enable_formatting);
 }
-}  // namespace clog
+}  // namespace collie::log

@@ -22,7 +22,7 @@
 
 #include <mutex>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 template <typename Mutex>
@@ -37,18 +37,18 @@ using null_sink_st = null_sink<details::null_mutex>;
 
 }  // namespace sinks
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> null_logger_mt(const std::string &logger_name) {
     auto null_logger = Factory::template create<sinks::null_sink_mt>(logger_name);
     null_logger->set_level(level::off);
     return null_logger;
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> null_logger_st(const std::string &logger_name) {
     auto null_logger = Factory::template create<sinks::null_sink_st>(logger_name);
     null_logger->set_level(level::off);
     return null_logger;
 }
 
-}  // namespace clog
+}  // namespace collie::log

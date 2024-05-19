@@ -51,7 +51,7 @@
         }
 #endif
 
-namespace clog {
+namespace collie::log {
 
     class formatter;
 
@@ -150,13 +150,13 @@ namespace clog {
             n_levels
         };
 
-#define CLOG_LEVEL_NAME_TRACE clog::string_view_t("trace", 5)
-#define CLOG_LEVEL_NAME_DEBUG clog::string_view_t("debug", 5)
-#define CLOG_LEVEL_NAME_INFO clog::string_view_t("info", 4)
-#define CLOG_LEVEL_NAME_WARN clog::string_view_t("warn", 4)
-#define CLOG_LEVEL_NAME_ERROR clog::string_view_t("error", 5)
-#define CLOG_LEVEL_NAME_FATAL clog::string_view_t("fatal", 5)
-#define CLOG_LEVEL_NAME_OFF clog::string_view_t("off", 3)
+#define CLOG_LEVEL_NAME_TRACE collie::log::string_view_t("trace", 5)
+#define CLOG_LEVEL_NAME_DEBUG collie::log::string_view_t("debug", 5)
+#define CLOG_LEVEL_NAME_INFO collie::log::string_view_t("info", 4)
+#define CLOG_LEVEL_NAME_WARN collie::log::string_view_t("warn", 4)
+#define CLOG_LEVEL_NAME_ERROR collie::log::string_view_t("error", 5)
+#define CLOG_LEVEL_NAME_FATAL collie::log::string_view_t("fatal", 5)
+#define CLOG_LEVEL_NAME_OFF collie::log::string_view_t("off", 3)
 
 #if !defined(CLOG_LEVEL_NAMES)
 #define CLOG_LEVEL_NAMES                                                                  \
@@ -173,11 +173,11 @@ namespace clog {
         { "T", "D", "I", "W", "E", "C", "O" }
 #endif
 
-        const string_view_t &to_string_view(clog::level::level_enum l) noexcept;
+        const string_view_t &to_string_view(collie::log::level::level_enum l) noexcept;
 
-        const char *to_short_c_str(clog::level::level_enum l) noexcept;
+        const char *to_short_c_str(collie::log::level::level_enum l) noexcept;
 
-        clog::level::level_enum from_str(const std::string &name) noexcept;
+        collie::log::level::level_enum from_str(const std::string &name) noexcept;
 
     }  // namespace level
 
@@ -248,22 +248,22 @@ namespace clog {
 
         // to_string_view
 
-        constexpr clog::string_view_t to_string_view(const memory_buf_t &buf) noexcept {
-            return clog::string_view_t{buf.data(), buf.size()};
+        constexpr collie::log::string_view_t to_string_view(const memory_buf_t &buf) noexcept {
+            return collie::log::string_view_t{buf.data(), buf.size()};
         }
 
-        constexpr clog::string_view_t to_string_view(clog::string_view_t str)
+        constexpr collie::log::string_view_t to_string_view(collie::log::string_view_t str)
         noexcept {
             return str;
         }
 
 #if defined(CLOG_WCHAR_FILENAMES) || defined(CLOG_WCHAR_TO_UTF8_SUPPORT)
-        constexpr clog::wstring_view_t to_string_view(const wmemory_buf_t &buf)
+        constexpr collie::log::wstring_view_t to_string_view(const wmemory_buf_t &buf)
             noexcept {
-            return clog::wstring_view_t{buf.data(), buf.size()};
+            return collie::log::wstring_view_t{buf.data(), buf.size()};
         }
 
-        constexpr clog::wstring_view_t to_string_view(clog::wstring_view_t str)
+        constexpr collie::log::wstring_view_t to_string_view(collie::log::wstring_view_t str)
             noexcept {
             return str;
         }
@@ -301,6 +301,6 @@ namespace clog {
         }
 
     }  // namespace details
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/common-inl.h>

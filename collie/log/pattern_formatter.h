@@ -27,7 +27,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace clog {
+namespace collie::log {
 namespace details {
 
 // padding information.
@@ -79,12 +79,12 @@ public:
 
     explicit pattern_formatter(std::string pattern,
                                pattern_time_type time_type = pattern_time_type::local,
-                               std::string eol = clog::details::os::default_eol,
+                               std::string eol = collie::log::details::os::default_eol,
                                custom_flags custom_user_flags = custom_flags());
 
     // use default pattern is not given
     explicit pattern_formatter(pattern_time_type time_type = pattern_time_type::local,
-                               std::string eol = clog::details::os::default_eol);
+                               std::string eol = collie::log::details::os::default_eol);
 
     pattern_formatter(const pattern_formatter &other) = delete;
     pattern_formatter &operator=(const pattern_formatter &other) = delete;
@@ -122,7 +122,7 @@ private:
 
     void compile_pattern_(const std::string &pattern);
 };
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/pattern_formatter-inl.h>
 

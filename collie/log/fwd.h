@@ -14,7 +14,7 @@
 //
 #pragma once
 
-namespace clog {
+namespace collie::log {
     class logger;
 
     class formatter;
@@ -27,4 +27,4 @@ namespace clog {
         enum level_enum : int;
     }
 
-}  // namespace clog
+}  // namespace collie::log

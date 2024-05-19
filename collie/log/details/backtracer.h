@@ -26,7 +26,7 @@
 // Store log messages in circular buffer.
 // Useful for storing debug data in case of error/warning happens.
 
-namespace clog {
+namespace collie::log {
 namespace details {
 class  backtracer {
     mutable std::mutex mutex_;
@@ -51,6 +51,6 @@ public:
 };
 
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/details/backtracer-inl.h>

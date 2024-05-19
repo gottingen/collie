@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-namespace clog {
+namespace collie::log {
     namespace sinks {
         /*
          * Ring buffer sink
@@ -78,4 +78,4 @@ namespace clog {
 
     }  // namespace sinks
 
-}  // namespace clog
+}  // namespace collie::log

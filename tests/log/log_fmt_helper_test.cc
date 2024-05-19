@@ -19,33 +19,33 @@
 
 #include "collie/testing/test.h"
 
-using clog::memory_buf_t;
-using clog::details::fmt_helper::to_string_view;
+using collie::log::memory_buf_t;
+using collie::log::details::fmt_helper::to_string_view;
 
 void test_pad2(int n, const char *expected) {
     memory_buf_t buf;
-    clog::details::fmt_helper::pad2(n, buf);
+    collie::log::details::fmt_helper::pad2(n, buf);
 
     REQUIRE_EQ(to_string_view(buf) , expected);
 }
 
 void test_pad3(uint32_t n, const char *expected) {
     memory_buf_t buf;
-    clog::details::fmt_helper::pad3(n, buf);
+    collie::log::details::fmt_helper::pad3(n, buf);
 
     REQUIRE_EQ(to_string_view(buf) , expected);
 }
 
 void test_pad6(std::size_t n, const char *expected) {
     memory_buf_t buf;
-    clog::details::fmt_helper::pad6(n, buf);
+    collie::log::details::fmt_helper::pad6(n, buf);
 
     REQUIRE_EQ(to_string_view(buf) , expected);
 }
 
 void test_pad9(std::size_t n, const char *expected) {
     memory_buf_t buf;
-    clog::details::fmt_helper::pad9(n, buf);
+    collie::log::details::fmt_helper::pad9(n, buf);
 
     REQUIRE_EQ(to_string_view(buf) , expected);
 }

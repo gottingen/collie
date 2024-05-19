@@ -28,7 +28,7 @@
 #include <string>
 #include <tuple>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 template <typename Mutex>
@@ -149,4 +149,4 @@ inline bool rotating_file_sink<Mutex>::rename_file_(const filename_t &src_filena
 }
 
 }  // namespace sinks
-}  // namespace clog
+}  // namespace collie::log

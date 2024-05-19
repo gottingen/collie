@@ -80,9 +80,9 @@
 #define __has_feature(x) 0  // Compatibility with non-clang compilers.
 #endif
 
-namespace clog::details::os {
+namespace collie::log::details::os {
 
-    inline clog::log_clock::time_point now() noexcept {
+    inline collie::log::log_clock::time_point now() noexcept {
 #if defined __linux__ && defined CLOG_CLOCK_COARSE
         timespec ts;
         ::clock_gettime(CLOCK_REALTIME_COARSE, &ts);
@@ -587,4 +587,4 @@ namespace clog::details::os {
 #endif
     }
 
-}  // namespace clog::details::os
+}  // namespace collie::log::details::os

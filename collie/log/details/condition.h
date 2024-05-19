@@ -17,7 +17,7 @@
 #include <cstdint>
 #include <chrono>
 
-namespace clog::details {
+namespace collie::log::details {
 
     namespace {
         inline uint32_t lossy_increment(std::atomic<uint32_t> *counter) {
@@ -100,4 +100,4 @@ namespace clog::details {
         std::atomic<int64_t> _last_log_cycle{0};
     };
 
-}  // namespace clog::details
+}  // namespace collie::log::details

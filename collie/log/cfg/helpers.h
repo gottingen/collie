@@ -19,7 +19,7 @@
 #include <collie/log/common.h>
 #include <unordered_map>
 
-namespace clog {
+namespace collie::log {
 namespace cfg {
 namespace helpers {
 //
@@ -35,6 +35,6 @@ namespace helpers {
 }  // namespace helpers
 
 }  // namespace cfg
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/cfg/helpers-inl.h>

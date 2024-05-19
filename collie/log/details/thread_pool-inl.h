@@ -19,7 +19,7 @@
 #include <cassert>
 #include <collie/log/common.h>
 
-namespace clog {
+namespace collie::log {
 namespace details {
 
 inline thread_pool::thread_pool(size_t q_max_items,
@@ -29,7 +29,7 @@ inline thread_pool::thread_pool(size_t q_max_items,
     : q_(q_max_items) {
     if (threads_n == 0 || threads_n > 1000) {
         throw_clog_ex(
-            "clog::thread_pool(): invalid threads_n param (valid "
+            "collie::log::thread_pool(): invalid threads_n param (valid "
             "range is 1-1000)");
     }
     for (size_t i = 0; i < threads_n; i++) {
@@ -133,4 +133,4 @@ bool inline thread_pool::process_next_msg_() {
 }
 
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

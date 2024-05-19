@@ -22,10 +22,10 @@
 //
 // Usage:
 //
-// clog::stopwatch sw;
+// collie::log::stopwatch sw;
 // ...
-// clog::debug("Elapsed: {} seconds", sw);    =>  "Elapsed 0.005116733 seconds"
-// clog::info("Elapsed: {:.6} seconds", sw);  =>  "Elapsed 0.005163 seconds"
+// collie::log::debug("Elapsed: {} seconds", sw);    =>  "Elapsed 0.005116733 seconds"
+// collie::log::info("Elapsed: {:.6} seconds", sw);  =>  "Elapsed 0.005163 seconds"
 //
 //
 // If other units are needed (e.g. millis instead of double), include <collie/strings/fmt/chrono.h> and use
@@ -35,9 +35,9 @@
 //..
 // using std::chrono::duration_cast;
 // using std::chrono::milliseconds;
-// clog::info("Elapsed {}", duration_cast<milliseconds>(sw.elapsed())); => "Elapsed 5ms"
+// collie::log::info("Elapsed {}", duration_cast<milliseconds>(sw.elapsed())); => "Elapsed 5ms"
 
-namespace clog {
+namespace collie::log {
     class stopwatch {
         using clock = std::chrono::steady_clock;
         std::chrono::time_point<clock> start_tp_;
@@ -52,15 +52,15 @@ namespace clog {
 
         void reset() { start_tp_ = clock::now(); }
     };
-}  // namespace clog
+}  // namespace collie::log
 
 // Support for fmt formatting  (e.g. "{:012.9}" or just "{}")
 namespace fmt {
 
     template<>
-    struct formatter<clog::stopwatch> : formatter<double> {
+    struct formatter<collie::log::stopwatch> : formatter<double> {
         template<typename FormatContext>
-        auto format(const clog::stopwatch &sw, FormatContext &ctx) const -> decltype(ctx.out()) {
+        auto format(const collie::log::stopwatch &sw, FormatContext &ctx) const -> decltype(ctx.out()) {
             return formatter<double>::format(sw.elapsed().count(), ctx);
         }
     };

@@ -26,14 +26,14 @@
 #include <collie/log/details/log_msg.h>
 #include <collie/log/sinks/sink.h>
 
-namespace clog {
+namespace collie::log {
     namespace sinks {
         template<typename Mutex>
         class base_sink : public sink {
         public:
             base_sink();
 
-            explicit base_sink(std::unique_ptr<clog::formatter> formatter);
+            explicit base_sink(std::unique_ptr<collie::log::formatter> formatter);
 
             ~base_sink() override = default;
 
@@ -51,11 +51,11 @@ namespace clog {
 
             void set_pattern(const std::string &pattern) final;
 
-            void set_formatter(std::unique_ptr<clog::formatter> sink_formatter) final;
+            void set_formatter(std::unique_ptr<collie::log::formatter> sink_formatter) final;
 
         protected:
             // sink formatter
-            std::unique_ptr<clog::formatter> formatter_;
+            std::unique_ptr<collie::log::formatter> formatter_;
             Mutex mutex_;
 
             virtual void sink_it_(const details::log_msg &msg) = 0;
@@ -64,9 +64,9 @@ namespace clog {
 
             virtual void set_pattern_(const std::string &pattern);
 
-            virtual void set_formatter_(std::unique_ptr<clog::formatter> sink_formatter);
+            virtual void set_formatter_(std::unique_ptr<collie::log::formatter> sink_formatter);
         };
     }  // namespace sinks
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/sinks/base_sink-inl.h>

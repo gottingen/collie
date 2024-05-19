@@ -19,7 +19,7 @@
 #include <collie/log/common.h>
 #include <tuple>
 
-namespace clog {
+namespace collie::log {
     namespace details {
 
 // Helper class for file sinks.
@@ -77,6 +77,6 @@ namespace clog {
             file_event_handlers event_handlers_;
         };
     }  // namespace details
-}  // namespace clog
+}  // namespace collie::log
 
 #include <collie/log/details/file_helper-inl.h>

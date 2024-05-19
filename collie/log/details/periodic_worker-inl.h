@@ -17,7 +17,7 @@
 #pragma once
 
 
-namespace clog {
+namespace collie::log {
 namespace details {
 
 // stop the worker thread and join it
@@ -33,4 +33,4 @@ inline periodic_worker::~periodic_worker() {
 }
 
 }  // namespace details
-}  // namespace clog
+}  // namespace collie::log

@@ -20,7 +20,7 @@
 #include <collie/log/common.h>
 #include <collie/log/details/os.h>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 template <typename Mutex>
@@ -49,4 +49,4 @@ inline void basic_file_sink<Mutex>::flush_() {
 }
 
 }  // namespace sinks
-}  // namespace clog
+}  // namespace collie::log
