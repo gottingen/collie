@@ -20,8 +20,9 @@
 #include <chrono>
 #include <random>
 #include <collie/table/table.h>
-#include <thread>
 
+#include <thread>
+using namespace collie;
 using namespace collie::table;
 using Row_t = Table::Row_t;
 std::atomic_bool keep_running(true);

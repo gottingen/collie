@@ -43,5 +43,11 @@ int main() {
     std::unique_ptr<int> iptr = std::make_unique<int>(10);
     collie::println("ptr: {}", collie::ptr(iptr.get()));
 
+    collie::println(collie::Color::green, "green");
+    collie::println(collie::Color::yellow, "yellow {}", 42);
+    collie::println(collie::Color::yellow, 42);
+    collie::println(42);
+
+    collie::to_str(42);
     return 0;
 }

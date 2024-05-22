@@ -19,7 +19,7 @@
 #include <collie/table/table.h>
 using namespace collie::table;
 using Row_t = Table::Row_t;
-
+using namespace collie;
 int main() {
   Table styled_table;
   styled_table.add_row(Row_t{"Bold", "Italic", "Bold & Italic", "Blinking"});

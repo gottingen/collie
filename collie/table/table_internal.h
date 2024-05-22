@@ -22,10 +22,8 @@
 #include <iostream>
 #include <string>
 #include <collie/table/column.h>
-#include <collie/table/font_style.h>
 #include <collie/table/printer.h>
 #include <collie/table/row.h>
-#include <collie/table/termcolor.h>
 #include <vector>
 
 #ifdef max

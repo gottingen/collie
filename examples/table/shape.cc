@@ -19,7 +19,7 @@
 #include <collie/table/table.h>
 using namespace collie::table;
 using Row_t = Table::Row_t;
-
+using namespace collie;
 void print_shape(Table &table) {
   auto shape = table.shape();
   std::cout << "Shape: (" << shape.first << ", " << shape.second << ")" << std::endl;

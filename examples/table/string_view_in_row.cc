@@ -19,7 +19,7 @@
 #include <collie/table/table.h>
 using namespace collie::table;
 using Row_t = Table::Row_t;
-
+using namespace collie;
 #if __cplusplus >= 201703L
 #include <string_view>
 using std::string_view;

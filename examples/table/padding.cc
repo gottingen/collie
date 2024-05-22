@@ -18,6 +18,7 @@
 
 #include <collie/table/table.h>
 using namespace collie::table;
+using namespace collie;
 using Row_t = Table::Row_t;
 
 int main() {

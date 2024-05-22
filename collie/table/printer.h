@@ -18,8 +18,7 @@
 
 #pragma once
 
-#include <collie/table/color.h>
-#include <collie/table/font_style.h>
+#include <collie/strings/text_style.h>
 #include <utility>
 #include <vector>
 

@@ -18,6 +18,7 @@
 
 
 #include <collie/table/asciidoc_exporter.h>
+using namespace collie;
 using namespace collie::table;
 using Row_t = Table::Row_t;
 

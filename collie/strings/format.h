@@ -29,6 +29,7 @@
 #include <collie/strings/fmt/os.h>
 #include <collie/strings/fmt/args.h>
 #include <collie/strings/fmt/std.h>
+#include <collie/strings/text_style.h>
 
 namespace collie {
 
@@ -75,7 +76,7 @@ namespace collie {
     String format_range(std::string_view fmt, It begin, Sentinel end, std::string_view sep) {
         fmt::memory_buffer view_buf;
         fmt::format_to(std::back_inserter(view_buf), fmt,
-                         fmt::join(std::forward<It>(begin), std::forward<Sentinel>(end), sep));
+                       fmt::join(std::forward<It>(begin), std::forward<Sentinel>(end), sep));
         return String(view_buf.data(), view_buf.size());
     }
 
@@ -117,6 +118,15 @@ namespace collie {
         dst->append(view_buf.data(), view_buf.size());
     }
 
+    template<typename T>
+    void println(std::FILE *file, const T &arg) {
+        fmt::print(file, "{}\n", arg);
+    }
+
+    template<typename T>
+    void println(std::ostream &os, const T &arg) {
+        fmt::print(os, "{}\n", arg);
+    }
 
     template<typename ...Args>
     void println(std::FILE *file, std::string_view fmt, Args &&... args) {
@@ -128,19 +138,46 @@ namespace collie {
         fmt::print(os, "{}\n", format(fmt, std::forward<Args>(args)...));
     }
 
+    template<typename T>
+    void println(const T &arg) {
+        fmt::print(stdout, "{}\n", arg);
+    }
+
     template<typename ...Args>
     inline void println(std::string_view fmt, Args &&... args) {
         fmt::print(stdout, "{}\n", format(fmt, std::forward<Args>(args)...));
     }
 
     template<typename ...Args>
-    inline void println(const text_style &ts, std::string_view fmt, Args &&... args) {
-        fmt::print(stdout, ts, "{}\n", format(fmt, std::forward<Args>(args)...));
+    inline void println(const Color &c, std::string_view fmt, Args &&... args) {
+        TextStyle ts;
+        ts.with_foreground_color(c);
+        TermPrinter::apply_text_style(std::cout, ts);
+        fmt::print(std::cout, "{}\n", format(fmt, std::forward<Args>(args)...));
+        TermPrinter::reset_element_style(std::cout);
     }
 
     template<typename ...Args>
-    inline void println(const color &c, std::string_view fmt, Args &&... args) {
-        fmt::print(stdout, fg(c), "{}\n", format(fmt, std::forward<Args>(args)...));
+    inline void println(const TextStyle &ts, std::string_view fmt, Args &&... args) {
+        TermPrinter::apply_text_style(std::cout, ts);
+        fmt::print(std::cout, "{}\n", format(fmt, std::forward<Args>(args)...));
+        TermPrinter::reset_element_style(std::cout);
+    }
+
+    template<typename T>
+    inline void println(const Color &c, const T &arg) {
+        TextStyle ts;
+        ts.with_foreground_color(c);
+        TermPrinter::apply_text_style(std::cout, ts);
+        fmt::print(std::cout, "{}\n", arg);
+        TermPrinter::reset_element_style(std::cout);
+    }
+
+    template<typename T>
+    inline void println(const TextStyle &ts, const T &arg) {
+        TermPrinter::apply_text_style(std::cout, ts);
+        fmt::print(std::cout, "{}\n", arg);
+        TermPrinter::reset_element_style(std::cout);
     }
 
 

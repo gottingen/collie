@@ -19,7 +19,7 @@
 #include <collie/table/markdown_exporter.h>
 using namespace collie::table;
 using Row_t = Table::Row_t;
-
+using namespace collie;
 int main() {
   Table movies;
   movies.add_row(Row_t{"S/N", "Movie Name", "Director", "Estimated Budget", "Release Date"});

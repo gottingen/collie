@@ -16,31 +16,21 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-#ifndef COLLIE_TABLE_TERMCOLOR_H_
-#define COLLIE_TABLE_TERMCOLOR_H_
+#pragma once
 
+#include <collie/port/port.h>
 // the following snippet of code detects the current OS and
 // defines the appropriate macro that is used to wrap some
 // platform specific things
-#if defined(_WIN32) || defined(_WIN64)
-#define TERMCOLOR_OS_WINDOWS
-#elif defined(__APPLE__)
-#define TERMCOLOR_OS_MACOS
-#elif defined(__unix__) || defined(__unix)
-#define TERMCOLOR_OS_LINUX
-#else
-#error unsupported platform
-#endif
-
 // This headers provides the `isatty()`/`fileno()` functions,
 // which are used for testing whether a standart stream refers
 // to the terminal. As for Windows, we also need WinApi funcs
 // for changing colors attributes of the terminal.
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_LINUX) || defined(COLLIE_PLATFORM_OSX)
 
 #include <unistd.h>
 
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
 #include <io.h>
 #include <windows.h>
 #endif
@@ -48,12 +38,12 @@
 #include <cstdio>
 #include <iostream>
 
-namespace termcolor {
-// Forward declaration of the `_internal` namespace.
-// All comments are below.
+namespace collie::termcolor {
+    // Forward declaration of the `_internal` namespace.
+    // All comments are below.
     namespace _internal {
-// An index to be used to access a private storage of I/O streams. See
-// colorize / nocolorize I/O manipulators for details.
+        // An index to be used to access a private storage of I/O streams. See
+        // colorize / nocolorize I/O manipulators for details.
         static int colorize_index = std::ios_base::xalloc();
 
         inline FILE *get_standard_stream(const std::ostream &stream);
@@ -62,7 +52,7 @@ namespace termcolor {
 
         inline bool is_atty(const std::ostream &stream);
 
-#if defined(TERMCOLOR_OS_WINDOWS)
+#if defined(COLLIE_PLATFORM_WINDOWS)
         inline void win_change_attributes(std::ostream &stream, int foreground, int background = -1);
 #endif
     } // namespace _internal
@@ -79,9 +69,9 @@ namespace termcolor {
 
     inline std::ostream &reset(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[00m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, -1, -1);
 #endif
         }
@@ -90,9 +80,9 @@ namespace termcolor {
 
     inline std::ostream &bold(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[1m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
 #endif
         }
         return stream;
@@ -100,9 +90,9 @@ namespace termcolor {
 
     inline std::ostream &dark(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[2m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
 #endif
         }
         return stream;
@@ -110,9 +100,9 @@ namespace termcolor {
 
     inline std::ostream &italic(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[3m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
 #endif
         }
         return stream;
@@ -120,9 +110,9 @@ namespace termcolor {
 
     inline std::ostream &underline(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[4m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
 #endif
         }
         return stream;
@@ -130,9 +120,9 @@ namespace termcolor {
 
     inline std::ostream &blink(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[5m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
 #endif
         }
         return stream;
@@ -140,9 +130,9 @@ namespace termcolor {
 
     inline std::ostream &reverse(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[7m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
 #endif
         }
         return stream;
@@ -150,9 +140,9 @@ namespace termcolor {
 
     inline std::ostream &concealed(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[8m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
 #endif
         }
         return stream;
@@ -160,9 +150,9 @@ namespace termcolor {
 
     inline std::ostream &crossed(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[9m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
 #endif
         }
         return stream;
@@ -170,9 +160,9 @@ namespace termcolor {
 
     inline std::ostream &grey(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[30m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream,
                                              0 // grey (black)
             );
@@ -183,9 +173,9 @@ namespace termcolor {
 
     inline std::ostream &red(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[31m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, FOREGROUND_RED);
 #endif
         }
@@ -194,9 +184,9 @@ namespace termcolor {
 
     inline std::ostream &green(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[32m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, FOREGROUND_GREEN);
 #endif
         }
@@ -205,9 +195,9 @@ namespace termcolor {
 
     inline std::ostream &yellow(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[33m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, FOREGROUND_GREEN | FOREGROUND_RED);
 #endif
         }
@@ -216,9 +206,9 @@ namespace termcolor {
 
     inline std::ostream &blue(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[34m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, FOREGROUND_BLUE);
 #endif
         }
@@ -227,9 +217,9 @@ namespace termcolor {
 
     inline std::ostream &magenta(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[35m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, FOREGROUND_BLUE | FOREGROUND_RED);
 #endif
         }
@@ -238,9 +228,9 @@ namespace termcolor {
 
     inline std::ostream &cyan(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[36m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, FOREGROUND_BLUE | FOREGROUND_GREEN);
 #endif
         }
@@ -249,9 +239,9 @@ namespace termcolor {
 
     inline std::ostream &white(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[37m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 #endif
         }
@@ -260,9 +250,9 @@ namespace termcolor {
 
     inline std::ostream &on_grey(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[40m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, -1,
                                              0 // grey (black)
             );
@@ -273,9 +263,9 @@ namespace termcolor {
 
     inline std::ostream &on_red(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[41m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, -1, BACKGROUND_RED);
 #endif
         }
@@ -284,9 +274,9 @@ namespace termcolor {
 
     inline std::ostream &on_green(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[42m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, -1, BACKGROUND_GREEN);
 #endif
         }
@@ -295,9 +285,9 @@ namespace termcolor {
 
     inline std::ostream &on_yellow(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[43m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, -1, BACKGROUND_GREEN | BACKGROUND_RED);
 #endif
         }
@@ -306,9 +296,9 @@ namespace termcolor {
 
     inline std::ostream &on_blue(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[44m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, -1, BACKGROUND_BLUE);
 #endif
         }
@@ -317,9 +307,9 @@ namespace termcolor {
 
     inline std::ostream &on_magenta(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[45m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, -1, BACKGROUND_BLUE | BACKGROUND_RED);
 #endif
         }
@@ -328,9 +318,9 @@ namespace termcolor {
 
     inline std::ostream &on_cyan(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[46m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, -1, BACKGROUND_GREEN | BACKGROUND_BLUE);
 #endif
         }
@@ -339,9 +329,9 @@ namespace termcolor {
 
     inline std::ostream &on_white(std::ostream &stream) {
         if (_internal::is_colorized(stream)) {
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             stream << "\033[47m";
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             _internal::win_change_attributes(stream, -1,
                                              BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_RED);
 #endif
@@ -350,14 +340,14 @@ namespace termcolor {
         return stream;
     }
 
-//! Since C++ hasn't a way to hide something in the header from
-//! the outer access, I have to introduce this namespace which
-//! is used for internal purpose and should't be access from
-//! the user code.
+    //! Since C++ hasn't a way to hide something in the header from
+    //! the outer access, I have to introduce this namespace which
+    //! is used for internal purpose and should't be access from
+    //! the user code.
     namespace _internal {
-//! Since C++ hasn't a true way to extract stream handler
-//! from the a given `std::ostream` object, I have to write
-//! this kind of hack.
+        //! Since C++ hasn't a true way to extract stream handler
+        //! from the a given `std::ostream` object, I have to write
+        //! this kind of hack.
         inline FILE *get_standard_stream(const std::ostream &stream) {
             if (&stream == &std::cout)
                 return stdout;
@@ -367,15 +357,15 @@ namespace termcolor {
             return 0;
         }
 
-// Say whether a given stream should be colorized or not. It's always
-// true for ATTY streams and may be true for streams marked with
-// colorize flag.
+        // Say whether a given stream should be colorized or not. It's always
+        // true for ATTY streams and may be true for streams marked with
+        // colorize flag.
         inline bool is_colorized(std::ostream &stream) {
             return is_atty(stream) || static_cast<bool>(stream.iword(colorize_index));
         }
 
-//! Test whether a given `std::ostream` object refers to
-//! a terminal.
+        //! Test whether a given `std::ostream` object refers to
+        //! a terminal.
         inline bool is_atty(const std::ostream &stream) {
             FILE *std_stream = get_standard_stream(stream);
 
@@ -386,14 +376,14 @@ namespace termcolor {
             if (!std_stream)
                 return false;
 
-#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+#if defined(COLLIE_PLATFORM_OSX) || defined(COLLIE_PLATFORM_LINUX)
             return ::isatty(fileno(std_stream));
-#elif defined(TERMCOLOR_OS_WINDOWS)
+#elif defined(COLLIE_PLATFORM_WINDOWS)
             return ::_isatty(_fileno(std_stream));
 #endif
         }
 
-#if defined(TERMCOLOR_OS_WINDOWS)
+#if defined(COLLIE_PLATFORM_WINDOWS)
         //! Change Windows Terminal colors attribute. If some
         //! parameter is `-1` then attribute won't changed.
         inline void win_change_attributes(std::ostream &stream, int foreground, int background) {
@@ -445,14 +435,144 @@ namespace termcolor {
 
           SetConsoleTextAttribute(hTerminal, info.wAttributes);
         }
-#endif // TERMCOLOR_OS_WINDOWS
+#endif // COLLIE_PLATFORM_WINDOWS
 
     } // namespace _internal
 
-} // namespace termcolor
+} // namespace collie::termcolor
 
-#undef TERMCOLOR_OS_WINDOWS
-#undef TERMCOLOR_OS_MACOS
-#undef TERMCOLOR_OS_LINUX
+namespace collie {
 
-#endif // COLLIE_TABLE_TERMCOLOR_H_
+    enum class Color {
+        none, grey, red, green, yellow, blue, magenta, cyan, white
+    };
+    enum class FontStyle {
+        bold, dark, italic, underline, blink, reverse, concealed, crossed
+    };
+
+    struct TextStyle {
+        std::vector<FontStyle> style_list{};
+        Color foreground_color{Color::none};
+        Color background_color{Color::none};
+        TextStyle& with_style(FontStyle style) {
+            this->style_list.push_back(style);
+            return *this;
+        }
+        TextStyle& with_foreground_color(Color color) {
+            this->foreground_color = color;
+            return *this;
+        }
+        TextStyle& with_background_color(Color color) {
+            this->background_color = color;
+            return *this;
+        }
+    };
+
+    class TermPrinter {
+    public:
+        static void apply_text_style(std::ostream &stream, const TextStyle &style) {
+            apply_foreground_color(stream, style.foreground_color);
+            apply_background_color(stream, style.background_color);
+            for (const auto &s : style.style_list) {
+                apply_font_style(stream, s);
+            }
+        }
+        static void apply_font_style(std::ostream &stream, FontStyle style) {
+            switch (style) {
+                case FontStyle::bold:
+                    stream << termcolor::bold;
+                    break;
+                case FontStyle::dark:
+                    stream << termcolor::dark;
+                    break;
+                case FontStyle::italic:
+                    stream << termcolor::italic;
+                    break;
+                case FontStyle::underline:
+                    stream << termcolor::underline;
+                    break;
+                case FontStyle::blink:
+                    stream << termcolor::blink;
+                    break;
+                case FontStyle::reverse:
+                    stream << termcolor::reverse;
+                    break;
+                case FontStyle::concealed:
+                    stream << termcolor::concealed;
+                    break;
+                case FontStyle::crossed:
+                    stream << termcolor::crossed;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        static void apply_foreground_color(std::ostream &stream, Color foreground_color) {
+            switch (foreground_color) {
+                case Color::grey:
+                    stream << termcolor::grey;
+                    break;
+                case Color::red:
+                    stream << termcolor::red;
+                    break;
+                case Color::green:
+                    stream << termcolor::green;
+                    break;
+                case Color::yellow:
+                    stream << termcolor::yellow;
+                    break;
+                case Color::blue:
+                    stream << termcolor::blue;
+                    break;
+                case Color::magenta:
+                    stream << termcolor::magenta;
+                    break;
+                case Color::cyan:
+                    stream << termcolor::cyan;
+                    break;
+                case Color::white:
+                    stream << termcolor::white;
+                    break;
+                case Color::none:
+                default:
+                    break;
+            }
+        }
+
+        static void apply_background_color(std::ostream &stream, Color background_color) {
+            switch (background_color) {
+                case Color::grey:
+                    stream << termcolor::on_grey;
+                    break;
+                case Color::red:
+                    stream << termcolor::on_red;
+                    break;
+                case Color::green:
+                    stream << termcolor::on_green;
+                    break;
+                case Color::yellow:
+                    stream << termcolor::on_yellow;
+                    break;
+                case Color::blue:
+                    stream << termcolor::on_blue;
+                    break;
+                case Color::magenta:
+                    stream << termcolor::on_magenta;
+                    break;
+                case Color::cyan:
+                    stream << termcolor::on_cyan;
+                    break;
+                case Color::white:
+                    stream << termcolor::on_white;
+                    break;
+                case Color::none:
+                default:
+                    break;
+            }
+        }
+
+        static void reset_element_style(std::ostream &stream) { stream << termcolor::reset; }
+    };
+}  // namespace collie
+

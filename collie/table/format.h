@@ -23,9 +23,8 @@
 #include <cstddef>
 #include <sstream>
 #include <string>
-#include <collie/table/color.h>
+#include <collie/strings/text_style.h>
 #include <collie/table/font_align.h>
-#include <collie/table/font_style.h>
 #include <collie/table/utf8.h>
 #include <optional>
 #include <vector>

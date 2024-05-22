@@ -26,7 +26,6 @@
 #include <locale>
 
 #include <cstdlib>
-#include <collie/table/termcolor.h>
 #include <wchar.h>
 
 namespace collie::table {
