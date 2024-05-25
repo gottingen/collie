@@ -1,38 +1,41 @@
-// Copyright 2024 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 #pragma once
 
 #include <algorithm>
 #include <iterator>
 
-namespace clog {
+namespace collie::log {
     namespace level {
 
         constexpr static string_view_t level_string_views[]CLOG_LEVEL_NAMES;
 
         static const char *short_level_names[]CLOG_SHORT_LEVEL_NAMES;
 
-        inline const string_view_t &to_string_view(clog::level::level_enum l) noexcept {
+        inline const string_view_t &to_string_view(collie::log::level::level_enum l) noexcept {
             return level_string_views[l];
         }
 
-        inline const char *to_short_c_str(clog::level::level_enum l) noexcept {
+        inline const char *to_short_c_str(collie::log::level::level_enum l) noexcept {
             return short_level_names[l];
         }
 
-        inline clog::level::level_enum from_str(const std::string &name) noexcept {
+        inline collie::log::level::level_enum from_str(const std::string &name) noexcept {
             auto it = std::find(std::begin(level_string_views), std::end(level_string_views), name);
             if (it != std::end(level_string_views))
                 return static_cast<level::level_enum>(std::distance(std::begin(level_string_views), it));
@@ -65,4 +68,4 @@ namespace clog {
 
     inline void throw_clog_ex(std::string msg) { CLOG_THROW(CLogEx(std::move(msg))); }
 
-}  // namespace clog
+}  // namespace collie::log

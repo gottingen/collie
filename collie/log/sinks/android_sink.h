@@ -1,16 +1,19 @@
-// Copyright 2024 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
 
@@ -35,7 +38,7 @@
         #define CLOG_ANDROID_RETRIES 2
     #endif
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 /*
@@ -98,19 +101,19 @@ private:
         return __android_log_buf_write(ID, prio, tag, text);
     }
 
-    static android_LogPriority convert_to_android_(clog::level::level_enum level) {
+    static android_LogPriority convert_to_android_(collie::log::level::level_enum level) {
         switch (level) {
-            case clog::level::trace:
+            case collie::log::level::trace:
                 return ANDROID_LOG_VERBOSE;
-            case clog::level::debug:
+            case collie::log::level::debug:
                 return ANDROID_LOG_DEBUG;
-            case clog::level::info:
+            case collie::log::level::info:
                 return ANDROID_LOG_INFO;
-            case clog::level::warn:
+            case collie::log::level::warn:
                 return ANDROID_LOG_WARN;
-            case clog::level::error:
+            case collie::log::level::error:
                 return ANDROID_LOG_ERROR;
-            case clog::level::fatal:
+            case collie::log::level::fatal:
                 return ANDROID_LOG_FATAL;
             default:
                 return ANDROID_LOG_DEFAULT;
@@ -133,18 +136,18 @@ using android_sink_buf_st = android_sink<details::null_mutex, BufferId>;
 
 // Create and register android syslog logger
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> android_logger_mt(const std::string &logger_name,
                                                  const std::string &tag = "clog") {
     return Factory::template create<sinks::android_sink_mt>(logger_name, tag);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> android_logger_st(const std::string &logger_name,
                                                  const std::string &tag = "clog") {
     return Factory::template create<sinks::android_sink_st>(logger_name, tag);
 }
 
-}  // namespace clog
+}  // namespace collie::log
 
 #endif  // __ANDROID__

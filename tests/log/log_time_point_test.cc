@@ -22,10 +22,10 @@
 
 TEST_CASE("time_point1 [time_point log_msg]")
 {
-    std::shared_ptr<clog::sinks::test_sink_st> test_sink(new clog::sinks::test_sink_st);
-    clog::logger logger("test-time_point", test_sink);
+    std::shared_ptr<collie::log::sinks::test_sink_st> test_sink(new collie::log::sinks::test_sink_st);
+    collie::log::logger logger("test-time_point", test_sink);
 
-    clog::source_loc source{};
+    collie::log::source_loc source{};
     turbo::Time tp = turbo::Time::time_now();
     test_sink->set_pattern("%T.%F"); // interested in the time_point
 
@@ -33,15 +33,15 @@ TEST_CASE("time_point1 [time_point log_msg]")
     test_sink->set_delay(std::chrono::milliseconds(10));
     for (int i = 0; i < 5; i++)
     {
-        clog::details::log_msg msg{tp, source, "test_logger", clog::level::info, "message"};
+        collie::log::details::log_msg msg{tp, source, "test_logger", collie::log::level::info, "message"};
         test_sink->log(msg);
     }
 
-    logger.log(tp, source, clog::level::info, "formatted message");
-    logger.log(tp, source, clog::level::info, "formatted message");
-    logger.log(tp, source, clog::level::info, "formatted message");
-    logger.log(tp, source, clog::level::info, "formatted message");
-    logger.log(source, clog::level::info, "formatted message"); // last line has different time_point
+    logger.log(tp, source, collie::log::level::info, "formatted message");
+    logger.log(tp, source, collie::log::level::info, "formatted message");
+    logger.log(tp, source, collie::log::level::info, "formatted message");
+    logger.log(tp, source, collie::log::level::info, "formatted message");
+    logger.log(source, collie::log::level::info, "formatted message"); // last line has different time_point
 
     // now the real test... that the times are the same.
     std::vector<std::string> lines = test_sink->lines();
@@ -50,5 +50,5 @@ TEST_CASE("time_point1 [time_point log_msg]")
     REQUIRE_EQ(lines[4] , lines[5]);
     REQUIRE_EQ(lines[6] , lines[7]);
     REQUIRE_NE(lines[8] , lines[9]);
-    clog::drop_all();
+    collie::log::drop_all();
 }

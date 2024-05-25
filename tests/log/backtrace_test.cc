@@ -21,11 +21,11 @@
 TEST_CASE("bactrace1 [bactrace]")
 {
 
-    using clog::sinks::test_sink_st;
+    using collie::log::sinks::test_sink_st;
     auto test_sink = std::make_shared<test_sink_st>();
     size_t backtrace_size = 5;
 
-    clog::logger logger("test-backtrace", test_sink);
+    collie::log::logger logger("test-backtrace", test_sink);
     logger.set_pattern("%v");
     logger.enable_backtrace(backtrace_size);
 
@@ -49,13 +49,13 @@ TEST_CASE("bactrace1 [bactrace]")
 
 TEST_CASE("bactrace-async [bactrace]")
 {
-    using clog::sinks::test_sink_mt;
+    using collie::log::sinks::test_sink_mt;
     auto test_sink = std::make_shared<test_sink_mt>();
 
     size_t backtrace_size = 5;
 
-    clog::init_thread_pool(120, 1);
-    auto logger = std::make_shared<clog::async_logger>("test-bactrace-async", test_sink, clog::thread_pool());
+    collie::log::init_thread_pool(120, 1);
+    auto logger = std::make_shared<collie::log::async_logger>("test-bactrace-async", test_sink, collie::log::thread_pool());
     logger->set_pattern("%v");
     logger->enable_backtrace(backtrace_size);
 

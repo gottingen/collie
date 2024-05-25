@@ -1,16 +1,19 @@
-// Copyright 2024 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
 
@@ -34,7 +37,7 @@
 // kafka header
 #include <librdkafka/rdkafkacpp.h>
 
-namespace clog {
+namespace collie::log {
 namespace sinks {
 
 struct kafka_sink_config {
@@ -101,32 +104,32 @@ private:
 };
 
 using kafka_sink_mt = kafka_sink<std::mutex>;
-using kafka_sink_st = kafka_sink<clog::details::null_mutex>;
+using kafka_sink_st = kafka_sink<collie::log::details::null_mutex>;
 
 }  // namespace sinks
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> kafka_logger_mt(const std::string &logger_name,
-                                               clog::sinks::kafka_sink_config config) {
+                                               collie::log::sinks::kafka_sink_config config) {
     return Factory::template create<sinks::kafka_sink_mt>(logger_name, config);
 }
 
-template <typename Factory = clog::synchronous_factory>
+template <typename Factory = collie::log::synchronous_factory>
 inline std::shared_ptr<logger> kafka_logger_st(const std::string &logger_name,
-                                               clog::sinks::kafka_sink_config config) {
+                                               collie::log::sinks::kafka_sink_config config) {
     return Factory::template create<sinks::kafka_sink_st>(logger_name, config);
 }
 
-template <typename Factory = clog::async_factory>
-inline std::shared_ptr<clog::logger> kafka_logger_async_mt(
-    std::string logger_name, clog::sinks::kafka_sink_config config) {
+template <typename Factory = collie::log::async_factory>
+inline std::shared_ptr<collie::log::logger> kafka_logger_async_mt(
+    std::string logger_name, collie::log::sinks::kafka_sink_config config) {
     return Factory::template create<sinks::kafka_sink_mt>(logger_name, config);
 }
 
-template <typename Factory = clog::async_factory>
-inline std::shared_ptr<clog::logger> kafka_logger_async_st(
-    std::string logger_name, clog::sinks::kafka_sink_config config) {
+template <typename Factory = collie::log::async_factory>
+inline std::shared_ptr<collie::log::logger> kafka_logger_async_st(
+    std::string logger_name, collie::log::sinks::kafka_sink_config config) {
     return Factory::template create<sinks::kafka_sink_st>(logger_name, config);
 }
 
-}  // namespace clog
+}  // namespace collie::log

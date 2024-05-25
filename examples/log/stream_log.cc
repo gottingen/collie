@@ -1,16 +1,19 @@
-// Copyright 2023 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //#define CLOG_CHECK_ALWAYS_ON
 #include <collie/log/logging.h>
@@ -24,10 +27,10 @@ int main() {
     LOG(WARN) << "Hello, World!" << " jeff is here";
     LOG(ERROR) << "Hello, World!" << " jeff is here";
     LOG(FATAL) << "Hello, World!" << " jeff is here";
-    clog::default_logger()->set_level(clog::level::trace);
+    collie::log::default_logger()->set_level(collie::log::level::trace);
     LOG(DEBUG) << "Hello, World!" << " jeff is here";
     LOG(TRACE) << "Hello, World!" << " jeff is here";
-    clog::default_logger()->set_level(clog::level::info);
+    collie::log::default_logger()->set_level(collie::log::level::info);
 
     LOG_IF(INFO, true) << "Hello, World!" << " jeff is here";
     LOG_IF(INFO, false) << "Hello, World!" << " jeff is not here";
@@ -144,10 +147,10 @@ int main() {
     // CHECK_NEAR false
     CHECK_NEAR(1.0, 1.1, 0.05);
     /// vlog
-    clog::default_logger()->set_vlog_level(1);
+    collie::log::default_logger()->set_vlog_level(1);
     VLOG(1) << "VLOG(1)"<< " jeff should not here";
     VLOG(0) << "VLOG(0)"<< " jeff should here";
-    clog::default_logger()->set_vlog_level(2);
+    collie::log::default_logger()->set_vlog_level(2);
     VLOG(-1) << "VLOG(-1)"<< " jeff should here";
     VLOG(0) << "VLOG(0)"<< " jeff should here";
     VLOG(1) << "VLOG(1)"<< " jeff should here";
@@ -221,7 +224,7 @@ int main() {
         }
         VLOG_ONCE(1) << s;
     }
-    clog::default_logger()->set_pattern("%v");
+    collie::log::default_logger()->set_pattern("%v");
     LOG(INFO) << "Hello, World!" << " jeff is here";
     LOG(WARN) << "Hello, World!" << " jeff is here";
     return 0;

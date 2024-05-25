@@ -24,179 +24,179 @@
 
 #include "collie/testing/test.h"
 
-using clog::cfg::load_argv_levels;
-using clog::cfg::load_env_levels;
-using clog::sinks::test_sink_st;
+using collie::log::cfg::load_argv_levels;
+using collie::log::cfg::load_env_levels;
+using collie::log::sinks::test_sink_st;
 
 TEST_CASE("env [cfg]")
 {
-    clog::drop("l1");
-    auto l1 = clog::create<test_sink_st>("l1");
+    collie::log::drop("l1");
+    auto l1 = collie::log::create<test_sink_st>("l1");
 #ifdef CATCH_PLATFORM_WINDOWS
     _putenv_s("TLOG_LEVEL", "l1=warn");
 #else
     ::setenv("TLOG_LEVEL", "l1=warn", 1);
 #endif
     load_env_levels();
-    REQUIRE_EQ(l1->level(), clog::level::warn);
-    clog::set_default_logger(clog::create<test_sink_st>("cfg-default"));
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::info);
+    REQUIRE_EQ(l1->level(), collie::log::level::warn);
+    collie::log::set_default_logger(collie::log::create<test_sink_st>("cfg-default"));
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::info);
 }
 
 TEST_CASE("argv1 [cfg]")
 {
-    clog::drop("l1");
+    collie::log::drop("l1");
     const char *argv[] = {"ignore", "TLOG_LEVEL=l1=warn"};
     load_argv_levels(2, argv);
-    auto l1 = clog::create<clog::sinks::test_sink_st>("l1");
-    REQUIRE_EQ(l1->level(), clog::level::warn);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::info);
+    auto l1 = collie::log::create<collie::log::sinks::test_sink_st>("l1");
+    REQUIRE_EQ(l1->level(), collie::log::level::warn);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::info);
 }
 
 TEST_CASE("argv2 [cfg]")
 {
-    clog::drop("l1");
+    collie::log::drop("l1");
     const char *argv[] = {"ignore", "TLOG_LEVEL=l1=warn,trace"};
     load_argv_levels(2, argv);
-    auto l1 = clog::create<test_sink_st>("l1");
-    REQUIRE_EQ(l1->level(), clog::level::warn);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::trace);
+    auto l1 = collie::log::create<test_sink_st>("l1");
+    REQUIRE_EQ(l1->level(), collie::log::level::warn);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::trace);
 }
 
 TEST_CASE("argv3 [cfg]")
 {
-    clog::set_level(clog::level::trace);
+    collie::log::set_level(collie::log::level::trace);
 
-    clog::drop("l1");
+    collie::log::drop("l1");
     const char *argv[] = {"ignore", "TLOG_LEVEL=junk_name=warn"};
     load_argv_levels(2, argv);
-    auto l1 = clog::create<test_sink_st>("l1");
-    REQUIRE_EQ(l1->level(), clog::level::trace);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::trace);
+    auto l1 = collie::log::create<test_sink_st>("l1");
+    REQUIRE_EQ(l1->level(), collie::log::level::trace);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::trace);
 }
 
 TEST_CASE("argv4 [cfg]")
 {
-    clog::set_level(clog::level::info);
-    clog::drop("l1");
+    collie::log::set_level(collie::log::level::info);
+    collie::log::drop("l1");
     const char *argv[] = {"ignore", "TLOG_LEVEL=junk"};
     load_argv_levels(2, argv);
-    auto l1 = clog::create<test_sink_st>("l1");
-    REQUIRE_EQ(l1->level(), clog::level::info);
+    auto l1 = collie::log::create<test_sink_st>("l1");
+    REQUIRE_EQ(l1->level(), collie::log::level::info);
 }
 
 TEST_CASE("argv5 [cfg]")
 {
-    clog::set_level(clog::level::info);
-    clog::drop("l1");
+    collie::log::set_level(collie::log::level::info);
+    collie::log::drop("l1");
     const char *argv[] = {"ignore", "ignore", "TLOG_LEVEL=l1=warn,trace"};
     load_argv_levels(3, argv);
-    auto l1 = clog::create<test_sink_st>("l1");
-    REQUIRE_EQ(l1->level(), clog::level::warn);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::trace);
-    clog::set_level(clog::level::info);
+    auto l1 = collie::log::create<test_sink_st>("l1");
+    REQUIRE_EQ(l1->level(), collie::log::level::warn);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::trace);
+    collie::log::set_level(collie::log::level::info);
 }
 
 TEST_CASE("argv6 [cfg]")
 {
-    clog::set_level(clog::level::err);
+    collie::log::set_level(collie::log::level::err);
     const char *argv[] = {""};
     load_argv_levels(1, argv);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::err);
-    clog::set_level(clog::level::info);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::err);
+    collie::log::set_level(collie::log::level::info);
 }
 
 TEST_CASE("argv7 [cfg]")
 {
-    clog::set_level(clog::level::err);
+    collie::log::set_level(collie::log::level::err);
     const char *argv[] = {""};
     load_argv_levels(0, argv);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::err);
-    clog::set_level(clog::level::info);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::err);
+    collie::log::set_level(collie::log::level::info);
 }
 
 TEST_CASE("level-not-set-test1 [cfg]")
 {
-    clog::drop("l1");
+    collie::log::drop("l1");
     const char *argv[] = {"ignore", ""};
     load_argv_levels(2, argv);
-    auto l1 = clog::create<clog::sinks::test_sink_st>("l1");
-    l1->set_level(clog::level::trace);
-    REQUIRE_EQ(l1->level(), clog::level::trace);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::info);
+    auto l1 = collie::log::create<collie::log::sinks::test_sink_st>("l1");
+    l1->set_level(collie::log::level::trace);
+    REQUIRE_EQ(l1->level(), collie::log::level::trace);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::info);
 }
 
 TEST_CASE("level-not-set-test2 [cfg]")
 {
-    clog::drop("l1");
-    clog::drop("l2");
+    collie::log::drop("l1");
+    collie::log::drop("l2");
     const char *argv[] = {"ignore", "TLOG_LEVEL=l1=trace"};
 
-    auto l1 = clog::create<clog::sinks::test_sink_st>("l1");
-    l1->set_level(clog::level::warn);
-    auto l2 = clog::create<clog::sinks::test_sink_st>("l2");
-    l2->set_level(clog::level::warn);
+    auto l1 = collie::log::create<collie::log::sinks::test_sink_st>("l1");
+    l1->set_level(collie::log::level::warn);
+    auto l2 = collie::log::create<collie::log::sinks::test_sink_st>("l2");
+    l2->set_level(collie::log::level::warn);
 
     load_argv_levels(2, argv);
 
-    REQUIRE_EQ(l1->level(), clog::level::trace);
-    REQUIRE_EQ(l2->level(), clog::level::warn);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::info);
+    REQUIRE_EQ(l1->level(), collie::log::level::trace);
+    REQUIRE_EQ(l2->level(), collie::log::level::warn);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::info);
 }
 
 TEST_CASE("level-not-set-test3 [cfg]")
 {
-    clog::drop("l1");
-    clog::drop("l2");
+    collie::log::drop("l1");
+    collie::log::drop("l2");
     const char *argv[] = {"ignore", "TLOG_LEVEL=l1=trace"};
 
     load_argv_levels(2, argv);
 
-    auto l1 = clog::create<clog::sinks::test_sink_st>("l1");
-    auto l2 = clog::create<clog::sinks::test_sink_st>("l2");
+    auto l1 = collie::log::create<collie::log::sinks::test_sink_st>("l1");
+    auto l2 = collie::log::create<collie::log::sinks::test_sink_st>("l2");
 
-    REQUIRE_EQ(l1->level(), clog::level::trace);
-    REQUIRE_EQ(l2->level(), clog::level::info);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::info);
+    REQUIRE_EQ(l1->level(), collie::log::level::trace);
+    REQUIRE_EQ(l2->level(), collie::log::level::info);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::info);
 }
 
 TEST_CASE("level-not-set-test4 [cfg]")
 {
-    clog::drop("l1");
-    clog::drop("l2");
+    collie::log::drop("l1");
+    collie::log::drop("l2");
     const char *argv[] = {"ignore", "TLOG_LEVEL=l1=trace,warn"};
 
     load_argv_levels(2, argv);
 
-    auto l1 = clog::create<clog::sinks::test_sink_st>("l1");
-    auto l2 = clog::create<clog::sinks::test_sink_st>("l2");
+    auto l1 = collie::log::create<collie::log::sinks::test_sink_st>("l1");
+    auto l2 = collie::log::create<collie::log::sinks::test_sink_st>("l2");
 
-    REQUIRE_EQ(l1->level(), clog::level::trace);
-    REQUIRE_EQ(l2->level(), clog::level::warn);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::warn);
+    REQUIRE_EQ(l1->level(), collie::log::level::trace);
+    REQUIRE_EQ(l2->level(), collie::log::level::warn);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::warn);
 }
 
 TEST_CASE("level-not-set-test5 [cfg]")
 {
-    clog::drop("l1");
-    clog::drop("l2");
+    collie::log::drop("l1");
+    collie::log::drop("l2");
     const char *argv[] = {"ignore", "TLOG_LEVEL=l1=junk,warn"};
 
     load_argv_levels(2, argv);
 
-    auto l1 = clog::create<clog::sinks::test_sink_st>("l1");
-    auto l2 = clog::create<clog::sinks::test_sink_st>("l2");
+    auto l1 = collie::log::create<collie::log::sinks::test_sink_st>("l1");
+    auto l2 = collie::log::create<collie::log::sinks::test_sink_st>("l2");
 
-    REQUIRE_EQ(l1->level(), clog::level::warn);
-    REQUIRE_EQ(l2->level(), clog::level::warn);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::warn);
+    REQUIRE_EQ(l1->level(), collie::log::level::warn);
+    REQUIRE_EQ(l2->level(), collie::log::level::warn);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::warn);
 }
 
 TEST_CASE("restore-to-default [cfg]")
 {
-    clog::drop("l1");
-    clog::drop("l2");
+    collie::log::drop("l1");
+    collie::log::drop("l2");
     const char *argv[] = {"ignore", "TLOG_LEVEL=info"};
     load_argv_levels(2, argv);
-    REQUIRE_EQ(clog::default_logger()->level(), clog::level::info);
+    REQUIRE_EQ(collie::log::default_logger()->level(), collie::log::level::info);
 }

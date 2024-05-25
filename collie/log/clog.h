@@ -1,16 +1,19 @@
-// Copyright 2024 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
 #ifndef COLLIE_CLOG_H_
@@ -29,18 +32,24 @@
 #include <memory>
 #include <string>
 
-namespace clog {
+namespace collie::log {
 
     using default_factory = synchronous_factory;
+
+    inline bool clog_fatal_crash_flag = true;
+
+    inline void set_fatal_crash(bool flag) {
+        clog_fatal_crash_flag = flag;
+    }
 
     // Create and register a logger with a templated sink type
     // The logger's level, formatter and flush level will be set according the
     // global settings.
     //
     // Example:
-    //   clog::create<daily_file_sink_st>("logger_name", "dailylog_filename", 11, 59);
+    //   collie::log::create<daily_file_sink_st>("logger_name", "dailylog_filename", 11, 59);
     template<typename Sink, typename... SinkArgs>
-    inline std::shared_ptr<clog::logger> create(std::string logger_name, SinkArgs &&...sink_args) {
+    inline std::shared_ptr<collie::log::logger> create(std::string logger_name, SinkArgs &&...sink_args) {
         return default_factory::create<Sink>(std::move(logger_name),
                                              std::forward<SinkArgs>(sink_args)...);
     }
@@ -51,20 +60,20 @@ namespace clog {
     // Useful for initializing manually created loggers with the global settings.
     //
     // Example:
-    //   auto mylogger = std::make_shared<clog::logger>("mylogger", ...);
-    //   clog::initialize_logger(mylogger);
+    //   auto mylogger = std::make_shared<collie::log::logger>("mylogger", ...);
+    //   collie::log::initialize_logger(mylogger);
     void initialize_logger(std::shared_ptr<logger> logger);
 
     // Return an existing logger or nullptr if a logger with such name doesn't
     // exist.
-    // example: clog::get("my_logger")->info("hello {}", "world");
+    // example: collie::log::get("my_logger")->info("hello {}", "world");
     std::shared_ptr<logger> get(const std::string &name);
 
     // Set global formatter. Each sink in each logger will get a clone of this object
-    void set_formatter(std::unique_ptr<clog::formatter> formatter);
+    void set_formatter(std::unique_ptr<collie::log::formatter> formatter);
 
     // Set global format string.
-    // example: clog::set_pattern("%Y-%m-%d %H:%M:%S.%e %l : %v");
+    // example: collie::log::set_pattern("%Y-%m-%d %H:%M:%S.%e %l : %v");
     void set_pattern(std::string pattern,
                      pattern_time_type time_type = pattern_time_type::local);
 
@@ -106,7 +115,7 @@ namespace clog {
 
     // Apply a user defined function on all registered loggers
     // Example:
-    // clog::apply_all([&](std::shared_ptr<clog::logger> l) {l->flush();});
+    // collie::log::apply_all([&](std::shared_ptr<collie::log::logger> l) {l->flush();});
     void apply_all(const std::function<void(std::shared_ptr<logger>)> &fun);
 
     // Drop the reference to the given logger
@@ -118,37 +127,37 @@ namespace clog {
     // stop any running threads started by clog and clean registry loggers
     void shutdown();
 
-    // Automatic registration of loggers when using clog::create() or clog::create_async
+    // Automatic registration of loggers when using collie::log::create() or collie::log::create_async
     void set_automatic_registration(bool automatic_registration);
 
     // API for using default logger (stdout_color_mt),
-    // e.g: clog::info("Message {}", 1);
+    // e.g: collie::log::info("Message {}", 1);
     //
-    // The default logger object can be accessed using the clog::default_logger():
+    // The default logger object can be accessed using the collie::log::default_logger():
     // For example, to add another sink to it:
-    // clog::default_logger()->sinks().push_back(some_sink);
+    // collie::log::default_logger()->sinks().push_back(some_sink);
     //
-    // The default logger can replaced using clog::set_default_logger(new_logger).
+    // The default logger can replaced using collie::log::set_default_logger(new_logger).
     // For example, to replace it with a file logger.
     //
     // IMPORTANT:
     // The default API is thread safe (for _mt loggers), but:
     // set_default_logger() *should not* be used concurrently with the default API.
-    // e.g do not call set_default_logger() from one thread while calling clog::info() from another.
+    // e.g do not call set_default_logger() from one thread while calling collie::log::info() from another.
 
-    std::shared_ptr<clog::logger> default_logger();
+    std::shared_ptr<collie::log::logger> default_logger();
 
-    clog::logger *default_logger_raw();
+    collie::log::logger *default_logger_raw();
 
-    void set_default_logger(std::shared_ptr<clog::logger> default_logger);
+    void set_default_logger(std::shared_ptr<collie::log::logger> default_logger);
 
     // Initialize logger level based on environment configs.
     //
     // Useful for applying CLOG_LEVEL to manually created loggers.
     //
     // Example:
-    //   auto mylogger = std::make_shared<clog::logger>("mylogger", ...);
-    //   clog::apply_logger_env_levels(mylogger);
+    //   auto mylogger = std::make_shared<collie::log::logger>("mylogger", ...);
+    //   collie::log::apply_logger_env_levels(mylogger);
     void apply_logger_env_levels(std::shared_ptr<logger> logger);
 
     template<typename... Args>
@@ -279,7 +288,7 @@ namespace clog {
         default_logger_raw()->fatal(msg);
     }
 
-}  // namespace clog
+}  // namespace collie::log
 
 //
 // enable/disable log calls at compile time according to global level.
@@ -296,16 +305,16 @@ namespace clog {
 
 #ifndef CLOG_NO_SOURCE_LOC
 #define CLOG_LOGGER_CALL(logger, level, ...) \
-        (logger)->log(clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, level, __VA_ARGS__)
+        (logger)->log(collie::log::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, level, __VA_ARGS__)
 #else
 #define CLOG_LOGGER_CALL(logger, level, ...) \
-        (logger)->log(clog::source_loc{}, level, __VA_ARGS__)
+        (logger)->log(collie::log::source_loc{}, level, __VA_ARGS__)
 #endif
 
 #if CLOG_ACTIVE_LEVEL <= CLOG_LEVEL_TRACE
 #define CLOG_LOGGER_TRACE(logger, ...) \
-        CLOG_LOGGER_CALL(logger, clog::level::trace, __VA_ARGS__)
-#define CLOG_TRACE(...) CLOG_LOGGER_TRACE(clog::default_logger_raw(), __VA_ARGS__)
+        CLOG_LOGGER_CALL(logger, collie::log::level::trace, __VA_ARGS__)
+#define CLOG_TRACE(...) CLOG_LOGGER_TRACE(collie::log::default_logger_raw(), __VA_ARGS__)
 #else
 #define CLOG_LOGGER_TRACE(logger, ...) (void)0
 #define CLOG_TRACE(...) (void)0
@@ -313,8 +322,8 @@ namespace clog {
 
 #if CLOG_ACTIVE_LEVEL <= CLOG_LEVEL_DEBUG
 #define CLOG_LOGGER_DEBUG(logger, ...) \
-        CLOG_LOGGER_CALL(logger, clog::level::debug, __VA_ARGS__)
-#define CLOG_DEBUG(...) CLOG_LOGGER_DEBUG(clog::default_logger_raw(), __VA_ARGS__)
+        CLOG_LOGGER_CALL(logger, collie::log::level::debug, __VA_ARGS__)
+#define CLOG_DEBUG(...) CLOG_LOGGER_DEBUG(collie::log::default_logger_raw(), __VA_ARGS__)
 #else
 #define CLOG_LOGGER_DEBUG(logger, ...) (void)0
 #define CLOG_DEBUG(...) (void)0
@@ -322,8 +331,8 @@ namespace clog {
 
 #if CLOG_ACTIVE_LEVEL <= CLOG_LEVEL_INFO
 #define CLOG_LOGGER_INFO(logger, ...) \
-        CLOG_LOGGER_CALL(logger, clog::level::info, __VA_ARGS__)
-#define CLOG_INFO(...) CLOG_LOGGER_INFO(clog::default_logger_raw(), __VA_ARGS__)
+        CLOG_LOGGER_CALL(logger, collie::log::level::info, __VA_ARGS__)
+#define CLOG_INFO(...) CLOG_LOGGER_INFO(collie::log::default_logger_raw(), __VA_ARGS__)
 #else
 #define CLOG_LOGGER_INFO(logger, ...) (void)0
 #define CLOG_INFO(...) (void)0
@@ -331,8 +340,8 @@ namespace clog {
 
 #if CLOG_ACTIVE_LEVEL <= CLOG_LEVEL_WARN
 #define CLOG_LOGGER_WARN(logger, ...) \
-        CLOG_LOGGER_CALL(logger, clog::level::warn, __VA_ARGS__)
-#define CLOG_WARN(...) CLOG_LOGGER_WARN(clog::default_logger_raw(), __VA_ARGS__)
+        CLOG_LOGGER_CALL(logger, collie::log::level::warn, __VA_ARGS__)
+#define CLOG_WARN(...) CLOG_LOGGER_WARN(collie::log::default_logger_raw(), __VA_ARGS__)
 #else
 #define CLOG_LOGGER_WARN(logger, ...) (void)0
 #define CLOG_WARN(...) (void)0
@@ -340,8 +349,8 @@ namespace clog {
 
 #if CLOG_ACTIVE_LEVEL <= CLOG_LEVEL_ERROR
 #define CLOG_LOGGER_ERROR(logger, ...) \
-        CLOG_LOGGER_CALL(logger, clog::level::error, __VA_ARGS__)
-#define CLOG_ERROR(...) CLOG_LOGGER_ERROR(clog::default_logger_raw(), __VA_ARGS__)
+        CLOG_LOGGER_CALL(logger, collie::log::level::error, __VA_ARGS__)
+#define CLOG_ERROR(...) CLOG_LOGGER_ERROR(collie::log::default_logger_raw(), __VA_ARGS__)
 #else
 #define CLOG_LOGGER_ERROR(logger, ...) (void)0
 #define CLOG_ERROR(...) (void)0
@@ -349,8 +358,8 @@ namespace clog {
 
 #if CLOG_ACTIVE_LEVEL <= CLOG_LEVEL_FATAL
 #define CLOG_LOGGER_FATAL(logger, ...) \
-        CLOG_LOGGER_CALL(logger, clog::level::fatal, __VA_ARGS__)
-#define CLOG_FATAL(...) CLOG_LOGGER_FATAL(clog::default_logger_raw(), __VA_ARGS__)
+        CLOG_LOGGER_CALL(logger, collie::log::level::fatal, __VA_ARGS__)
+#define CLOG_FATAL(...) CLOG_LOGGER_FATAL(collie::log::default_logger_raw(), __VA_ARGS__)
 #else
 #define CLOG_LOGGER_FATAL(logger, ...) (void)0
 #define CLOG_FATAL(...) (void)0

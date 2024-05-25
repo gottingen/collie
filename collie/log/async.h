@@ -1,16 +1,19 @@
-// Copyright 2024 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 #pragma once
 
@@ -33,7 +36,7 @@
 #include <memory>
 #include <mutex>
 
-namespace clog {
+namespace collie::log {
 
 namespace details {
 static const size_t default_async_q_size = 8192;
@@ -70,14 +73,14 @@ using async_factory = async_factory_impl<async_overflow_policy::block>;
 using async_factory_nonblock = async_factory_impl<async_overflow_policy::overrun_oldest>;
 
 template <typename Sink, typename... SinkArgs>
-inline std::shared_ptr<clog::logger> create_async(std::string logger_name,
+inline std::shared_ptr<collie::log::logger> create_async(std::string logger_name,
                                                     SinkArgs &&...sink_args) {
     return async_factory::create<Sink>(std::move(logger_name),
                                        std::forward<SinkArgs>(sink_args)...);
 }
 
 template <typename Sink, typename... SinkArgs>
-inline std::shared_ptr<clog::logger> create_async_nb(std::string logger_name,
+inline std::shared_ptr<collie::log::logger> create_async_nb(std::string logger_name,
                                                        SinkArgs &&...sink_args) {
     return async_factory_nonblock::create<Sink>(std::move(logger_name),
                                                 std::forward<SinkArgs>(sink_args)...);
@@ -105,7 +108,7 @@ inline void init_thread_pool(size_t q_size, size_t thread_count) {
 }
 
 // get the global thread pool.
-inline std::shared_ptr<clog::details::thread_pool> thread_pool() {
+inline std::shared_ptr<collie::log::details::thread_pool> thread_pool() {
     return details::registry::instance().get_tp();
 }
-}  // namespace clog
+}  // namespace collie::log

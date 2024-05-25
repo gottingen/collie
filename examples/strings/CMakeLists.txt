@@ -21,7 +21,7 @@ carbin_cc_binary(
 
 carbin_cc_binary(
         NAME splitter
-        SOURCES splitter.cc
+        SOURCES splitter.cc split_vector.cc
         CXXOPTS ${USER_CXX_FLAGS}
 )
 

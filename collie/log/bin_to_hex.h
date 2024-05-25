@@ -1,16 +1,19 @@
-// Copyright 2024 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 #pragma once
 
@@ -43,12 +46,12 @@
 // Examples:
 //
 // std::vector<char> v(200, 0x0b);
-// logger->info("Some buffer {}", clog::to_hex(v));
+// logger->info("Some buffer {}", collie::log::to_hex(v));
 // char buf[128];
-// logger->info("Some buffer {:X}", clog::to_hex(std::begin(buf), std::end(buf)));
-// logger->info("Some buffer {:X}", clog::to_hex(std::begin(buf), std::end(buf), 16));
+// logger->info("Some buffer {:X}", collie::log::to_hex(std::begin(buf), std::end(buf)));
+// logger->info("Some buffer {:X}", collie::log::to_hex(std::begin(buf), std::end(buf), 16));
 
-namespace clog {
+namespace collie::log {
     namespace details {
 
         template<typename It>
@@ -104,12 +107,12 @@ namespace clog {
         return details::dump_info<It>(range_begin, range_end, size_per_line);
     }
 
-}  // namespace clog
+}  // namespace collie::log
 
 namespace fmt {
 
     template<typename T>
-    struct formatter<clog::details::dump_info<T>, char> {
+    struct formatter<collie::log::details::dump_info<T>, char> {
         const char delimiter = ' ';
         bool put_newlines = true;
         bool put_delimiters = true;
@@ -150,7 +153,7 @@ namespace fmt {
 
         // format the given bytes range as hex
         template<typename FormatContext, typename Container>
-        auto format(const clog::details::dump_info<Container> &the_range, FormatContext &ctx) const
+        auto format(const collie::log::details::dump_info<Container> &the_range, FormatContext &ctx) const
         -> decltype(ctx.out()) {
             constexpr const char *hex_upper = "0123456789ABCDEF";
             constexpr const char *hex_lower = "0123456789abcdef";
@@ -220,7 +223,7 @@ namespace fmt {
             *inserter++ = '\n';
 
             if (put_positions) {
-                clog::fmt_lib::format_to(inserter, FMT_STRING("{:04X}: "), pos);
+                collie::log::fmt_lib::format_to(inserter, FMT_STRING("{:04X}: "), pos);
             }
         }
     };

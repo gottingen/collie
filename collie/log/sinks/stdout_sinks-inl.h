@@ -1,16 +1,19 @@
-// Copyright 2024 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
 #pragma once
@@ -32,7 +35,7 @@
 #include <stdio.h>  // _fileno(..)
 #endif                  // WIN32
 
-namespace clog {
+namespace collie::log {
 
     namespace sinks {
 
@@ -40,7 +43,7 @@ namespace clog {
         inline stdout_sink_base<ConsoleMutex>::stdout_sink_base(FILE *file)
                 : mutex_(ConsoleMutex::mutex()),
                   file_(file),
-                  formatter_(details::make_unique<clog::pattern_formatter>()) {
+                  formatter_(details::make_unique<collie::log::pattern_formatter>()) {
 #ifdef _WIN32
             // get windows handle from the FILE* object
 
@@ -50,7 +53,7 @@ namespace clog {
             // and let the log method to do nothing if (handle_ == INVALID_HANDLE_VALUE).
             // throw only if non stdout/stderr target is requested (probably regular file and not console).
             if (handle_ == INVALID_HANDLE_VALUE && file != stdout && file != stderr) {
-                throw_clog_ex("clog::stdout_sink_base: _get_osfhandle() failed", errno);
+                throw_clog_ex("collie::log::stdout_sink_base: _get_osfhandle() failed", errno);
             }
 #endif  // WIN32
         }
@@ -89,12 +92,12 @@ namespace clog {
         template<typename ConsoleMutex>
         inline void stdout_sink_base<ConsoleMutex>::set_pattern(const std::string &pattern) {
             std::lock_guard<mutex_t> lock(mutex_);
-            formatter_ = std::unique_ptr<clog::formatter>(new pattern_formatter(pattern));
+            formatter_ = std::unique_ptr<collie::log::formatter>(new pattern_formatter(pattern));
         }
 
         template<typename ConsoleMutex>
         inline void stdout_sink_base<ConsoleMutex>::set_formatter(
-                std::unique_ptr<clog::formatter> sink_formatter) {
+                std::unique_ptr<collie::log::formatter> sink_formatter) {
             std::lock_guard<mutex_t> lock(mutex_);
             formatter_ = std::move(sink_formatter);
         }
@@ -131,4 +134,4 @@ namespace clog {
     inline std::shared_ptr<logger> stderr_logger_st(const std::string &logger_name) {
         return Factory::template create<sinks::stderr_sink_st>(logger_name);
     }
-}  // namespace clog
+}  // namespace collie::log

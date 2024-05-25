@@ -1,16 +1,19 @@
-// Copyright 2024 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 #pragma once
 
@@ -18,7 +21,7 @@
 #include <collie/log/common.h>
 #include <collie/log/pattern_formatter.h>
 
-namespace clog {
+namespace collie::log {
 
     inline void initialize_logger(std::shared_ptr<logger> logger) {
         details::registry::instance().initialize_logger(std::move(logger));
@@ -28,13 +31,13 @@ namespace clog {
         return details::registry::instance().get(name);
     }
 
-    inline void set_formatter(std::unique_ptr<clog::formatter> formatter) {
+    inline void set_formatter(std::unique_ptr<collie::log::formatter> formatter) {
         details::registry::instance().set_formatter(std::move(formatter));
     }
 
     inline void set_pattern(std::string pattern, pattern_time_type time_type) {
         set_formatter(
-                std::unique_ptr<clog::formatter>(new pattern_formatter(std::move(pattern), time_type)));
+                std::unique_ptr<collie::log::formatter>(new pattern_formatter(std::move(pattern), time_type)));
     }
 
     inline void enable_backtrace(size_t n_messages) {
@@ -85,15 +88,15 @@ namespace clog {
         details::registry::instance().set_automatic_registration(automatic_registration);
     }
 
-    inline std::shared_ptr<clog::logger> default_logger() {
+    inline std::shared_ptr<collie::log::logger> default_logger() {
         return details::registry::instance().default_logger();
     }
 
-    inline clog::logger *default_logger_raw() {
+    inline collie::log::logger *default_logger_raw() {
         return details::registry::instance().get_default_raw();
     }
 
-    inline void set_default_logger(std::shared_ptr<clog::logger> default_logger) {
+    inline void set_default_logger(std::shared_ptr<collie::log::logger> default_logger) {
         details::registry::instance().set_default_logger(std::move(default_logger));
     }
 
@@ -101,4 +104,4 @@ namespace clog {
         details::registry::instance().apply_logger_env_levels(std::move(logger));
     }
 
-}  // namespace clog
+}  // namespace collie::log

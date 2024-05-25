@@ -25,9 +25,9 @@
 TEST_CASE("simple_file_logger [simple_logger]]")
 {
     prepare_logdir();
-    clog::filename_t filename = TLOG_FILENAME_T(SIMPLE_LOG);
+    collie::log::filename_t filename = TLOG_FILENAME_T(SIMPLE_LOG);
 
-    auto logger = clog::create<clog::sinks::basic_file_sink_mt>("logger", filename);
+    auto logger = collie::log::create<collie::log::sinks::basic_file_sink_mt>("logger", filename);
     logger->set_pattern("%v");
 
     logger->info("Test message {}", 1);
@@ -35,7 +35,7 @@ TEST_CASE("simple_file_logger [simple_logger]]")
 
     logger->flush();
     require_message_count(SIMPLE_LOG, 2);
-    using clog::details::os::default_eol;
+    using collie::log::details::os::default_eol;
     REQUIRE(file_contents(SIMPLE_LOG) ==
             turbo::format("Test message 1{}Test message 2{}", default_eol, default_eol));
 }
@@ -43,12 +43,12 @@ TEST_CASE("simple_file_logger [simple_logger]]")
 TEST_CASE("flush_on [flush_on]]")
 {
     prepare_logdir();
-    clog::filename_t filename = TLOG_FILENAME_T(SIMPLE_LOG);
+    collie::log::filename_t filename = TLOG_FILENAME_T(SIMPLE_LOG);
 
-    auto logger = clog::create<clog::sinks::basic_file_sink_mt>("logger", filename);
+    auto logger = collie::log::create<collie::log::sinks::basic_file_sink_mt>("logger", filename);
     logger->set_pattern("%v");
-    logger->set_level(clog::level::trace);
-    logger->flush_on(clog::level::info);
+    logger->set_level(collie::log::level::trace);
+    logger->flush_on(collie::log::level::info);
     REQUIRE(count_lines(SIMPLE_LOG, true) == 0);
     logger->trace("Should not be flushed");
     REQUIRE(count_lines(SIMPLE_LOG, true) == 1);
@@ -57,7 +57,7 @@ TEST_CASE("flush_on [flush_on]]")
     logger->info("Test message {}", 2);
 
     require_message_count(SIMPLE_LOG, 3);
-    using clog::details::os::default_eol;
+    using collie::log::details::os::default_eol;
     REQUIRE(file_contents(SIMPLE_LOG) ==
             turbo::format("Should not be flushed{}Test message 1{}Test message 2{}", default_eol,
                                          default_eol, default_eol));
@@ -67,8 +67,8 @@ TEST_CASE("rotating_file_logger1 [rotating_logger]]")
 {
     prepare_logdir();
     size_t max_size = 1024 * 10;
-    clog::filename_t basename = TLOG_FILENAME_T(ROTATING_LOG);
-    auto logger = clog::rotating_logger_mt("logger", basename, max_size, 0);
+    collie::log::filename_t basename = TLOG_FILENAME_T(ROTATING_LOG);
+    auto logger = collie::log::rotating_logger_mt("logger", basename, max_size, 0);
 
     for (int i = 0; i < 10; ++i) {
         logger->info("Test message {}", i);
@@ -82,20 +82,20 @@ TEST_CASE("rotating_file_logger2 [rotating_logger]]")
 {
     prepare_logdir();
     size_t max_size = 1024 * 10;
-    clog::filename_t basename = TLOG_FILENAME_T(ROTATING_LOG);
+    collie::log::filename_t basename = TLOG_FILENAME_T(ROTATING_LOG);
 
     {
         // make an initial logger to create the first output file
-        auto logger = clog::rotating_logger_mt("logger", basename, max_size, 2, true);
+        auto logger = collie::log::rotating_logger_mt("logger", basename, max_size, 2, true);
         for (int i = 0; i < 10; ++i) {
             logger->info("Test message {}", i);
         }
         // drop causes the logger destructor to be called, which is required so the
         // next logger can rename the first output file.
-        clog::drop(logger->name());
+        collie::log::drop(logger->name());
     }
 
-    auto logger = clog::rotating_logger_mt("logger", basename, max_size, 2, true);
+    auto logger = collie::log::rotating_logger_mt("logger", basename, max_size, 2, true);
     for (int i = 0; i < 10; ++i) {
         logger->info("Test message {}", i);
     }
@@ -119,6 +119,6 @@ TEST_CASE("rotating_file_logger3 [rotating_logger]]")
 {
     prepare_logdir();
     size_t max_size = 0;
-    clog::filename_t basename = TLOG_FILENAME_T(ROTATING_LOG);
-    REQUIRE_THROWS_AS(clog::rotating_logger_mt("logger", basename, max_size, 0), clog::tlog_ex);
+    collie::log::filename_t basename = TLOG_FILENAME_T(ROTATING_LOG);
+    REQUIRE_THROWS_AS(collie::log::rotating_logger_mt("logger", basename, max_size, 0), collie::log::tlog_ex);
 }

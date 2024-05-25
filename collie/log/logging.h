@@ -1,16 +1,19 @@
-// Copyright 2023 The Elastic-AI Authors.
-// part of Elastic AI Search
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
-//      https://www.apache.org/licenses/LICENSE-2.0
+// Copyright (C) 2024 EA group inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 #pragma once
 
@@ -20,7 +23,7 @@
 #include <collie/base/macros.h>
 #include <system_error>
 
-namespace clog::details {
+namespace collie::log::details {
 
 #ifdef NDEBUG
     static constexpr bool debug_mode = false;
@@ -40,6 +43,9 @@ namespace clog::details {
 
         ~LogStream() {
             logger_->log(loc_, level_, details::to_string_view(stream_));
+            if(level_ == level::fatal && clog_fatal_crash_flag) {
+                std::abort();
+            }
         }
 
         template<typename T>
@@ -198,10 +204,10 @@ namespace clog::details {
         return t;
     }
 
-}  // namespace clog:details
+}  // namespace collie::log:details
 
 #define IS_VLOG_ON_LOGGER(verboselevel, logger) ((logger)->vlog_level() > (verboselevel))
-#define IS_VLOG_ON(verboselevel) IS_VLOG_ON_LOGGER(verboselevel, clog::default_logger_raw())
+#define IS_VLOG_ON(verboselevel) IS_VLOG_ON_LOGGER(verboselevel, collie::log::default_logger_raw())
 
 #if defined(NDEBUG) && !defined(CLOG_CHECK_ALWAYS_ON)
 #  define CLOG_DCHECK_IS_ON() 0
@@ -211,39 +217,39 @@ namespace clog::details {
 
 #ifndef CLOG_NO_SOURCE_LOC
 #define COLLIE_LOG_LOGGER_STREAM(logger, level, pl) \
-        !logger->should_log(level) ? (void)0 : clog::details::LogMessageVoidify()&clog::details::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, level)
+        !logger->should_log(level) ? (void)0 : collie::log::details::LogMessageVoidify()&collie::log::details::LogStream<pl>((logger), collie::log::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, level)
 #else
 #define COLLIE_LOG_LOGGER_STREAM(logger, level) \
-        clog::LogStream((logger), clog::source_loc{}, level)
+        collie::log::LogStream((logger), collie::log::source_loc{}, level)
 #endif
 
 #define COLLIE_LOG_LOGGER_NULL_STREAM() \
-        clog::details::NullStream((nullptr), clog::source_loc{}, clog::level::trace)
+        collie::log::details::NullStream((nullptr), collie::log::source_loc{}, collie::log::level::trace)
 
-#define COLLIE_LOG_TRACE(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, clog::level::trace, pl)
-#define COLLIE_LOG_DEBUG(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, clog::level::debug, pl)
-#define COLLIE_LOG_INFO(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, clog::level::info, pl)
-#define COLLIE_LOG_WARN(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, clog::level::warn, pl)
-#define COLLIE_LOG_ERROR(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, clog::level::error, pl)
-#define COLLIE_LOG_FATAL(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, clog::level::fatal, pl)
+#define COLLIE_LOG_TRACE(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, collie::log::level::trace, pl)
+#define COLLIE_LOG_DEBUG(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, collie::log::level::debug, pl)
+#define COLLIE_LOG_INFO(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, collie::log::level::info, pl)
+#define COLLIE_LOG_WARN(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, collie::log::level::warn, pl)
+#define COLLIE_LOG_ERROR(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, collie::log::level::error, pl)
+#define COLLIE_LOG_FATAL(logger, pl) COLLIE_LOG_LOGGER_STREAM(logger, collie::log::level::fatal, pl)
 
 
 #define COLLIE_LOGGER_IF_CALL_EVERY_N(SEVERITY, N, condition, logger, pl) \
-        static ::clog::details::LogEveryNState COLLIE_CONCAT(everyn_, __LINE__); \
-        if(COLLIE_CONCAT(everyn_, __LINE__).should_log((N)) && logger->should_log(static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY)) && (condition)) \
-            clog::details::LogMessageVoidify()&clog::details::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY))
+        static ::collie::log::details::LogEveryNState COLLIE_CONCAT(everyn_, __LINE__); \
+        if(COLLIE_CONCAT(everyn_, __LINE__).should_log((N)) && logger->should_log(static_cast<collie::log::level::level_enum>(CLOG_LEVEL_##SEVERITY)) && (condition)) \
+            collie::log::details::LogMessageVoidify()&collie::log::details::LogStream<pl>((logger), collie::log::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<collie::log::level::level_enum>(CLOG_LEVEL_##SEVERITY))
 
 #define COLLIE_LOGGER_IF_CALL_FIRST_N(SEVERITY, N, condition, logger, pl) \
-        static ::clog::details::LogFirstNState COLLIE_CONCAT(firstn_, __LINE__); \
-        if(COLLIE_CONCAT(firstn_, __LINE__).should_log((N)) && logger->should_log(static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY)) && (condition)) \
-            clog::details::LogMessageVoidify()&clog::details::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY))
+        static ::collie::log::details::LogFirstNState COLLIE_CONCAT(firstn_, __LINE__); \
+        if(COLLIE_CONCAT(firstn_, __LINE__).should_log((N)) && logger->should_log(static_cast<collie::log::level::level_enum>(CLOG_LEVEL_##SEVERITY)) && (condition)) \
+            collie::log::details::LogMessageVoidify()&collie::log::details::LogStream<pl>((logger), collie::log::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<collie::log::level::level_enum>(CLOG_LEVEL_##SEVERITY))
 
 #define COLLIE_LOGGER_IF_CALL_DURATION(SEVERITY, seconds, condition, logger, pl) \
         constexpr size_t COLLIE_CONCAT(LOG_TIME_PERIOD, __LINE__) =                         \
         std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(seconds)).count(); \
-        static ::clog::details::LogEveryNDurationState<COLLIE_CONCAT(LOG_TIME_PERIOD, __LINE__)> COLLIE_CONCAT(every_t_, __LINE__); \
-        if(COLLIE_CONCAT(every_t_, __LINE__).should_log() && logger->should_log(static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY)) && (condition)) \
-            clog::details::LogMessageVoidify()&clog::details::LogStream<pl>((logger), clog::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<clog::level::level_enum>(CLOG_LEVEL_##SEVERITY))
+        static ::collie::log::details::LogEveryNDurationState<COLLIE_CONCAT(LOG_TIME_PERIOD, __LINE__)> COLLIE_CONCAT(every_t_, __LINE__); \
+        if(COLLIE_CONCAT(every_t_, __LINE__).should_log() && logger->should_log(static_cast<collie::log::level::level_enum>(CLOG_LEVEL_##SEVERITY)) && (condition)) \
+            collie::log::details::LogMessageVoidify()&collie::log::details::LogStream<pl>((logger), collie::log::source_loc{__FILE__, __LINE__, CLOG_FUNCTION}, static_cast<collie::log::level::level_enum>(CLOG_LEVEL_##SEVERITY))
 
 #define COLLIE_LOG_IMPL(SEVERITY, logger, pl) COLLIE_LOG_##SEVERITY(logger, pl)
 
@@ -310,12 +316,12 @@ DEFINE_CHECK_OP_IMPL(Check_GT, >)
 #undef DEFINE_CHECK_OP_IMPL
 
 #define CHECK_OP_IMPL_LOGGER(name, op, val1, val2, logger) \
-  if(!Check##name##Impl(clog::details::get_referenceable_value(val1), clog::details::get_referenceable_value(val2))) \
-    LOG_LOGGER(FATAL, logger) << clog::details::MakeCheckOpString(val1, val2, #val1 " " #op " " #val2)
+  if(!Check##name##Impl(collie::log::details::get_referenceable_value(val1), collie::log::details::get_referenceable_value(val2))) \
+    LOG_LOGGER(FATAL, logger) << collie::log::details::MakeCheckOpString(val1, val2, #val1 " " #op " " #val2)
 
 #define PCHECK_OP_IMPL_LOGGER(name, op, val1, val2, logger) \
-  if(!Check##name##Impl(clog::details::get_referenceable_value(val1), clog::details::get_referenceable_value(val2))) \
-    PLOG_LOGGER(FATAL, logger) << clog::details::MakeCheckOpString(val1, val2, #val1 " " #op " " #val2)
+  if(!Check##name##Impl(collie::log::details::get_referenceable_value(val1), collie::log::details::get_referenceable_value(val2))) \
+    PLOG_LOGGER(FATAL, logger) << collie::log::details::MakeCheckOpString(val1, val2, #val1 " " #op " " #val2)
 
 #define CHECK_OP_LOGGER(name, op, val1, val2, logger) \
   CHECK_OP_IMPL_LOGGER(name, op, val1, val2, logger)
@@ -359,61 +365,61 @@ DEFINE_CHECK_OP_IMPL(Check_GT, >)
 
 
 /// default logger
-#define LOG(SEVERITY) LOG_LOGGER(SEVERITY, clog::default_logger_raw())
-#define LOG_IF(SEVERITY, condition) LOG_LOGGER_IF(SEVERITY, (condition), clog::default_logger_raw())
-#define LOG_EVERY_N(SEVERITY, N) LOG_LOGGER_EVERY_N(SEVERITY, N, clog::default_logger_raw())
-#define LOG_IF_EVERY_N(SEVERITY, N, condition) LOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define LOG_FIRST_N(SEVERITY, N) LOG_LOGGER_FIRST_N(SEVERITY, (N), clog::default_logger_raw())
-#define LOG_IF_FIRST_N(SEVERITY, N, condition) LOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define LOG_EVERY_T(SEVERITY, seconds) LOG_LOGGER_EVERY_T(SEVERITY, (seconds), clog::default_logger_raw())
-#define LOG_IF_EVERY_T(SEVERITY, seconds, condition) LOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), clog::default_logger_raw())
-#define LOG_ONCE(SEVERITY) LOG_LOGGER_ONCE(SEVERITY, clog::default_logger_raw())
-#define LOG_IF_ONCE(SEVERITY, condition) LOG_LOGGER_IF_ONCE(SEVERITY, (condition), clog::default_logger_raw())
+#define LOG(SEVERITY) LOG_LOGGER(SEVERITY, collie::log::default_logger_raw())
+#define LOG_IF(SEVERITY, condition) LOG_LOGGER_IF(SEVERITY, (condition), collie::log::default_logger_raw())
+#define LOG_EVERY_N(SEVERITY, N) LOG_LOGGER_EVERY_N(SEVERITY, N, collie::log::default_logger_raw())
+#define LOG_IF_EVERY_N(SEVERITY, N, condition) LOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define LOG_FIRST_N(SEVERITY, N) LOG_LOGGER_FIRST_N(SEVERITY, (N), collie::log::default_logger_raw())
+#define LOG_IF_FIRST_N(SEVERITY, N, condition) LOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define LOG_EVERY_T(SEVERITY, seconds) LOG_LOGGER_EVERY_T(SEVERITY, (seconds), collie::log::default_logger_raw())
+#define LOG_IF_EVERY_T(SEVERITY, seconds, condition) LOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), collie::log::default_logger_raw())
+#define LOG_ONCE(SEVERITY) LOG_LOGGER_ONCE(SEVERITY, collie::log::default_logger_raw())
+#define LOG_IF_ONCE(SEVERITY, condition) LOG_LOGGER_IF_ONCE(SEVERITY, (condition), collie::log::default_logger_raw())
 
-#define CHECK(condition) CHECK_LOGGER(condition, clog::default_logger_raw())
+#define CHECK(condition) CHECK_LOGGER(condition, collie::log::default_logger_raw())
 #define CHECK_NOTNULL(val) CHECK(collie::ptr(val) != nullptr)
-#define CHECK_EQ(val1, val2) CHECK_OP_LOGGER(_EQ, ==, val1, val2, clog::default_logger_raw())
-#define CHECK_NE(val1, val2) CHECK_OP_LOGGER(_NE, !=, val1, val2, clog::default_logger_raw())
-#define CHECK_LE(val1, val2) CHECK_OP_LOGGER(_LE, <=, val1, val2, clog::default_logger_raw())
-#define CHECK_LT(val1, val2) CHECK_OP_LOGGER(_LT, <, val1, val2, clog::default_logger_raw())
-#define CHECK_GE(val1, val2) CHECK_OP_LOGGER(_GE, >=, val1, val2, clog::default_logger_raw())
-#define CHECK_GT(val1, val2) CHECK_OP_LOGGER(_GT, >, val1, val2, clog::default_logger_raw())
-#define CHECK_DOUBLE_EQ(val1, val2) CHECK_DOUBLE_EQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define CHECK_NEAR(val1, val2, margin) CHECK_NEAR_LOGGER(val1, val2, margin, clog::default_logger_raw())
+#define CHECK_EQ(val1, val2) CHECK_OP_LOGGER(_EQ, ==, val1, val2, collie::log::default_logger_raw())
+#define CHECK_NE(val1, val2) CHECK_OP_LOGGER(_NE, !=, val1, val2, collie::log::default_logger_raw())
+#define CHECK_LE(val1, val2) CHECK_OP_LOGGER(_LE, <=, val1, val2, collie::log::default_logger_raw())
+#define CHECK_LT(val1, val2) CHECK_OP_LOGGER(_LT, <, val1, val2, collie::log::default_logger_raw())
+#define CHECK_GE(val1, val2) CHECK_OP_LOGGER(_GE, >=, val1, val2, collie::log::default_logger_raw())
+#define CHECK_GT(val1, val2) CHECK_OP_LOGGER(_GT, >, val1, val2, collie::log::default_logger_raw())
+#define CHECK_DOUBLE_EQ(val1, val2) CHECK_DOUBLE_EQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define CHECK_NEAR(val1, val2, margin) CHECK_NEAR_LOGGER(val1, val2, margin, collie::log::default_logger_raw())
 #define CHECK_INDEX(I, A) CHECK(I < (sizeof(A) / sizeof(A[0])))
 #define CHECK_BOUND(B, A) CHECK(B <= (sizeof(A) / sizeof(A[0])))
 
-#define PLOG(SEVERITY) PLOG_LOGGER(SEVERITY, clog::default_logger_raw())
-#define PLOG_IF(SEVERITY, condition) PLOG_LOGGER_IF(SEVERITY, (condition), clog::default_logger_raw())
-#define PLOG_EVERY_N(SEVERITY, N) PLOG_LOGGER_EVERY_N(SEVERITY, N, clog::default_logger_raw())
-#define PLOG_IF_EVERY_N(SEVERITY, N, condition) PLOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define PLOG_FIRST_N(SEVERITY, N) PLOG_LOGGER_FIRST_N(SEVERITY, (N), true, clog::default_logger_raw())
-#define PLOG_IF_FIRST_N(SEVERITY, N, condition) PLOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define PLOG_EVERY_T(SEVERITY, seconds) PLOG_LOGGER_EVERY_T(SEVERITY, (seconds), clog::default_logger_raw())
-#define PLOG_IF_EVERY_T(SEVERITY, seconds, condition) PLOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), clog::default_logger_raw())
-#define PLOG_ONCE(SEVERITY) PLOG_LOGGER_ONCE(SEVERITY, clog::default_logger_raw())
-#define PLOG_IF_ONCE(SEVERITY, condition) PLOG_LOGGER_IF_ONCE(SEVERITY, (condition), clog::default_logger_raw())
+#define PLOG(SEVERITY) PLOG_LOGGER(SEVERITY, collie::log::default_logger_raw())
+#define PLOG_IF(SEVERITY, condition) PLOG_LOGGER_IF(SEVERITY, (condition), collie::log::default_logger_raw())
+#define PLOG_EVERY_N(SEVERITY, N) PLOG_LOGGER_EVERY_N(SEVERITY, N, collie::log::default_logger_raw())
+#define PLOG_IF_EVERY_N(SEVERITY, N, condition) PLOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define PLOG_FIRST_N(SEVERITY, N) PLOG_LOGGER_FIRST_N(SEVERITY, (N), true, collie::log::default_logger_raw())
+#define PLOG_IF_FIRST_N(SEVERITY, N, condition) PLOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define PLOG_EVERY_T(SEVERITY, seconds) PLOG_LOGGER_EVERY_T(SEVERITY, (seconds), collie::log::default_logger_raw())
+#define PLOG_IF_EVERY_T(SEVERITY, seconds, condition) PLOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), collie::log::default_logger_raw())
+#define PLOG_ONCE(SEVERITY) PLOG_LOGGER_ONCE(SEVERITY, collie::log::default_logger_raw())
+#define PLOG_IF_ONCE(SEVERITY, condition) PLOG_LOGGER_IF_ONCE(SEVERITY, (condition), collie::log::default_logger_raw())
 
-#define PCHECK(condition) PCHECK_LOGGER(condition, clog::default_logger_raw())
-#define PCHECK_PTREQ(val1, val2) PCHECK_PTREQ_LOGGER(val1, val2, clog::default_logger_raw())
+#define PCHECK(condition) PCHECK_LOGGER(condition, collie::log::default_logger_raw())
+#define PCHECK_PTREQ(val1, val2) PCHECK_PTREQ_LOGGER(val1, val2, collie::log::default_logger_raw())
 #define PCHECK_NOTNUL(val) PCHECK_NOTNULL_LOGGER(collie::ptr(val) != nullptr, log::default_logger_raw())
-#define PCHECK_EQ(val1, val2) PCHECK_EQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define PCHECK_NE(val1, val2) PCHECK_NE_LOGGER(val1, val2, clog::default_logger_raw())
-#define PCHECK_LE(val1, val2) PCHECK_LE_LOGGER(val1, val2, clog::default_logger_raw())
-#define PCHECK_LT(val1, val2) PCHECK_LT_LOGGER(val1, val2, clog::default_logger_raw())
-#define PCHECK_GE(val1, val2) PCHECK_GE_LOGGER(val1, val2, clog::default_logger_raw())
-#define PCHECK_GT(val1, val2) PCHECK_GT_LOGGER(val1, val2, clog::default_logger_raw())
+#define PCHECK_EQ(val1, val2) PCHECK_EQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define PCHECK_NE(val1, val2) PCHECK_NE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define PCHECK_LE(val1, val2) PCHECK_LE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define PCHECK_LT(val1, val2) PCHECK_LT_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define PCHECK_GE(val1, val2) PCHECK_GE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define PCHECK_GT(val1, val2) PCHECK_GT_LOGGER(val1, val2, collie::log::default_logger_raw())
 
-#define VLOG(verboselevel) VLOG_LOGGER(verboselevel, clog::default_logger_raw())
-#define VLOG_IF(verboselevel, condition) VLOG_IF_LOGGER(verboselevel, (condition), clog::default_logger_raw())
-#define VLOG_EVERY_N(verboselevel, N) VLOG_EVERY_N_LOGGER(verboselevel, N, clog::default_logger_raw())
-#define VLOG_IF_EVERY_N(verboselevel, N, condition) VLOG_IF_EVERY_N_LOGGER(verboselevel, (N), (condition), clog::default_logger_raw())
-#define VLOG_FIRST_N(verboselevel, N) VLOG_FIRST_N_LOGGER(verboselevel, (N), clog::default_logger_raw())
-#define VLOG_IF_FIRST_N(verboselevel, N, condition) VLOG_IF_FIRST_N_LOGGER(verboselevel, (N), (condition), clog::default_logger_raw())
-#define VLOG_EVERY_T(verboselevel, seconds) VLOG_EVERY_T_LOGGER(verboselevel, (seconds), clog::default_logger_raw())
-#define VLOG_IF_EVERY_T(verboselevel, seconds, condition) VLOG_IF_EVERY_T_LOGGER(verboselevel, (seconds), (condition), clog::default_logger_raw())
-#define VLOG_ONCE(verboselevel) VLOG_ONCE_LOGGER(verboselevel, clog::default_logger_raw())
-#define VLOG_IF_ONCE(verboselevel, condition) VLOG_IF_ONCE_LOGGER(verboselevel, (condition), clog::default_logger_raw())
+#define VLOG(verboselevel) VLOG_LOGGER(verboselevel, collie::log::default_logger_raw())
+#define VLOG_IF(verboselevel, condition) VLOG_IF_LOGGER(verboselevel, (condition), collie::log::default_logger_raw())
+#define VLOG_EVERY_N(verboselevel, N) VLOG_EVERY_N_LOGGER(verboselevel, N, collie::log::default_logger_raw())
+#define VLOG_IF_EVERY_N(verboselevel, N, condition) VLOG_IF_EVERY_N_LOGGER(verboselevel, (N), (condition), collie::log::default_logger_raw())
+#define VLOG_FIRST_N(verboselevel, N) VLOG_FIRST_N_LOGGER(verboselevel, (N), collie::log::default_logger_raw())
+#define VLOG_IF_FIRST_N(verboselevel, N, condition) VLOG_IF_FIRST_N_LOGGER(verboselevel, (N), (condition), collie::log::default_logger_raw())
+#define VLOG_EVERY_T(verboselevel, seconds) VLOG_EVERY_T_LOGGER(verboselevel, (seconds), collie::log::default_logger_raw())
+#define VLOG_IF_EVERY_T(verboselevel, seconds, condition) VLOG_IF_EVERY_T_LOGGER(verboselevel, (seconds), (condition), collie::log::default_logger_raw())
+#define VLOG_ONCE(verboselevel) VLOG_ONCE_LOGGER(verboselevel, collie::log::default_logger_raw())
+#define VLOG_IF_ONCE(verboselevel, condition) VLOG_IF_ONCE_LOGGER(verboselevel, (condition), collie::log::default_logger_raw())
 
 
 #if CLOG_DCHECK_IS_ON()
@@ -472,57 +478,57 @@ DEFINE_CHECK_OP_IMPL(Check_GT, >)
 #define DVLOG_IF_ONCE_LOGGER(verboselevel, condition, logger) VLOG_IF_ONCE_LOGGER(verboselevel, condition, logger)
 
 #define DLOG(SEVERITY)                                LOG(SEVERITY)
-#define DLOG_IF(SEVERITY, condition)                  LOG_LOGGER_IF(SEVERITY, (condition), clog::default_logger_raw())
-#define DLOG_EVERY_N(SEVERITY, N)                     LOG_LOGGER_EVERY_N(SEVERITY, N, clog::default_logger_raw())
-#define DLOG_IF_EVERY_N(SEVERITY, N, condition)       LOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define DLOG_FIRST_N(SEVERITY, N)                     LOG_LOGGER_FIRST_N(SEVERITY, (N), true, clog::default_logger_raw())
-#define DLOG_IF_FIRST_N(SEVERITY, N, condition)       LOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define DLOG_EVERY_T(SEVERITY, seconds)               LOG_LOGGER_EVERY_T(SEVERITY, (seconds), clog::default_logger_raw())
-#define DLOG_IF_EVERY_T(SEVERITY, seconds, condition) LOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), clog::default_logger_raw())
-#define DLOG_ONCE(SEVERITY)                           LOG_LOGGER_ONCE(SEVERITY, clog::default_logger_raw())
-#define DLOG_IF_ONCE(SEVERITY, condition)             LOG_LOGGER_IF_ONCE(SEVERITY, (condition), clog::default_logger_raw())
+#define DLOG_IF(SEVERITY, condition)                  LOG_LOGGER_IF(SEVERITY, (condition), collie::log::default_logger_raw())
+#define DLOG_EVERY_N(SEVERITY, N)                     LOG_LOGGER_EVERY_N(SEVERITY, N, collie::log::default_logger_raw())
+#define DLOG_IF_EVERY_N(SEVERITY, N, condition)       LOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define DLOG_FIRST_N(SEVERITY, N)                     LOG_LOGGER_FIRST_N(SEVERITY, (N), true, collie::log::default_logger_raw())
+#define DLOG_IF_FIRST_N(SEVERITY, N, condition)       LOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define DLOG_EVERY_T(SEVERITY, seconds)               LOG_LOGGER_EVERY_T(SEVERITY, (seconds), collie::log::default_logger_raw())
+#define DLOG_IF_EVERY_T(SEVERITY, seconds, condition) LOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), collie::log::default_logger_raw())
+#define DLOG_ONCE(SEVERITY)                           LOG_LOGGER_ONCE(SEVERITY, collie::log::default_logger_raw())
+#define DLOG_IF_ONCE(SEVERITY, condition)             LOG_LOGGER_IF_ONCE(SEVERITY, (condition), collie::log::default_logger_raw())
 
-#define DCHECK(condition) DCHECK_LOGGER(condition, clog::default_logger_raw())
-#define DCHECK_NOTNULL(val) DCHECK_NOTNULL_LOGGER(val, clog::default_logger_raw())
-#define DCHECK_PTREQ(val1, val2) DCHECK_PTREQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_EQ(val1, val2) CHECK_EQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_NE(val1, val2) CHECK_NE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_LE(val1, val2) CHECK_LE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_LT(val1, val2) CHECK_LT_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_GE(val1, val2) CHECK_GE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_GT(val1, val2) CHECK_GT_LOGGER(val1, val2, clog::default_logger_raw())
+#define DCHECK(condition) DCHECK_LOGGER(condition, collie::log::default_logger_raw())
+#define DCHECK_NOTNULL(val) DCHECK_NOTNULL_LOGGER(val, collie::log::default_logger_raw())
+#define DCHECK_PTREQ(val1, val2) DCHECK_PTREQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_EQ(val1, val2) CHECK_EQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_NE(val1, val2) CHECK_NE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_LE(val1, val2) CHECK_LE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_LT(val1, val2) CHECK_LT_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_GE(val1, val2) CHECK_GE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_GT(val1, val2) CHECK_GT_LOGGER(val1, val2, collie::log::default_logger_raw())
 
-#define DPLOG(SEVERITY)                                  PLOG_LOGGER(SEVERITY, clog::default_logger_raw())
-#define DPLOG_IF(SEVERITY, condition)                    PLOG_LOGGER_IF(SEVERITY, (condition), clog::default_logger_raw())
-#define DPLOG_EVERY_N(SEVERITY, N)                       PLOG_LOGGER_EVERY_N(SEVERITY, N, clog::default_logger_raw())
-#define DPLOG_IF_EVERY_N(SEVERITY, N, condition)         PLOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define DPLOG_FIRST_N(SEVERITY, N)                       PLOG_LOGGER_FIRST_N(SEVERITY, (N), true, clog::default_logger_raw())
-#define DPLOG_IF_FIRST_N(SEVERITY, N, condition)         PLOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define DPLOG_EVERY_T(SEVERITY, seconds)                 PLOG_LOGGER_EVERY_T(SEVERITY, (seconds), clog::default_logger_raw())
-#define DPLOG_IF_EVERY_T(SEVERITY, seconds, condition)   PLOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), clog::default_logger_raw())
-#define DPLOG_ONCE(SEVERITY)                             PLOG_LOGGER_ONCE(SEVERITY, clog::default_logger_raw())
-#define DPLOG_IF_ONCE(SEVERITY, condition)               PLOG_LOGGER_IF_ONCE(SEVERITY, (condition), clog::default_logger_raw())
+#define DPLOG(SEVERITY)                                  PLOG_LOGGER(SEVERITY, collie::log::default_logger_raw())
+#define DPLOG_IF(SEVERITY, condition)                    PLOG_LOGGER_IF(SEVERITY, (condition), collie::log::default_logger_raw())
+#define DPLOG_EVERY_N(SEVERITY, N)                       PLOG_LOGGER_EVERY_N(SEVERITY, N, collie::log::default_logger_raw())
+#define DPLOG_IF_EVERY_N(SEVERITY, N, condition)         PLOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define DPLOG_FIRST_N(SEVERITY, N)                       PLOG_LOGGER_FIRST_N(SEVERITY, (N), true, collie::log::default_logger_raw())
+#define DPLOG_IF_FIRST_N(SEVERITY, N, condition)         PLOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define DPLOG_EVERY_T(SEVERITY, seconds)                 PLOG_LOGGER_EVERY_T(SEVERITY, (seconds), collie::log::default_logger_raw())
+#define DPLOG_IF_EVERY_T(SEVERITY, seconds, condition)   PLOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), collie::log::default_logger_raw())
+#define DPLOG_ONCE(SEVERITY)                             PLOG_LOGGER_ONCE(SEVERITY, collie::log::default_logger_raw())
+#define DPLOG_IF_ONCE(SEVERITY, condition)               PLOG_LOGGER_IF_ONCE(SEVERITY, (condition), collie::log::default_logger_raw())
 
-#define DPCHECK(condition) DPCHECK_LOGGER(condition, clog::default_logger_raw())
-#define DPCHECK_NOTNULL(val) DPCHECK_NOTNULL_LOGGER(val, clog::default_logger_raw())
-#define DPCHECK_PTREQ(val1, val2) DPCHECK_PTREQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_EQ(val1, val2) PCHECK_EQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_NE(val1, val2) PCHECK_NE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_LE(val1, val2) PCHECK_LE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_LT(val1, val2) PCHECK_LT_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_GE(val1, val2) PCHECK_GE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_GT(val1, val2) PCHECK_GT_LOGGER(val1, val2, clog::default_logger_raw())
+#define DPCHECK(condition) DPCHECK_LOGGER(condition, collie::log::default_logger_raw())
+#define DPCHECK_NOTNULL(val) DPCHECK_NOTNULL_LOGGER(val, collie::log::default_logger_raw())
+#define DPCHECK_PTREQ(val1, val2) DPCHECK_PTREQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_EQ(val1, val2) PCHECK_EQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_NE(val1, val2) PCHECK_NE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_LE(val1, val2) PCHECK_LE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_LT(val1, val2) PCHECK_LT_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_GE(val1, val2) PCHECK_GE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_GT(val1, val2) PCHECK_GT_LOGGER(val1, val2, collie::log::default_logger_raw())
 
-#define DVLOG(verboselevel) DVLOG_LOGGER(verboselevel, clog::default_logger_raw())
-#define DVLOG_IF(verboselevel, condition) DVLOG_IF_LOGGER(verboselevel, (condition), clog::default_logger_raw())
-#define DVLOG_EVERY_N(verboselevel, N) DVLOG_EVERY_N_LOGGER(verboselevel, N, clog::default_logger_raw())
-#define DVLOG_IF_EVERY_N(verboselevel, N, condition) DVLOG_IF_EVERY_N_LOGGER(verboselevel, (N), (condition), clog::default_logger_raw())
-#define DVLOG_FIRST_N(verboselevel, N) DVLOG_FIRST_N_LOGGER(verboselevel, (N), clog::default_logger_raw())
-#define DVLOG_IF_FIRST_N(verboselevel, N, condition) DVLOG_IF_FIRST_N_LOGGER(verboselevel, (N), (condition), clog::default_logger_raw())
-#define DVLOG_EVERY_T(verboselevel, seconds) DVLOG_EVERY_T_LOGGER(verboselevel, (seconds), clog::default_logger_raw())
-#define DVLOG_IF_EVERY_T(verboselevel, seconds, condition) DVLOG_IF_EVERY_T_LOGGER(verboselevel, (seconds), (condition), clog::default_logger_raw())
-#define DVLOG_ONCE(verboselevel) DVLOG_ONCE_LOGGER(verboselevel, clog::default_logger_raw())
-#define DVLOG_IF_ONCE(verboselevel, condition) DVLOG_IF_ONCE_LOGGER(verboselevel, (condition), clog::default_logger_raw())
+#define DVLOG(verboselevel) DVLOG_LOGGER(verboselevel, collie::log::default_logger_raw())
+#define DVLOG_IF(verboselevel, condition) DVLOG_IF_LOGGER(verboselevel, (condition), collie::log::default_logger_raw())
+#define DVLOG_EVERY_N(verboselevel, N) DVLOG_EVERY_N_LOGGER(verboselevel, N, collie::log::default_logger_raw())
+#define DVLOG_IF_EVERY_N(verboselevel, N, condition) DVLOG_IF_EVERY_N_LOGGER(verboselevel, (N), (condition), collie::log::default_logger_raw())
+#define DVLOG_FIRST_N(verboselevel, N) DVLOG_FIRST_N_LOGGER(verboselevel, (N), collie::log::default_logger_raw())
+#define DVLOG_IF_FIRST_N(verboselevel, N, condition) DVLOG_IF_FIRST_N_LOGGER(verboselevel, (N), (condition), collie::log::default_logger_raw())
+#define DVLOG_EVERY_T(verboselevel, seconds) DVLOG_EVERY_T_LOGGER(verboselevel, (seconds), collie::log::default_logger_raw())
+#define DVLOG_IF_EVERY_T(verboselevel, seconds, condition) DVLOG_IF_EVERY_T_LOGGER(verboselevel, (seconds), (condition), collie::log::default_logger_raw())
+#define DVLOG_ONCE(verboselevel) DVLOG_ONCE_LOGGER(verboselevel, collie::log::default_logger_raw())
+#define DVLOG_IF_ONCE(verboselevel, condition) DVLOG_IF_ONCE_LOGGER(verboselevel, (condition), collie::log::default_logger_raw())
 
 #else // NDEBUG
 
@@ -751,58 +757,58 @@ COLLIE_MSVC_PUSH_DISABLE_WARNING(4127)                      \
 COLLIE_MSVC_PUSH_DISABLE_WARNING(4127)                      \
     while(false) COLLIE_MSVC_POP_WARNING() PCHECK_GT_LOGGER(val1, val2, logger)
 
-#define DLOG(SEVERITY)                                DLOG_LOGGER(SEVERITY, clog::default_logger_raw())
-#define DLOG_IF(SEVERITY, condition)                  DLOG_LOGGER_IF(SEVERITY, (condition), clog::default_logger_raw())
-#define DLOG_EVERY_N(SEVERITY, N)                     DLOG_LOGGER_EVERY_N(SEVERITY, N, clog::default_logger_raw())
-#define DLOG_IF_EVERY_N(SEVERITY, N, condition)       DLOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define DLOG_FIRST_N(SEVERITY, N)                     DLOG_LOGGER_FIRST_N(SEVERITY, (N), true, clog::default_logger_raw())
-#define DLOG_IF_FIRST_N(SEVERITY, N, condition)       DLOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define DLOG_EVERY_T(SEVERITY, seconds)               DLOG_LOGGER_EVERY_T(SEVERITY, (seconds), clog::default_logger_raw())
-#define DLOG_IF_EVERY_T(SEVERITY, seconds, condition) DLOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), clog::default_logger_raw())
-#define DLOG_ONCE(SEVERITY)                           DLOG_LOGGER_ONCE(SEVERITY, clog::default_logger_raw())
-#define DLOG_IF_ONCE(SEVERITY, condition)             DLOG_LOGGER_IF_ONCE(SEVERITY, (condition), clog::default_logger_raw())
+#define DLOG(SEVERITY)                                DLOG_LOGGER(SEVERITY, collie::log::default_logger_raw())
+#define DLOG_IF(SEVERITY, condition)                  DLOG_LOGGER_IF(SEVERITY, (condition), collie::log::default_logger_raw())
+#define DLOG_EVERY_N(SEVERITY, N)                     DLOG_LOGGER_EVERY_N(SEVERITY, N, collie::log::default_logger_raw())
+#define DLOG_IF_EVERY_N(SEVERITY, N, condition)       DLOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define DLOG_FIRST_N(SEVERITY, N)                     DLOG_LOGGER_FIRST_N(SEVERITY, (N), true, collie::log::default_logger_raw())
+#define DLOG_IF_FIRST_N(SEVERITY, N, condition)       DLOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define DLOG_EVERY_T(SEVERITY, seconds)               DLOG_LOGGER_EVERY_T(SEVERITY, (seconds), collie::log::default_logger_raw())
+#define DLOG_IF_EVERY_T(SEVERITY, seconds, condition) DLOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), collie::log::default_logger_raw())
+#define DLOG_ONCE(SEVERITY)                           DLOG_LOGGER_ONCE(SEVERITY, collie::log::default_logger_raw())
+#define DLOG_IF_ONCE(SEVERITY, condition)             DLOG_LOGGER_IF_ONCE(SEVERITY, (condition), collie::log::default_logger_raw())
 
-#define DCHECK(condition) DCHECK_LOGGER(condition, clog::default_logger_raw())
-#define DCHECK_NOTNULL(val) DCHECK_NOTNULL_LOGGER(val, clog::default_logger_raw())
-#define DCHECK_PTREQ(val1, val2) DCHECK_PTREQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_EQ(val1, val2) CHECK_EQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_NE(val1, val2) CHECK_NE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_LE(val1, val2) CHECK_LE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_LT(val1, val2) CHECK_LT_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_GE(val1, val2) CHECK_GE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DCHECK_GT(val1, val2) CHECK_GT_LOGGER(val1, val2, clog::default_logger_raw())
+#define DCHECK(condition) DCHECK_LOGGER(condition, collie::log::default_logger_raw())
+#define DCHECK_NOTNULL(val) DCHECK_NOTNULL_LOGGER(val, collie::log::default_logger_raw())
+#define DCHECK_PTREQ(val1, val2) DCHECK_PTREQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_EQ(val1, val2) CHECK_EQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_NE(val1, val2) CHECK_NE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_LE(val1, val2) CHECK_LE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_LT(val1, val2) CHECK_LT_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_GE(val1, val2) CHECK_GE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DCHECK_GT(val1, val2) CHECK_GT_LOGGER(val1, val2, collie::log::default_logger_raw())
 
 
-#define DPLOG(SEVERITY)                                  DPLOG_LOGGER(SEVERITY, clog::default_logger_raw())
-#define DPLOG_IF(SEVERITY, condition)                    DPLOG_LOGGER_IF(SEVERITY, (condition), clog::default_logger_raw())
-#define DPLOG_EVERY_N(SEVERITY, N)                       DPLOG_LOGGER_EVERY_N(SEVERITY, N, clog::default_logger_raw())
-#define DPLOG_IF_EVERY_N(SEVERITY, N, condition)         DPLOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define DPLOG_FIRST_N(SEVERITY, N)                       DPLOG_LOGGER_FIRST_N(SEVERITY, (N), true, clog::default_logger_raw())
-#define DPLOG_IF_FIRST_N(SEVERITY, N, condition)         DPLOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), clog::default_logger_raw())
-#define DPLOG_EVERY_T(SEVERITY, seconds)                 DPLOG_LOGGER_EVERY_T(SEVERITY, (seconds), clog::default_logger_raw())
-#define DPLOG_IF_EVERY_T(SEVERITY, seconds, condition)   DPLOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), clog::default_logger_raw())
-#define DPLOG_ONCE(SEVERITY)                             DPLOG_LOGGER_ONCE(SEVERITY, clog::default_logger_raw())
-#define DPLOG_IF_ONCE(SEVERITY, condition)               DPLOG_LOGGER_IF_ONCE(SEVERITY, (condition), clog::default_logger_raw())
+#define DPLOG(SEVERITY)                                  DPLOG_LOGGER(SEVERITY, collie::log::default_logger_raw())
+#define DPLOG_IF(SEVERITY, condition)                    DPLOG_LOGGER_IF(SEVERITY, (condition), collie::log::default_logger_raw())
+#define DPLOG_EVERY_N(SEVERITY, N)                       DPLOG_LOGGER_EVERY_N(SEVERITY, N, collie::log::default_logger_raw())
+#define DPLOG_IF_EVERY_N(SEVERITY, N, condition)         DPLOG_LOGGER_IF_EVERY_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define DPLOG_FIRST_N(SEVERITY, N)                       DPLOG_LOGGER_FIRST_N(SEVERITY, (N), true, collie::log::default_logger_raw())
+#define DPLOG_IF_FIRST_N(SEVERITY, N, condition)         DPLOG_LOGGER_IF_FIRST_N(SEVERITY, (N), (condition), collie::log::default_logger_raw())
+#define DPLOG_EVERY_T(SEVERITY, seconds)                 DPLOG_LOGGER_EVERY_T(SEVERITY, (seconds), collie::log::default_logger_raw())
+#define DPLOG_IF_EVERY_T(SEVERITY, seconds, condition)   DPLOG_LOGGER_IF_EVERY_T(SEVERITY, (seconds), (condition), collie::log::default_logger_raw())
+#define DPLOG_ONCE(SEVERITY)                             DPLOG_LOGGER_ONCE(SEVERITY, collie::log::default_logger_raw())
+#define DPLOG_IF_ONCE(SEVERITY, condition)               DPLOG_LOGGER_IF_ONCE(SEVERITY, (condition), collie::log::default_logger_raw())
 
-#define DPCHECK(condition)        DPCHECK_LOGGER(condition, clog::default_logger_raw())
-#define DPCHECK_NOTNULL(val)      DPCHECK_NOTNULL_LOGGER(val, clog::default_logger_raw())
-#define DPCHECK_PTREQ(val1, val2) DPCHECK_PTREQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_EQ(val1, val2) DPCHECK_EQ_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_NE(val1, val2) DPCHECK_NE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_LE(val1, val2) DPCHECK_LE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_LT(val1, val2) DPCHECK_LT_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_GE(val1, val2) DPCHECK_GE_LOGGER(val1, val2, clog::default_logger_raw())
-#define DPCHECK_GT(val1, val2) DPCHECK_GT_LOGGER(val1, val2, clog::default_logger_raw())
+#define DPCHECK(condition)        DPCHECK_LOGGER(condition, collie::log::default_logger_raw())
+#define DPCHECK_NOTNULL(val)      DPCHECK_NOTNULL_LOGGER(val, collie::log::default_logger_raw())
+#define DPCHECK_PTREQ(val1, val2) DPCHECK_PTREQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_EQ(val1, val2) DPCHECK_EQ_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_NE(val1, val2) DPCHECK_NE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_LE(val1, val2) DPCHECK_LE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_LT(val1, val2) DPCHECK_LT_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_GE(val1, val2) DPCHECK_GE_LOGGER(val1, val2, collie::log::default_logger_raw())
+#define DPCHECK_GT(val1, val2) DPCHECK_GT_LOGGER(val1, val2, collie::log::default_logger_raw())
 
-#define DVLOG(verboselevel) DVLOG_LOGGER(verboselevel, clog::default_logger_raw())
-#define DVLOG_IF(verboselevel, condition) DVLOG_IF_LOGGER(verboselevel, (condition), clog::default_logger_raw())
-#define DVLOG_EVERY_N(verboselevel, N) DVLOG_EVERY_N_LOGGER(verboselevel, N, clog::default_logger_raw())
-#define DVLOG_IF_EVERY_N(verboselevel, N, condition) DVLOG_IF_EVERY_N_LOGGER(verboselevel, (N), (condition), clog::default_logger_raw())
-#define DVLOG_FIRST_N(verboselevel, N) DVLOG_FIRST_N_LOGGER(verboselevel, (N), clog::default_logger_raw())
-#define DVLOG_IF_FIRST_N(verboselevel, N, condition) DVLOG_IF_FIRST_N_LOGGER(verboselevel, (N), (condition), clog::default_logger_raw())
-#define DVLOG_EVERY_T(verboselevel, seconds) DVLOG_EVERY_T_LOGGER(verboselevel, (seconds), clog::default_logger_raw())
-#define DVLOG_IF_EVERY_T(verboselevel, seconds, condition) DVLOG_IF_EVERY_T_LOGGER(verboselevel, (seconds), (condition), clog::default_logger_raw())
-#define DVLOG_ONCE(verboselevel) DVLOG_ONCE_LOGGER(verboselevel, clog::default_logger_raw())
-#define DVLOG_IF_ONCE(verboselevel, condition) DVLOG_IF_ONCE_LOGGER(verboselevel, (condition), clog::default_logger_raw())
+#define DVLOG(verboselevel) DVLOG_LOGGER(verboselevel, collie::log::default_logger_raw())
+#define DVLOG_IF(verboselevel, condition) DVLOG_IF_LOGGER(verboselevel, (condition), collie::log::default_logger_raw())
+#define DVLOG_EVERY_N(verboselevel, N) DVLOG_EVERY_N_LOGGER(verboselevel, N, collie::log::default_logger_raw())
+#define DVLOG_IF_EVERY_N(verboselevel, N, condition) DVLOG_IF_EVERY_N_LOGGER(verboselevel, (N), (condition), collie::log::default_logger_raw())
+#define DVLOG_FIRST_N(verboselevel, N) DVLOG_FIRST_N_LOGGER(verboselevel, (N), collie::log::default_logger_raw())
+#define DVLOG_IF_FIRST_N(verboselevel, N, condition) DVLOG_IF_FIRST_N_LOGGER(verboselevel, (N), (condition), collie::log::default_logger_raw())
+#define DVLOG_EVERY_T(verboselevel, seconds) DVLOG_EVERY_T_LOGGER(verboselevel, (seconds), collie::log::default_logger_raw())
+#define DVLOG_IF_EVERY_T(verboselevel, seconds, condition) DVLOG_IF_EVERY_T_LOGGER(verboselevel, (seconds), (condition), collie::log::default_logger_raw())
+#define DVLOG_ONCE(verboselevel) DVLOG_ONCE_LOGGER(verboselevel, collie::log::default_logger_raw())
+#define DVLOG_IF_ONCE(verboselevel, condition) DVLOG_IF_ONCE_LOGGER(verboselevel, (condition), collie::log::default_logger_raw())
 
 #endif
