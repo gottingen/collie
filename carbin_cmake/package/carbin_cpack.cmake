@@ -14,12 +14,13 @@
 # limitations under the License.
 #
 
-include(carbin_system_info)
+message(STATUS "CPACK FOR ${PRETTY_NAME}")
 if (${PRETTY_NAME} MATCHES "Ubuntu")
     MESSAGE(STATUS "Linux dist: ubuntu, build deb package")
     include(carbin_deb)
 elseif (${PRETTY_NAME} MATCHES "darwin")
     MESSAGE(STATUS "Linux dist: macos build dmg package")
-elseif (${PRETTY_NAME} MATCHES "centos")
+elseif (${PRETTY_NAME} MATCHES "centos" OR ${PRETTY_NAME} MATCHES "CentOS")
+    MESSAGE(STATUS "Linux dist: centos build rpm package")
     include(carbin_rpm)
 endif ()
