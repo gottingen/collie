@@ -35,7 +35,7 @@ carbin_cc_test(
         COPTS ${USER_CXX_FLAGS}
 )
 ]]
-#[[
+
 add_subdirectory(base)
 add_subdirectory(container)
 add_subdirectory(meta)
@@ -43,5 +43,5 @@ add_subdirectory(strings)
 add_subdirectory(simd)
 add_subdirectory(tc)
 add_subdirectory(taskflow)
-]]
+
 add_subdirectory(utility)

@@ -40,12 +40,14 @@ set(source_files test.cc
 
 carbin_cc_test(
         NAME type_safe_test
+        MODULE base
         SOURCES ${source_files}
         CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_test(
         NAME type_safe_std_test
+        MODULE base
         SOURCES std_tc.cc
         CXXOPTS ${USER_CXX_FLAGS}
 )

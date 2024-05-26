@@ -31,8 +31,8 @@ message(STATUS ${PROJECT_NAME}_IS_TOP_PROJECT)
 
 set(PROJECT_DESCRIPTION "Hercules is an ahead of time compiler for a subset of the Python language framework.")
 set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 2)
-set(PROJECT_VERSION_PATCH 32)
+set(PROJECT_VERSION_MINOR 3)
+set(PROJECT_VERSION_PATCH 33)
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
 set(${PROJECT_NAME}_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
@@ -41,7 +41,8 @@ set(${PROJECT_NAME}_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 set(${PROJECT_NAME}_VERSION ${PROJECT_VERSION})
 
 
-set(CARBIN_VERSION 0.3.0)
+set(CARBIN_VERSION 0.5.0)
+set(CARBIN_CMAKE_VERSION 0.5.0)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/carbin_cmake)
 ##################################################################
 # add this for ${PROJECT_NAME} 's cmake include
@@ -69,7 +70,8 @@ include(carbin_module)
 include(collie_deps)
 include(collie_cxx_config)
 include(collie_test)
-include(collie_package_config)
+
+configure_file(${PROJECT_SOURCE_DIR}/conda/meta.yaml.in ${PROJECT_SOURCE_DIR}/conda/meta.yaml @ONLY)
 
 add_subdirectory(collie)
 ####################################################################
@@ -90,19 +92,16 @@ endif ()
 ##############################################
 # header installing
 #############################################
-
 install(DIRECTORY ${PROJECT_NAME}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         FILES_MATCHING
         PATTERN "*.inc"
         PATTERN "*.h"
-        PATTERN "*.hpp"
-        PATTERN "*.inl"
         )
 
 # Layout. This works for all platforms:
-#   * <prefix>/lib*/cmake/<PROJECT-NAME>
-#   * <prefix>/lib*/
+#   * <prefix>/@CMAKE_INSTALL_LIBDIR@/cmake/<PROJECT-NAME>
+#   * <prefix>/@CMAKE_INSTALL_LIBDIR@*/
 #   * <prefix>/include/
 set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
@@ -129,21 +128,21 @@ write_basic_package_version_file(
 #   * TARGETS_EXPORT_NAME
 #   * PROJECT_NAME
 configure_package_config_file(
-        "carbin_cmake/package/carbin_config.cmake.in"
+        "cmake/collie_config.cmake.in"
         "${project_config}"
         INSTALL_DESTINATION "${config_install_dir}"
 )
 
 #Targets:
-#  * <prefix>/lib/libbar.a
-#  * <prefix>/lib/libbaz.a
+#  * <prefix>/${CMAKE_INSTALL_LIBDIR}/libbar.a
+#  * <prefix>/${CMAKE_INSTALL_LIBDIR}/libbaz.a
 #  * header location after install: <prefix>/include/foo/Bar.hpp
 #  * headers can be included by C++ code `#include <foo/Bar.hpp>`
 
 
 # Config
-#   * <prefix>/lib/cmake/Foo/FooConfig.cmake
-#   * <prefix>/lib/cmake/Foo/FooConfigVersion.cmake
+#   * <prefix>/${CMAKE_INSTALL_LIBDIR}/cmake/Foo/FooConfig.cmake
+#   * <prefix>/${CMAKE_INSTALL_LIBDIR}/cmake/Foo/FooConfigVersion.cmake
 install(
         FILES
         "${project_config}" "${version_config}"
@@ -152,7 +151,7 @@ install(
 )
 
 # Config
-#   * <prefix>/lib/cmake/Foo/FooTargets.cmake
+#   * <prefix>/${CMAKE_INSTALL_LIBDIR}/cmake/Foo/FooTargets.cmake
 
 install(
         EXPORT
@@ -162,4 +161,8 @@ install(
         DESTINATION
         "${config_install_dir}"
 )
-include(carbin_cpack)
+configure_file(${PROJECT_SOURCE_DIR}/carbin_cmake/package/pkg_dump_template.pc.in
+        ${PROJECT_BINARY_DIR}/package/${PROJECT_NAME}.pc)
+
+install(FILES ${PROJECT_BINARY_DIR}/package/${PROJECT_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+include(collie_cpack_config)
