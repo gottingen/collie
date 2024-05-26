@@ -18,12 +18,14 @@ find_package(Threads REQUIRED)
 
 carbin_cc_test(
         NAME reflect_aliases_test
+        MODULE base
         SOURCES reflect_aliases_test.cc
         CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_test(
         NAME reflect_test
+        MODULE base
         SOURCES reflect_test.cc
         CXXOPTS ${USER_CXX_FLAGS}
 )

@@ -18,12 +18,14 @@ find_package(Threads REQUIRED)
 
 carbin_cc_test(
         NAME iterator_test
+        MODULE base
         SOURCES iterator_test.cc
         CXXOPTS ${USER_CXX_FLAGS}
 )
 
 carbin_cc_test(
         NAME fifo_map_test
+        MODULE base
         SOURCES fifo_map_test.cc
         CXXOPTS ${USER_CXX_FLAGS}
 )

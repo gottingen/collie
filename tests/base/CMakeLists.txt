@@ -18,6 +18,7 @@ find_package(Threads REQUIRED)
 
 carbin_cc_test(
         NAME uuid_test
+        MODULE base
         SOURCES uuid_test.cc
         CXXOPTS ${USER_CXX_FLAGS}
         LINKS Threads::Threads

@@ -34,6 +34,7 @@ find_package(Threads REQUIRED)
 foreach (unittest IN LISTS TF_UNITTESTS)
     carbin_cc_test(
             NAME tf_${unittest}
+            MODULE base
             SOURCES ${unittest}.cc
             CXXOPTS ${USER_CXX_FLAGS}
             LINKS Threads::Threads

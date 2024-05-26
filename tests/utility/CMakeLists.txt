@@ -18,6 +18,7 @@ find_package(Threads REQUIRED)
 
 carbin_cc_test(
         NAME status_test
+        MODULE utility
         SOURCES status_test.cc
         CXXOPTS ${USER_CXX_FLAGS}
 )
