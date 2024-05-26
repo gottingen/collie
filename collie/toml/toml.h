@@ -72,19 +72,19 @@ TOML_DISABLE_SUGGEST_ATTR_WARNINGS;
 
 #if TOML_IMPLEMENTATION
 
-#include <collie/toml/impl/std_string.inl>
-#include <collie/toml/impl/print_to_stream.inl>
-#include <collie/toml/impl/node.inl>
-#include <collie/toml/impl/at_path.inl>
-#include <collie/toml/impl/path.inl>
-#include <collie/toml/impl/array.inl>
-#include <collie/toml/impl/table.inl>
-#include <collie/toml/impl/unicode.inl>
-#include <collie/toml/impl/parser.inl>
-#include <collie/toml/impl/formatter.inl>
-#include <collie/toml/impl/toml_formatter.inl>
-#include <collie/toml/impl/json_formatter.inl>
-#include <collie/toml/impl/yaml_formatter.inl>
+#include <collie/toml/impl/std_string_inl.h>
+#include <collie/toml/impl/print_to_stream_inl.h>
+#include <collie/toml/impl/node_inl.h>
+#include <collie/toml/impl/at_pat_.inl.h>
+#include <collie/toml/impl/path_inl.h>
+#include <collie/toml/impl/array_inl.h>
+#include <collie/toml/impl/table_inl.h>
+#include <collie/toml/impl/unicode_inl.h>
+#include <collie/toml/impl/parser_inl.h>
+#include <collie/toml/impl/formatter_inl.h>
+#include <collie/toml/impl/toml_formatter_inl.h>
+#include <collie/toml/impl/json_formatter_inl.h>
+#include <collie/toml/impl/yaml_formatter_inl.h>
 
 #endif // TOML_IMPLEMENTATION
 

@@ -31,8 +31,8 @@ message(STATUS ${PROJECT_NAME}_IS_TOP_PROJECT)
 
 set(PROJECT_DESCRIPTION "Hercules is an ahead of time compiler for a subset of the Python language framework.")
 set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 3)
-set(PROJECT_VERSION_PATCH 33)
+set(PROJECT_VERSION_MINOR 2)
+set(PROJECT_VERSION_PATCH 38)
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
 set(${PROJECT_NAME}_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
@@ -97,6 +97,7 @@ install(DIRECTORY ${PROJECT_NAME}
         FILES_MATCHING
         PATTERN "*.inc"
         PATTERN "*.h"
+        PATTERN "*.hpp"
         )
 
 # Layout. This works for all platforms:
