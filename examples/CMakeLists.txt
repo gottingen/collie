@@ -30,15 +30,11 @@ carbin_cc_binary(
         COPTS ${USER_CXX_FLAGS}
 )
 ]]
-add_subdirectory(cli)
-add_subdirectory(strings)
+
 add_subdirectory(tc)
 add_subdirectory(module)
 add_subdirectory(table)
 add_subdirectory(toml)
-add_subdirectory(log)
 add_subdirectory(container)
 add_subdirectory(meta)
 add_subdirectory(simd)
-add_subdirectory(taskflow)
-add_subdirectory(utility)
